@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="溪水邊 Stream Side 為自己抽張卡 — 一張牌卡，一個當下，讓直覺帶你看見今天需要的那道光。">
+  <title>為自己抽張卡｜溪水邊 Stream Side</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body { background: var(--rice); }
+
+    /* Shuffle animation */
+    @keyframes shuffle {
+      0%   { transform: translateX(0) rotate(0deg); }
+      25%  { transform: translateX(-8px) rotate(-3deg); }
+      50%  { transform: translateX(8px) rotate(3deg); }
+      75%  { transform: translateX(-4px) rotate(-1.5deg); }
+      100% { transform: translateX(0) rotate(0deg); }
+    }
+
+    .shuffling .card-3d { animation: shuffle 0.5s ease; }
+
+    /* Share toast */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--oak);
+      color: var(--rice);
+      padding: 0.75rem 1.75rem;
+      border-radius: 9999px;
+      font-size: 0.88rem;
+      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+      z-index: 999;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* Fade-in animation */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════ NAV ══════════════ -->
+  <header class="site-header" role="banner">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="溪水邊首頁">溪水邊 <span>Stream Side</span></a>
+      <nav aria-label="主選單">
+        <ul class="nav-links" role="list">
+          <li><a href="about.html">關於</a></li>
+          <li><a href="articles.html">專欄</a></li>
+          <li><a href="media.html">聲音</a></li>
+          <li><a href="events.html">講座</a></li>
+          <li><a href="cards.html" class="active">抽卡</a></li>
+        </ul>
+      </nav>
+      <button class="hamburger" id="hamburger" aria-label="開啟選單" aria-expanded="false" aria-controls="mobile-menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <nav class="mobile-menu" id="mobile-menu" aria-label="手機選單">
+      <a href="about.html">關於我們</a>
+      <a href="articles.html">專欄文章</a>
+      <a href="media.html">聲音與著作</a>
+      <a href="events.html">諮商講座</a>
+      <a href="cards.html">為自己抽張卡</a>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ══════════════ PAGE INTRO ══════════════ -->
+    <div style="text-align:center;padding:4rem 1.5rem 1rem;">
+      <p style="font-size:0.8rem;letter-spacing:0.18em;color:var(--straw);margin-bottom:0.5rem;text-transform:uppercase;">Card Reading</p>
+      <h1 style="font-size:clamp(1.8rem,3.5vw,2.5rem);color:var(--oak);margin-bottom:0.75rem;">為自己抽張卡</h1>
+      <p style="color:rgba(67,52,48,0.6);font-size:0.95rem;max-width:420px;margin:0 auto;line-height:1.9;">
+        深呼吸，靜下心來，<br>
+        讓直覺帶你翻開今天最需要看見的那道光。
+      </p>
+    </div>
+
+    <!-- ══════════════ CARD STAGE ══════════════ -->
+    <section class="card-stage" aria-labelledby="card-heading">
+      <h2 id="card-heading" style="position:absolute;opacity:0;pointer-events:none;">互動抽卡區</h2>
+
+      <!-- 3D Card Flip -->
+      <div class="card-3d-wrap" id="cardWrap" role="button" tabindex="0"
+           aria-label="點擊翻牌" aria-pressed="false"
+           onclick="flipCard()" onkeydown="if(event.key==='Enter'||event.key===' ')flipCard()">
+        <div class="card-3d" id="card3d">
+
+          <!-- Back face -->
+          <div class="card-face card-back-face" aria-hidden="true">
+            <div class="card-pattern">✦</div>
+            <p>點擊翻牌</p>
+          </div>
+
+          <!-- Front face (shown when flipped) -->
+          <div class="card-face card-front-face" id="cardFront">
+            <p class="card-number" id="cardNumber">No. —</p>
+            <div class="card-image-area" id="cardEmoji" aria-hidden="true">✨</div>
+            <h3 id="cardTitle">
+              <span class="placeholder-text">牌卡名稱 Card Name Placeholder</span>
+            </h3>
+            <p id="cardKeyword" style="font-size:0.78rem;color:var(--straw);font-weight:600;margin:0.2rem 0 0.4rem;">
+              <span class="placeholder-text">關鍵詞 Keyword</span>
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── Control Buttons ── -->
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-bottom:2.5rem;" role="group" aria-label="抽卡操作">
+        <button class="btn-outline" id="shuffleBtn" onclick="shuffle()" aria-label="洗牌" style="font-size:0.85rem;padding:0.6rem 1.5rem;">
+          🔀 洗牌
+        </button>
+        <button class="btn-primary" id="redrawBtn" onclick="redraw()" aria-label="重新抽卡" style="font-size:0.85rem;padding:0.6rem 1.5rem;">
+          ✦ 重新抽卡
+        </button>
+        <button class="btn-outline" id="shareBtn" onclick="shareCard()" aria-label="分享牌卡" style="font-size:0.85rem;padding:0.6rem 1.5rem;">
+          ↗ 分享
+        </button>
+      </div>
+
+      <!-- ── Interpretation Area ── -->
+      <div class="card-interpretation" id="interpretation" role="region" aria-live="polite" aria-label="牌卡解析">
+        <div style="width:40px;height:2px;background:var(--straw);margin:0 auto 1.5rem;border-radius:2px;"></div>
+        <h2 id="interpretTitle">
+          <span class="placeholder-text">牌卡標題 Card Title Placeholder</span>
+        </h2>
+        <p id="interpretBody" style="margin-top:0.75rem;">
+          <span class="placeholder-text">牌卡解析文字佔位符：每一張牌卡都有其獨特的意涵與引導問句，以溫柔的文字邀請抽卡者向內探索。Interpretation Text Placeholder — a warm, contemplative message unique to this card, inviting the reader to reflect inward.</span>
+        </p>
+        <p class="card-message" id="interpretMessage">
+          「<span class="placeholder-text">牌卡金句 Card Message Placeholder</span>」
+        </p>
+        <div style="margin-top:2rem;display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
+          <button onclick="shareCard()" class="btn-outline" style="font-size:0.82rem;padding:0.5rem 1.4rem;">分享這張卡</button>
+          <a href="articles.html" class="btn-outline" style="font-size:0.82rem;padding:0.5rem 1.4rem;">閱讀相關文章</a>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ══════════════ INTRO SECTION ══════════════ -->
+    <section style="padding:3rem 1.5rem 6rem;max-width:640px;margin:0 auto;text-align:center;">
+      <div class="divider" style="margin:0 0 3rem;"></div>
+      <h2 style="font-size:1.2rem;color:var(--oak);margin-bottom:1rem;">如何使用牌卡？</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1.5rem;text-align:center;margin-top:2rem;">
+        <div>
+          <div style="font-size:1.5rem;margin-bottom:0.5rem;">🌬️</div>
+          <p style="font-size:0.85rem;color:rgba(67,52,48,0.65);line-height:1.7;">深呼吸，<br>讓心安靜下來</p>
+        </div>
+        <div>
+          <div style="font-size:1.5rem;margin-bottom:0.5rem;">💭</div>
+          <p style="font-size:0.85rem;color:rgba(67,52,48,0.65);line-height:1.7;">心中帶著一個<br>此刻的疑問或感受</p>
+        </div>
+        <div>
+          <div style="font-size:1.5rem;margin-bottom:0.5rem;">🃏</div>
+          <p style="font-size:0.85rem;color:rgba(67,52,48,0.65);line-height:1.7;">點擊翻牌，<br>接收今天的訊息</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ══════════════ FOOTER ══════════════ -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-inner">
+      <p class="footer-quote">「在溪水邊，找回生活最溫暖的樣子。」</p>
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h3>溪水邊 Stream Side</h3>
+          <p>透過專業諮商、兒童閱讀與租書店的一手觀察，陪伴你找回內心最溫柔的角落。</p>
+        </div>
+        <nav class="footer-nav" aria-label="頁尾導覽">
+          <h4>網站地圖</h4>
+          <ul>
+            <li><a href="about.html">關於我們</a></li>
+            <li><a href="articles.html">專欄文章</a></li>
+            <li><a href="media.html">聲音與著作</a></li>
+            <li><a href="events.html">諮商講座</a></li>
+            <li><a href="cards.html">為自己抽張卡</a></li>
+          </ul>
+        </nav>
+        <nav class="footer-nav" aria-label="社群連結">
+          <h4>社群媒體</h4>
+          <ul>
+            <li><a href="#" rel="noopener">Instagram</a></li>
+            <li><a href="#" rel="noopener">Facebook</a></li>
+            <li><a href="#" rel="noopener">Podcast</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 溪水邊 Stream Side. All Rights Reserved.</p>
+        <p>以愛與溫度，陪你走每一段路。</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // ── Nav hamburger ──
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+    hamburger.addEventListener('click', () => {
+      const isOpen = mobileMenu.classList.toggle('open');
+      hamburger.classList.toggle('open', isOpen);
+      hamburger.setAttribute('aria-expanded', isOpen);
+    });
+
+    // ── Card data — replace these with real card content ──
+    const CARDS = [
+      {
+        number: 'No. 01', emoji: '🌊', title: '流動', keyword: '放手 · 信任 · 流動',
+        interpretTitle: '流動之卡',
+        interpretBody: '今天，也許有什麼事情讓你緊握著不放。這張卡輕輕地問你：如果你願意放手，生命會帶你流向哪裡？\n\n流動不是失去控制，而是相信自己有能力在任何水流中找到方向。讓那些抓太緊的地方，稍微鬆開一點。',
+        interpretMessage: '水往低處流，心往溫暖處去。'
+      },
+      {
+        number: 'No. 02', emoji: '🌱', title: '萌芽', keyword: '開始 · 潛力 · 耐心',
+        interpretTitle: '萌芽之卡',
+        interpretBody: '每一個開始都很小，就像種子破土之前，沒有人看得見它的力量。\n\n你現在正在做的事，或許還沒有成果，但種子已經在土裡了。給它時間，給它光，給它你的耐心。',
+        interpretMessage: '最深的根，長出最高的樹。'
+      },
+      {
+        number: 'No. 03', emoji: '☀️', title: '溫暖', keyword: '愛 · 接納 · 當下',
+        interpretTitle: '溫暖之卡',
+        interpretBody: '有時候，我們最需要的不是解答，而是一個溫暖的所在。\n\n今天，讓這張卡提醒你：你值得被溫柔對待，包括被你自己。把那一點點溫度，先給自己。',
+        interpretMessage: '你就是你最需要的那個家。'
+      },
+      {
+        number: 'No. 04', emoji: '🌙', title: '靜默', keyword: '休息 · 內省 · 夜晚',
+        interpretTitle: '靜默之卡',
+        interpretBody: '在這個總是要求產出的世界裡，靜默是一種勇敢。\n\n今天，也許你不需要解決什麼，也不需要說什麼。只是坐著，讓自己的內心說話，然後聽。',
+        interpretMessage: '靜下來，才能聽見自己。'
+      },
+      {
+        number: 'No. 05', emoji: '🦋', title: '轉化', keyword: '改變 · 蛻變 · 勇氣',
+        interpretTitle: '轉化之卡',
+        interpretBody: '蝴蝶在蛹裡的時候，並不知道自己會飛。它只是經歷著那段黑暗、混沌、看似沒有出口的過程。\n\n也許你正在某個蛹裡。請相信，那不是終點，而是轉化正在發生。',
+        interpretMessage: '改變的前一刻，總是最難熬的。'
+      },
+      {
+        number: 'No. 06', emoji: '🌸', title: '綻放', keyword: '展現 · 自信 · 美麗',
+        interpretTitle: '綻放之卡',
+        interpretBody: '你有些美好的東西，還藏在心裡沒有拿出來。\n\n這張卡問你：是什麼讓你不敢展現真實的自己？那些阻礙，是真實的牆，還是你為自己建造的？今天，試著讓那朵花開一點點。',
+        interpretMessage: '你的光，世界需要看見。'
+      },
+      {
+        number: 'No. 07', emoji: '🪨', title: '紮根', keyword: '穩定 · 基礎 · 歸屬',
+        interpretTitle: '紮根之卡',
+        interpretBody: '當一切都在晃動的時候，找到你的根。\n\n那可能是一個人、一個地方、一段回憶、一種信念。回到它，讓自己在那裡站穩。從穩定的地方，你才能往任何方向生長。',
+        interpretMessage: '根越深，風吹時越不怕。'
+      },
+      {
+        number: 'No. 08', emoji: '🕊️', title: '釋放', keyword: '原諒 · 放下 · 自由',
+        interpretTitle: '釋放之卡',
+        interpretBody: '你是否有什麼事情、什麼情緒，攜帶了很久，卻還沒找到地方放下？\n\n釋放不一定是原諒，也不一定是遺忘。它可以只是決定：「我不讓它繼續佔據我的心了。」今天，找一個小小的釋放。',
+        interpretMessage: '放下，是給自己的禮物。'
+      }
+    ];
+
+    let currentCardIndex = -1;
+    let isFlipped = false;
+
+    function getRandomCard() {
+      let newIndex;
+      do {
+        newIndex = Math.floor(Math.random() * CARDS.length);
+      } while (newIndex === currentCardIndex && CARDS.length > 1);
+      return newIndex;
+    }
+
+    function flipCard() {
+      if (isFlipped) return;
+      if (currentCardIndex === -1) currentCardIndex = getRandomCard();
+
+      const card = CARDS[currentCardIndex];
+      document.getElementById('cardNumber').textContent = card.number;
+      document.getElementById('cardEmoji').textContent = card.emoji;
+      document.getElementById('cardTitle').textContent = card.title;
+      document.getElementById('cardKeyword').textContent = card.keyword;
+      document.getElementById('interpretTitle').textContent = card.interpretTitle;
+      document.getElementById('interpretBody').textContent = card.interpretBody;
+      document.getElementById('interpretMessage').textContent = '「' + card.interpretMessage + '」';
+
+      document.getElementById('card3d').classList.add('flipped');
+      document.getElementById('cardWrap').setAttribute('aria-pressed', 'true');
+      isFlipped = true;
+
+      // Show interpretation
+      setTimeout(() => {
+        const interp = document.getElementById('interpretation');
+        interp.classList.add('visible');
+        interp.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 600);
+    }
+
+    function resetCard() {
+      document.getElementById('card3d').classList.remove('flipped');
+      document.getElementById('cardWrap').setAttribute('aria-pressed', 'false');
+      document.getElementById('interpretation').classList.remove('visible');
+      isFlipped = false;
+    }
+
+    function redraw() {
+      resetCard();
+      currentCardIndex = getRandomCard();
+      setTimeout(() => flipCard(), 400);
+    }
+
+    function shuffle() {
+      resetCard();
+      currentCardIndex = -1;
+      const wrap = document.getElementById('cardWrap');
+      wrap.classList.add('shuffling');
+      setTimeout(() => wrap.classList.remove('shuffling'), 600);
+      showToast('🔀 已洗牌，點擊牌卡抽一張');
+    }
+
+    function shareCard() {
+      const card = currentCardIndex >= 0 ? CARDS[currentCardIndex] : null;
+      const text = card
+        ? `我從溪水邊抽到了「${card.title}」${card.emoji}\n${card.interpretMessage}\n\n溪水邊 Stream Side · 為自己抽張卡`
+        : '我正在溪水邊為自己抽張卡 🃏\n溪水邊 Stream Side';
+
+      if (navigator.share) {
+        navigator.share({ title: '溪水邊 · 為自己抽張卡', text, url: window.location.href })
+          .catch(() => copyToClipboard(text));
+      } else {
+        copyToClipboard(text);
+      }
+    }
+
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text + '\n' + window.location.href)
+        .then(() => showToast('✓ 已複製到剪貼板'))
+        .catch(() => showToast('請手動複製頁面連結分享'));
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2800);
+    }
+  </script>
+
+</body>
+</html>

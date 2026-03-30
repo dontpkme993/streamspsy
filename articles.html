@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="溪水邊 Stream Side 專欄文章 — 關於心理、繪本與租書店觀察的深度閱讀。">
+  <title>專欄文章｜溪水邊 Stream Side</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "name": "溪水邊專欄",
+    "description": "關於心理諮商、兒童閱讀與書店觀察的深度文章",
+    "url": "https://streamside.tw/articles.html",
+    "author": {
+      "@type": "Person",
+      "name": "溪水邊創辦人"
+    }
+  }
+  </script>
+  <style>
+    .sidebar-sticky { position: sticky; top: 88px; }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════ NAV ══════════════ -->
+  <header class="site-header" role="banner">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="溪水邊首頁">溪水邊 <span>Stream Side</span></a>
+      <nav aria-label="主選單">
+        <ul class="nav-links" role="list">
+          <li><a href="about.html">關於</a></li>
+          <li><a href="articles.html" class="active">專欄</a></li>
+          <li><a href="media.html">聲音</a></li>
+          <li><a href="events.html">講座</a></li>
+          <li><a href="cards.html">抽卡</a></li>
+        </ul>
+      </nav>
+      <button class="hamburger" id="hamburger" aria-label="開啟選單" aria-expanded="false" aria-controls="mobile-menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <nav class="mobile-menu" id="mobile-menu" aria-label="手機選單">
+      <a href="about.html">關於我們</a>
+      <a href="articles.html">專欄文章</a>
+      <a href="media.html">聲音與著作</a>
+      <a href="events.html">諮商講座</a>
+      <a href="cards.html">為自己抽張卡</a>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ══════════════ PAGE HERO ══════════════ -->
+    <div class="page-hero">
+      <p style="font-size:0.8rem;letter-spacing:0.18em;color:var(--straw);margin-bottom:0.5rem;text-transform:uppercase;">Articles</p>
+      <h1>專欄文章</h1>
+      <p>每一篇文字，都是一次溫柔的相遇。</p>
+    </div>
+
+    <!-- ══════════════ TAG FILTER ══════════════ -->
+    <div style="max-width:1100px;margin:0 auto;padding:0 1.5rem 2.5rem;" role="search" aria-label="文章標籤過濾">
+      <p style="font-size:0.8rem;color:rgba(67,52,48,0.5);margin-bottom:1rem;letter-spacing:0.05em;">依主題瀏覽：</p>
+      <div style="display:flex;flex-wrap:wrap;gap:0.6rem;" id="tag-filter">
+        <button class="tag-btn active" data-tag="all" onclick="filterTags(this,'all')">全部</button>
+        <button class="tag-btn" data-tag="心理" onclick="filterTags(this,'心理')">#心理</button>
+        <button class="tag-btn" data-tag="繪本" onclick="filterTags(this,'繪本')">#繪本</button>
+        <button class="tag-btn" data-tag="租書店觀察" onclick="filterTags(this,'租書店觀察')">#租書店觀察</button>
+        <button class="tag-btn" data-tag="親子" onclick="filterTags(this,'親子')">#親子</button>
+        <button class="tag-btn" data-tag="自我探索" onclick="filterTags(this,'自我探索')">#自我探索</button>
+      </div>
+    </div>
+
+    <!-- ══════════════ SIDEBAR LAYOUT ══════════════ -->
+    <div class="sidebar-layout" style="padding-bottom:5rem;">
+
+      <!-- ── ARTICLE LIST ── -->
+      <section aria-labelledby="article-list-heading">
+        <h2 id="article-list-heading" style="font-size:1rem;color:rgba(67,52,48,0.4);letter-spacing:0.08em;margin-bottom:1.5rem;font-weight:400;">顯示所有文章</h2>
+
+        <!-- Article 1 -->
+        <article class="article-card" data-tags="心理 自我探索">
+          <div class="article-thumb">
+            <span>封面圖<br>Placeholder</span>
+          </div>
+          <div class="article-body">
+            <p class="date">2026年3月28日</p>
+            <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.5rem;">
+              <span class="tag">#心理</span>
+              <span class="tag">#自我探索</span>
+            </div>
+            <h3><span class="placeholder-text">文章標題一 Article Title 1 Placeholder — 關於自我探索的深度文章</span></h3>
+            <p class="summary-label">3 秒摘要</p>
+            <p class="summary"><span class="placeholder-text">文章重點摘要佔位符：讀者能在3秒內理解本文核心價值。3-second summary for AEO: the key takeaway a reader needs before deciding to read on. Article Excerpt Placeholder.</span></p>
+          </div>
+        </article>
+
+        <!-- Article 2 -->
+        <article class="article-card" data-tags="繪本 親子">
+          <div class="article-thumb">
+            <span>封面圖<br>Placeholder</span>
+          </div>
+          <div class="article-body">
+            <p class="date">2026年3月15日</p>
+            <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.5rem;">
+              <span class="tag">#繪本</span>
+              <span class="tag">#親子</span>
+            </div>
+            <h3><span class="placeholder-text">文章標題二 Article Title 2 Placeholder — 關於繪本與親子陪伴的溫暖分享</span></h3>
+            <p class="summary-label">3 秒摘要</p>
+            <p class="summary"><span class="placeholder-text">文章重點摘要佔位符：這篇文章分享了哪一本繪本以及它如何在親子關係中發揮作用。3-second summary Placeholder.</span></p>
+          </div>
+        </article>
+
+        <!-- Article 3 -->
+        <article class="article-card" data-tags="租書店觀察">
+          <div class="article-thumb">
+            <span>封面圖<br>Placeholder</span>
+          </div>
+          <div class="article-body">
+            <p class="date">2026年2月28日</p>
+            <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.5rem;">
+              <span class="tag">#租書店觀察</span>
+            </div>
+            <h3><span class="placeholder-text">文章標題三 Article Title 3 Placeholder — 在租書店裡看見的人情溫度</span></h3>
+            <p class="summary-label">3 秒摘要</p>
+            <p class="summary"><span class="placeholder-text">文章重點摘要佔位符：在書店的日常中，那些讓人動容的人與書的相遇瞬間。3-second summary Placeholder.</span></p>
+          </div>
+        </article>
+
+        <!-- Article 4 -->
+        <article class="article-card" data-tags="心理 自我探索">
+          <div class="article-thumb">
+            <span>封面圖<br>Placeholder</span>
+          </div>
+          <div class="article-body">
+            <p class="date">2026年2月14日</p>
+            <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.5rem;">
+              <span class="tag">#心理</span>
+              <span class="tag">#自我探索</span>
+            </div>
+            <h3><span class="placeholder-text">文章標題四 Article Title 4 Placeholder — 心理諮商的日常觀察與思考</span></h3>
+            <p class="summary-label">3 秒摘要</p>
+            <p class="summary"><span class="placeholder-text">文章重點摘要佔位符：從諮商現場出發，談一個關於接納與改變的核心概念。3-second summary Placeholder.</span></p>
+          </div>
+        </article>
+
+        <!-- Article 5 -->
+        <article class="article-card" data-tags="繪本 租書店觀察">
+          <div class="article-thumb">
+            <span>封面圖<br>Placeholder</span>
+          </div>
+          <div class="article-body">
+            <p class="date">2026年1月30日</p>
+            <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.5rem;">
+              <span class="tag">#繪本</span>
+              <span class="tag">#租書店觀察</span>
+            </div>
+            <h3><span class="placeholder-text">文章標題五 Article Title 5 Placeholder — 那些陪孩子選書的午後時光</span></h3>
+            <p class="summary-label">3 秒摘要</p>
+            <p class="summary"><span class="placeholder-text">文章重點摘要佔位符：選書不只是選故事，也是選一種看世界的方式。3-second summary Placeholder.</span></p>
+          </div>
+        </article>
+
+        <!-- Load more placeholder -->
+        <div style="text-align:center;margin-top:2rem;">
+          <button class="btn-outline">載入更多文章</button>
+        </div>
+
+      </section>
+
+      <!-- ── SIDEBAR ── -->
+      <aside aria-label="側邊欄" style="display:none;" class="lg-show">
+        <div class="sidebar-sticky">
+
+          <!-- Recommended -->
+          <div style="background:white;border-radius:1rem;padding:1.5rem;margin-bottom:1.5rem;box-shadow:0 2px 12px rgba(140,106,93,0.06);">
+            <h3 style="font-size:0.9rem;color:var(--oak);font-weight:700;letter-spacing:0.08em;margin-bottom:1.25rem;">推薦閱讀</h3>
+            <ul style="list-style:none;display:flex;flex-direction:column;gap:1rem;">
+              <li>
+                <a href="#" style="display:block;">
+                  <p style="font-size:0.82rem;color:var(--oak);font-weight:600;line-height:1.5;"><span class="placeholder-text">推薦文章標題一 Recommended Article 1</span></p>
+                  <p style="font-size:0.75rem;color:rgba(67,52,48,0.45);margin-top:0.2rem;">2026年3月</p>
+                </a>
+              </li>
+              <li style="border-top:1px solid rgba(140,106,93,0.1);padding-top:1rem;">
+                <a href="#">
+                  <p style="font-size:0.82rem;color:var(--oak);font-weight:600;line-height:1.5;"><span class="placeholder-text">推薦文章標題二 Recommended Article 2</span></p>
+                  <p style="font-size:0.75rem;color:rgba(67,52,48,0.45);margin-top:0.2rem;">2026年2月</p>
+                </a>
+              </li>
+              <li style="border-top:1px solid rgba(140,106,93,0.1);padding-top:1rem;">
+                <a href="#">
+                  <p style="font-size:0.82rem;color:var(--oak);font-weight:600;line-height:1.5;"><span class="placeholder-text">推薦文章標題三 Recommended Article 3</span></p>
+                  <p style="font-size:0.75rem;color:rgba(67,52,48,0.45);margin-top:0.2rem;">2026年1月</p>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Hot Tags -->
+          <div style="background:white;border-radius:1rem;padding:1.5rem;margin-bottom:1.5rem;box-shadow:0 2px 12px rgba(140,106,93,0.06);">
+            <h3 style="font-size:0.9rem;color:var(--oak);font-weight:700;letter-spacing:0.08em;margin-bottom:1.25rem;">熱門標籤</h3>
+            <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
+              <span class="tag">#心理</span>
+              <span class="tag">#繪本</span>
+              <span class="tag">#租書店觀察</span>
+              <span class="tag">#親子</span>
+              <span class="tag">#自我探索</span>
+              <span class="tag">#諮商</span>
+              <span class="tag">#書單</span>
+            </div>
+          </div>
+
+          <!-- CTA -->
+          <div style="background:linear-gradient(135deg,var(--oak),#6b4f45);border-radius:1rem;padding:1.5rem;text-align:center;">
+            <p style="color:var(--rice);font-size:0.88rem;line-height:1.7;margin-bottom:1rem;">想要在溪水邊找到專屬的陪伴？</p>
+            <a href="events.html" class="btn-primary" style="font-size:0.82rem;padding:0.6rem 1.5rem;">預約諮商</a>
+          </div>
+
+        </div>
+      </aside>
+    </div>
+
+  </main>
+
+  <!-- ══════════════ FOOTER ══════════════ -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-inner">
+      <p class="footer-quote">「在溪水邊，找回生活最溫暖的樣子。」</p>
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h3>溪水邊 Stream Side</h3>
+          <p>透過專業諮商、兒童閱讀與租書店的一手觀察，陪伴你找回內心最溫柔的角落。</p>
+        </div>
+        <nav class="footer-nav" aria-label="頁尾導覽">
+          <h4>網站地圖</h4>
+          <ul>
+            <li><a href="about.html">關於我們</a></li>
+            <li><a href="articles.html">專欄文章</a></li>
+            <li><a href="media.html">聲音與著作</a></li>
+            <li><a href="events.html">諮商講座</a></li>
+            <li><a href="cards.html">為自己抽張卡</a></li>
+          </ul>
+        </nav>
+        <nav class="footer-nav" aria-label="社群連結">
+          <h4>社群媒體</h4>
+          <ul>
+            <li><a href="#" rel="noopener">Instagram</a></li>
+            <li><a href="#" rel="noopener">Facebook</a></li>
+            <li><a href="#" rel="noopener">Podcast</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 溪水邊 Stream Side. All Rights Reserved.</p>
+        <p>以愛與溫度，陪你走每一段路。</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Hamburger
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+    hamburger.addEventListener('click', () => {
+      const isOpen = mobileMenu.classList.toggle('open');
+      hamburger.classList.toggle('open', isOpen);
+      hamburger.setAttribute('aria-expanded', isOpen);
+    });
+
+    // Tag filter
+    function filterTags(btn, tag) {
+      document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const articles = document.querySelectorAll('.article-card');
+      articles.forEach(a => {
+        if (tag === 'all') {
+          a.style.display = '';
+        } else {
+          const tags = a.dataset.tags || '';
+          a.style.display = tags.includes(tag) ? '' : 'none';
+        }
+      });
+    }
+
+    // Show sidebar on desktop
+    function updateSidebar() {
+      const sidebar = document.querySelector('aside');
+      if (window.innerWidth >= 1024) {
+        sidebar.style.display = 'block';
+      } else {
+        sidebar.style.display = 'none';
+      }
+    }
+    updateSidebar();
+    window.addEventListener('resize', updateSidebar);
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+# 溪水邊 Stream Side
+
+> 透過專業諮商、兒童閱讀與租書店的一手觀察，找回生活最溫暖的樣子。
+
+## About
+
+溪水邊（Stream Side）是一個以溫暖、親和、手作溫度為核心的品牌，由諮商心理師創辦。品牌融合了三個核心領域的一手觀察：
+
+- **專業諮商**：提供個別心理諮商服務，陪伴個案在安靜的對話空間裡重新聆聽自己。
+- **兒童閱讀**：透過精選繪本與閱讀陪伴，讓孩子在故事裡長出探索世界的勇氣。
+- **空間經營（租書店）**：在書店的日常中觀察人與書的相遇，累積對生活的深度理解。
+
+## Pages
+
+- [首頁](/) — 品牌門戶，包含快速入口、最新文章摘要與活動預告。
+- [關於我們](/about.html) — 創辦人背景、品牌哲學、核心價值與專業認證。
+- [專欄文章](/articles.html) — 關於心理、繪本與租書店觀察的深度文章，含3秒摘要供 AEO 快速讀取。
+- [聲音與著作](/media.html) — Podcast 節目（含各集重點大綱）與出版著作展示。
+- [諮商講座](/events.html) — 即將舉辦的工作坊、演講與諮商場次，以及過往活動紀錄。
+- [為自己抽張卡](/cards.html) — 互動式牌卡體驗，翻牌後顯示當日引導訊息。
+
+## Topics
+
+心理諮商、兒童閱讀、繪本推薦、親子關係、自我探索、情緒療癒、書店文化、生活觀察、正念、內在工作
+
+## Contact
+
+- Email: [Email Placeholder]
+- Location: [Location Placeholder]
+- Social: Instagram, Facebook, Podcast
+
+## License & Copyright
+
+© 2026 溪水邊 Stream Side. All Rights Reserved.
+
+---
+
+*此文件遵循 llms.txt 標準，供 AI 系統快速了解本網站結構與內容。*
+*This file follows the llms.txt convention for machine-readable site description.*
