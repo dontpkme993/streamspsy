@@ -1,0 +1,78 @@
+---js
+{
+  pagination: { data: "articles", size: 1, alias: "article" },
+  permalink: (data) => `/articles/${data.article.slug}/`,
+  layout: "base.njk",
+  eleventyComputed: {
+    title: (data) => `${data.article.title}｜溪水邊 Stream Side`,
+    description: (data) => data.article.summary || `溪水邊專欄文章：${data.article.title}`,
+    activeNav: "articles",
+    jsonLd: (data) => JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": data.article.title,
+      "datePublished": data.article.date,
+      "description": data.article.summary,
+      "author": { "@type": "Person", "name": "溪水邊創辦人" },
+      "url": `https://streamside.tw/articles/${data.article.slug}/`
+    })
+  }
+}
+---
+
+<!-- ══════════════ BACK LINK ══════════════ -->
+<div class="content-max" style="padding-top:2rem;">
+  <a href="/articles/" style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.88rem;color:var(--oak);opacity:0.65;transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.65'">
+    ← 返回專欄
+  </a>
+</div>
+
+<!-- ══════════════ ARTICLE HEADER ══════════════ -->
+<header style="padding:2.5rem 0 2rem;">
+  <div class="content-max" style="max-width:760px;">
+
+    <!-- Tags -->
+    {% if article.tags.length %}
+      <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:1.25rem;">
+        {% for tag in article.tags %}
+          <span class="tag">#{{ tag }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Title -->
+    <h1 style="font-size:clamp(1.6rem,4vw,2.4rem);color:var(--oak);line-height:1.35;margin-bottom:1rem;letter-spacing:0.04em;">{{ article.title }}</h1>
+
+    <!-- Date -->
+    <p style="font-size:0.82rem;color:rgba(67,52,48,0.5);letter-spacing:0.08em;margin-bottom:1.5rem;">{{ article.date | dateDisplay }}</p>
+
+    <!-- Summary (lead paragraph) -->
+    {% if article.summary %}
+      <p style="font-size:1.05rem;color:var(--oak);line-height:1.9;padding:1.25rem 1.5rem;background:rgba(212,163,115,0.12);border-left:3px solid var(--straw);border-radius:0 0.75rem 0.75rem 0;font-style:italic;">{{ article.summary }}</p>
+    {% endif %}
+
+  </div>
+</header>
+
+<!-- ══════════════ COVER IMAGE ══════════════ -->
+{% if article.image %}
+  <div class="content-max" style="max-width:760px;margin-bottom:2.5rem;">
+    <img src="{{ article.image }}" alt="{{ article.title }}" style="width:100%;border-radius:1rem;box-shadow:0 4px 24px rgba(140,106,93,0.15);display:block;">
+  </div>
+{% endif %}
+
+<!-- ══════════════ ARTICLE BODY ══════════════ -->
+<div class="content-max" style="max-width:760px;padding-bottom:5rem;">
+  {% if article.body %}
+    <div class="article-body prose">
+      {{ article.body | markdown | safe }}
+    </div>
+  {% else %}
+    <p style="color:rgba(67,52,48,0.4);font-style:italic;text-align:center;padding:4rem 0;">文章內容尚未發布。</p>
+  {% endif %}
+
+  <!-- ── Bottom back link ── -->
+  <div style="margin-top:4rem;padding-top:2rem;border-top:1px solid rgba(140,106,93,0.12);text-align:center;">
+    <a href="/articles/" class="btn-outline">← 返回專欄文章</a>
+  </div>
+</div>

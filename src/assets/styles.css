@@ -864,3 +864,96 @@ a { color: inherit; text-decoration: none; }
   color: rgba(67,52,48,0.45);
   font-size: 0.82rem;
 }
+
+/* ── Article body (rendered Markdown prose) ── */
+.article-body.prose h1,
+.article-body.prose h2,
+.article-body.prose h3 {
+  color: var(--oak);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.article-body.prose h1 { font-size: 1.7rem; }
+.article-body.prose h2 { font-size: 1.35rem; }
+.article-body.prose h3 { font-size: 1.1rem; }
+
+.article-body.prose p {
+  line-height: 1.9;
+  margin-bottom: 1.4rem;
+  color: var(--bark);
+}
+
+.article-body.prose blockquote {
+  border-left: 3px solid var(--straw);
+  margin: 2rem 0;
+  padding: 0.75rem 1.5rem;
+  background: rgba(212,163,115,0.08);
+  border-radius: 0 0.75rem 0.75rem 0;
+  font-style: italic;
+  color: rgba(67,52,48,0.75);
+}
+
+.article-body.prose blockquote p { margin-bottom: 0; }
+
+.article-body.prose code {
+  background: rgba(140,106,93,0.1);
+  padding: 0.15em 0.45em;
+  border-radius: 0.35rem;
+  font-size: 0.88em;
+  font-family: 'Courier New', Courier, monospace;
+  color: var(--oak);
+}
+
+.article-body.prose pre {
+  background: rgba(67,52,48,0.06);
+  border-radius: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+}
+
+.article-body.prose pre code {
+  background: none;
+  padding: 0;
+  font-size: 0.9rem;
+  color: var(--bark);
+}
+
+.article-body.prose img {
+  max-width: 100%;
+  border-radius: 0.75rem;
+  display: block;
+  margin: 2rem auto;
+  box-shadow: 0 2px 16px rgba(140,106,93,0.12);
+}
+
+.article-body.prose a {
+  color: var(--straw);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: opacity 0.2s;
+}
+
+.article-body.prose a:hover { opacity: 0.75; }
+
+.article-body.prose ul,
+.article-body.prose ol {
+  padding-left: 1.6rem;
+  margin-bottom: 1.4rem;
+}
+
+.article-body.prose li {
+  line-height: 1.9;
+  margin-bottom: 0.3rem;
+}
+
+.article-body.prose hr {
+  border: none;
+  height: 1px;
+  background: rgba(140,106,93,0.15);
+  margin: 3rem 0;
+}

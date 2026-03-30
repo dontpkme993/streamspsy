@@ -1,6 +1,13 @@
+const markdownIt = require('markdown-it');
+const md = markdownIt({ html: true, linkify: true, typographer: true });
+
 module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy("src/assets");
   eleventyConfig.addPassthroughCopy("src/llms.txt");
+  eleventyConfig.addPassthroughCopy("src/assets/images");
+
+  // Markdown filter
+  eleventyConfig.addFilter('markdown', content => content ? md.render(content) : '');
 
   // Date filter
   eleventyConfig.addFilter("dateDisplay", (dateStr) => {
