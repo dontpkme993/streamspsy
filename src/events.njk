@@ -1,0 +1,200 @@
+---
+layout: base.njk
+title: 諮商講座｜溪水邊 Stream Side
+description: 溪水邊 Stream Side 諮商講座 — 專業諮商預約、工作坊與講座資訊，過往紀錄與未來場次。
+activeNav: events
+jsonLd: |
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "Event",
+      "name": "活動名稱 Event Title Placeholder",
+      "startDate": "2026-04-12",
+      "location": {
+        "@type": "Place",
+        "name": "活動地點 Event Location Placeholder"
+      },
+      "organizer": {
+        "@type": "Person",
+        "name": "溪水邊創辦人"
+      },
+      "url": "https://streamside.tw/events/"
+    }
+  ]
+---
+
+<!-- ══════════════ PAGE HERO ══════════════ -->
+<div class="page-hero">
+  <p style="font-size:0.8rem;letter-spacing:0.18em;color:var(--straw);margin-bottom:0.5rem;text-transform:uppercase;">Counseling & Talks</p>
+  <h1>諮商講座</h1>
+  <p>每一次對話，都是重新認識自己的機會。</p>
+</div>
+
+<!-- ══════════════ UPCOMING EVENTS ══════════════ -->
+<section class="py-section" aria-labelledby="upcoming-heading">
+  <div class="content-max">
+    <p style="font-size:0.8rem;letter-spacing:0.18em;color:var(--straw);margin-bottom:0.5rem;text-transform:uppercase;">Upcoming</p>
+    <h2 class="section-title" id="upcoming-heading" style="margin-bottom:2.5rem;">即將到來</h2>
+
+    {% if events.length %}
+      {% for event in events %}
+        <article class="event-upcoming" role="article">
+          <div class="event-date-badge" aria-label="活動日期">
+            <div class="month">{{ event.date | dateDisplay }}</div>
+            <div class="day">{{ event.date.slice(8, 10) }}</div>
+          </div>
+          <div>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.5rem;">
+              {% for tag in event.tags %}
+                <span class="tag">#{{ tag }}</span>
+              {% endfor %}
+            </div>
+            <h3 style="font-size:1.1rem;color:var(--oak);margin-bottom:0.5rem;line-height:1.5;">{{ event.name }}</h3>
+            <p style="font-size:0.85rem;color:rgba(67,52,48,0.65);line-height:1.7;">{{ event.description }}</p>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:0.75rem;align-items:flex-start;">
+            {% if event.link %}
+              <a href="{{ event.link }}" class="btn-primary" rel="noopener" style="white-space:nowrap;">立即報名</a>
+            {% endif %}
+            <span style="font-size:0.78rem;color:rgba(67,52,48,0.45);white-space:nowrap;">{{ event.status }}</span>
+          </div>
+        </article>
+      {% endfor %}
+    {% else %}
+      <!-- Placeholder events shown when Notion is not connected -->
+      <article class="event-upcoming" role="article">
+        <div class="event-date-badge" aria-label="活動日期">
+          <div class="month">APR</div>
+          <div class="day">12</div>
+        </div>
+        <div>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.5rem;">
+            <span class="tag">#工作坊</span>
+            <span class="tag">#親子</span>
+          </div>
+          <h3 style="font-size:1.1rem;color:var(--oak);margin-bottom:0.5rem;line-height:1.5;">
+            <span class="placeholder-text">活動名稱一 Event Title 1 Placeholder</span>
+          </h3>
+          <p style="font-size:0.85rem;color:rgba(67,52,48,0.65);line-height:1.7;">
+            <span class="placeholder-text">時間、地點、人數限制、費用等活動詳細資訊佔位符。Event details: time, location, capacity, fees Placeholder.</span>
+          </p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;align-items:flex-start;">
+          <a href="#" class="btn-primary" rel="noopener" style="white-space:nowrap;">立即報名</a>
+          <span style="font-size:0.78rem;color:rgba(67,52,48,0.45);white-space:nowrap;">剩餘名額：<span class="placeholder-text">X / XX</span></span>
+        </div>
+      </article>
+
+      <article class="event-upcoming" role="article">
+        <div class="event-date-badge" aria-label="活動日期">
+          <div class="month">MAY</div>
+          <div class="day">03</div>
+        </div>
+        <div>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.5rem;">
+            <span class="tag">#個人諮商</span>
+            <span class="tag">#線上</span>
+          </div>
+          <h3 style="font-size:1.1rem;color:var(--oak);margin-bottom:0.5rem;line-height:1.5;">
+            <span class="placeholder-text">活動名稱二 Event Title 2 Placeholder</span>
+          </h3>
+          <p style="font-size:0.85rem;color:rgba(67,52,48,0.65);line-height:1.7;">
+            <span class="placeholder-text">時間、地點、人數限制、費用等活動詳細資訊佔位符。Event details Placeholder.</span>
+          </p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;align-items:flex-start;">
+          <a href="#" class="btn-primary" rel="noopener" style="white-space:nowrap;">立即報名</a>
+          <span style="font-size:0.78rem;color:rgba(67,52,48,0.45);white-space:nowrap;">剩餘名額：<span class="placeholder-text">X / XX</span></span>
+        </div>
+      </article>
+
+      <article class="event-upcoming" role="article">
+        <div class="event-date-badge" aria-label="活動日期" style="background:var(--sprout);">
+          <div class="month">JUN</div>
+          <div class="day">21</div>
+        </div>
+        <div>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.5rem;">
+            <span class="tag">#演講</span>
+            <span class="tag">#社區</span>
+          </div>
+          <h3 style="font-size:1.1rem;color:var(--oak);margin-bottom:0.5rem;line-height:1.5;">
+            <span class="placeholder-text">活動名稱三 Event Title 3 Placeholder</span>
+          </h3>
+          <p style="font-size:0.85rem;color:rgba(67,52,48,0.65);line-height:1.7;">
+            <span class="placeholder-text">時間、地點、人數限制、費用等活動詳細資訊佔位符。Event details Placeholder.</span>
+          </p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;align-items:flex-start;">
+          <a href="#" class="btn-outline" rel="noopener" style="white-space:nowrap;font-size:0.85rem;">報名連結</a>
+          <span style="font-size:0.78rem;color:rgba(67,52,48,0.45);white-space:nowrap;">即將開放報名</span>
+        </div>
+      </article>
+    {% endif %}
+
+  </div>
+</section>
+
+<div class="divider" style="margin:0 1.5rem;"></div>
+
+<!-- ══════════════ PAST EVENTS (TIMELINE) ══════════════ -->
+<section class="py-section" aria-labelledby="past-heading">
+  <div class="content-max" style="max-width:800px;">
+    <p style="font-size:0.8rem;letter-spacing:0.18em;color:rgba(67,52,48,0.4);margin-bottom:0.5rem;text-transform:uppercase;">Past Events</p>
+    <h2 class="section-title" id="past-heading" style="margin-bottom:2.5rem;color:rgba(140,106,93,0.6);">過往紀錄</h2>
+
+    <div style="position:relative;">
+
+      <article class="timeline-item past" role="article">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.3rem;">
+          <h3 style="font-size:0.92rem;color:rgba(67,52,48,0.5);font-weight:600;"><span class="placeholder-text">過往活動名稱一 Past Event Title 1</span></h3>
+          <span style="font-size:0.75rem;color:rgba(67,52,48,0.35);">2026年2月</span>
+        </div>
+        <p style="font-size:0.82rem;color:rgba(67,52,48,0.4);line-height:1.7;"><span class="placeholder-text">過往活動簡介與紀錄佔位符。Archive/Photo Placeholder — 活動回顧、參與人數、照片連結。</span></p>
+        <a href="#" style="font-size:0.78rem;color:rgba(140,106,93,0.5);margin-top:0.4rem;display:inline-block;" rel="noopener">查看相簿 →</a>
+      </article>
+
+      <article class="timeline-item past" role="article">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.3rem;">
+          <h3 style="font-size:0.92rem;color:rgba(67,52,48,0.5);font-weight:600;"><span class="placeholder-text">過往活動名稱二 Past Event Title 2</span></h3>
+          <span style="font-size:0.75rem;color:rgba(67,52,48,0.35);">2025年12月</span>
+        </div>
+        <p style="font-size:0.82rem;color:rgba(67,52,48,0.4);line-height:1.7;"><span class="placeholder-text">過往活動簡介與紀錄佔位符。Archive/Photo Placeholder.</span></p>
+        <a href="#" style="font-size:0.78rem;color:rgba(140,106,93,0.5);margin-top:0.4rem;display:inline-block;" rel="noopener">查看相簿 →</a>
+      </article>
+
+      <article class="timeline-item past" role="article">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.3rem;">
+          <h3 style="font-size:0.92rem;color:rgba(67,52,48,0.5);font-weight:600;"><span class="placeholder-text">過往活動名稱三 Past Event Title 3</span></h3>
+          <span style="font-size:0.75rem;color:rgba(67,52,48,0.35);">2025年10月</span>
+        </div>
+        <p style="font-size:0.82rem;color:rgba(67,52,48,0.4);line-height:1.7;"><span class="placeholder-text">過往活動簡介與紀錄佔位符。Archive/Photo Placeholder.</span></p>
+        <a href="#" style="font-size:0.78rem;color:rgba(140,106,93,0.5);margin-top:0.4rem;display:inline-block;" rel="noopener">查看相簿 →</a>
+      </article>
+
+      <article class="timeline-item past" role="article">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.3rem;">
+          <h3 style="font-size:0.92rem;color:rgba(67,52,48,0.5);font-weight:600;"><span class="placeholder-text">過往活動名稱四 Past Event Title 4</span></h3>
+          <span style="font-size:0.75rem;color:rgba(67,52,48,0.35);">2025年8月</span>
+        </div>
+        <p style="font-size:0.82rem;color:rgba(67,52,48,0.4);line-height:1.7;"><span class="placeholder-text">過往活動簡介與紀錄佔位符。Archive/Photo Placeholder.</span></p>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ COLLABORATION CTA ══════════════ -->
+<div class="content-max" style="padding-bottom:5rem;">
+  <div class="cta-block" style="background:linear-gradient(135deg,var(--oak) 0%,#6b4f45 100%);color:var(--rice);">
+    <p style="font-size:0.8rem;letter-spacing:0.18em;color:rgba(250,243,224,0.55);margin-bottom:0.75rem;text-transform:uppercase;">Collaboration</p>
+    <h2 style="font-size:1.8rem;color:var(--rice);margin-bottom:0.75rem;">合作洽談</h2>
+    <p style="color:rgba(250,243,224,0.75);max-width:480px;margin:0 auto 2rem;line-height:1.8;">
+      <span class="placeholder-text" style="color:rgba(250,243,224,0.45);">合作邀約說明佔位符：歡迎企業、學校、社區機構邀約演講、工作坊或其他形式的合作。Collaboration CTA Placeholder — open for speaking engagements, workshops, and institutional partnerships.</span>
+    </p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <a href="#" class="btn-primary" rel="noopener">發送合作邀約</a>
+      <a href="#" class="btn-outline" style="color:var(--rice);border-color:rgba(250,243,224,0.4);" rel="noopener">下載合作資料</a>
+    </div>
+  </div>
+</div>
