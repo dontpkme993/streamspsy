@@ -31,6 +31,13 @@ jobs:
 
       - run: npm ci
 
+      - name: Cache Notion images
+        uses: actions/cache@v4
+        with:
+          path: src/assets/images
+          key: notion-images-${{ github.run_id }}
+          restore-keys: notion-images-
+
       - name: Build with 11ty
         run: npm run build
         env:
