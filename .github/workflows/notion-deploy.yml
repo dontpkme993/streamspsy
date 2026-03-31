@@ -6,29 +6,33 @@ on:
   workflow_dispatch:       # 允許手動觸發
 
 jobs:
-  check-and-deploy:
+  check:
     runs-on: ubuntu-latest
+    outputs:
+      has_updates: ${{ steps.check.outputs.has_updates }}
     steps:
+      - uses: actions/checkout@v4
 
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+      - run: npm ci
 
-      - name: Check Notion for updates and deploy if needed
+      - name: Check Notion for updates
+        id: check
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTION_ARTICLES_DB: ${{ secrets.NOTION_ARTICLES_DB }}
           NOTION_EVENTS_DB: ${{ secrets.NOTION_EVENTS_DB }}
-          NETLIFY_BUILD_HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
           LAST_BUILD_TIME: ${{ vars.LAST_BUILD_TIME }}
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           GH_REPO: ${{ github.repository }}
         run: node .github/scripts/check-notion.js
+
+  deploy:
+    needs: check
+    if: needs.check.outputs.has_updates == 'true'
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit

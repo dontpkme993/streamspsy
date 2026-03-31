@@ -1,5 +1,6 @@
 const { Client } = require('@notionhq/client');
 const https = require('https');
+const fs = require('fs');
 
 const notion = new Client({ auth: process.env.NOTION_TOKEN });
 
@@ -13,29 +14,12 @@ const LAST_BUILD_TIME = process.env.LAST_BUILD_TIME || '2000-01-01T00:00:00.000Z
 console.log('上次 build 時間:', LAST_BUILD_TIME);
 console.log('監測 DB 數量:', DBS.length);
 
-async function checkDB(dbId) {
-  const res = await notion.dataSources.query({
-    data_source_id: dbId,
-    filter: {
-      timestamp: 'last_edited_time',
-      last_edited_time: { after: LAST_BUILD_TIME },
-    },
-  });
-  const count = res.results?.length || 0;
-  console.log(`DB ${dbId.slice(0, 8)}... 有 ${count} 筆更新`);
-  return count;
-}
-
-function post(url) {
-  return new Promise((resolve, reject) => {
-    const u = new URL(url);
-    const req = https.request(
-      { hostname: u.hostname, path: u.pathname + u.search, method: 'POST', headers: { 'Content-Length': 0 } },
-      res => resolve(res.statusCode)
-    );
-    req.on('error', reject);
-    req.end();
-  });
+function setOutput(key, value) {
+  const outputFile = process.env.GITHUB_OUTPUT;
+  if (outputFile) {
+    fs.appendFileSync(outputFile, `${key}=${value}\n`);
+  }
+  console.log(`output: ${key}=${value}`);
 }
 
 function githubRequest(method, path, body) {
@@ -64,11 +48,23 @@ function githubRequest(method, path, body) {
   });
 }
 
+async function checkDB(dbId) {
+  const res = await notion.dataSources.query({
+    data_source_id: dbId,
+    filter: {
+      timestamp: 'last_edited_time',
+      last_edited_time: { after: LAST_BUILD_TIME },
+    },
+  });
+  const count = res.results?.length || 0;
+  console.log(`DB ${dbId.slice(0, 8)}... 有 ${count} 筆更新`);
+  return count;
+}
+
 async function updateLastBuildTime(time) {
   const [owner, repo] = process.env.GH_REPO.split('/');
   const path = `/repos/${owner}/${repo}/actions/variables/LAST_BUILD_TIME`;
   const body = { name: 'LAST_BUILD_TIME', value: time };
-
   const status = await githubRequest('PATCH', path, body);
   if (status === 404) {
     await githubRequest('POST', `/repos/${owner}/${repo}/actions/variables`, body);
@@ -83,12 +79,12 @@ async function updateLastBuildTime(time) {
     const total = counts.reduce((a, b) => a + b, 0);
 
     if (total > 0) {
-      console.log(`共 ${total} 筆更新，觸發 deploy...`);
-      const status = await post(process.env.NETLIFY_BUILD_HOOK);
-      console.log('Netlify build 觸發，狀態:', status);
+      console.log(`共 ${total} 筆更新，準備觸發 deploy...`);
+      setOutput('has_updates', 'true');
       await updateLastBuildTime(now);
     } else {
       console.log('沒有更新，跳過 deploy。');
+      setOutput('has_updates', 'false');
     }
   } catch (e) {
     console.error('錯誤:', e.message);
