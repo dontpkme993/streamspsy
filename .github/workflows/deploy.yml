@@ -46,7 +46,7 @@ jobs:
           NOTION_EVENTS_DB: ${{ secrets.NOTION_EVENTS_DB }}
           SITE_BASE_PATH: /streamspsy/
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v4
         with:
           path: _site
 
