@@ -12,7 +12,6 @@ async function downloadImage(url, filename) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
   const dest = path.join(dir, filename);
-  if (fs.existsSync(dest)) return `/assets/images/${filename}`;
 
   return new Promise((resolve, reject) => {
     const client = url.startsWith('https') ? https : http;

@@ -76,17 +76,15 @@
     <p style="font-size:0.8rem;color:rgba(67,52,48,0.45);letter-spacing:0.08em;margin-bottom:1rem;text-align:center;">分享這篇文章</p>
     <div style="display:flex;justify-content:center;gap:0.75rem;flex-wrap:wrap;">
 
-      <a href="https://www.facebook.com/sharer/sharer.php?u={{ page.url | url | urlencode }}"
-         target="_blank" rel="noopener"
-         style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.55rem 1.2rem;border-radius:2rem;background:#1877F2;color:white;font-size:0.82rem;font-weight:600;text-decoration:none;">
+      <button onclick="shareTo('facebook')"
+              style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.55rem 1.2rem;border-radius:2rem;background:#1877F2;color:white;font-size:0.82rem;font-weight:600;border:none;cursor:pointer;">
         Facebook
-      </a>
+      </button>
 
-      <a href="https://social-plugins.line.me/lineit/share?url={{ page.url | url | urlencode }}"
-         target="_blank" rel="noopener"
-         style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.55rem 1.2rem;border-radius:2rem;background:#06C755;color:white;font-size:0.82rem;font-weight:600;text-decoration:none;">
+      <button onclick="shareTo('line')"
+              style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.55rem 1.2rem;border-radius:2rem;background:#06C755;color:white;font-size:0.82rem;font-weight:600;border:none;cursor:pointer;">
         LINE
-      </a>
+      </button>
 
       <button onclick="shareOrCopy()"
               style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.55rem 1.2rem;border-radius:2rem;background:var(--rice);border:1px solid rgba(140,106,93,0.2);color:var(--oak);font-size:0.82rem;font-weight:600;cursor:pointer;">
@@ -98,6 +96,14 @@
   </div>
 
   <script>
+    function shareTo(platform) {
+      var url = encodeURIComponent(window.location.href);
+      if (platform === 'facebook') {
+        window.open('https://www.facebook.com/sharer/sharer.php?u=' + url, '_blank', 'noopener');
+      } else if (platform === 'line') {
+        window.open('https://social-plugins.line.me/lineit/share?url=' + url, '_blank', 'noopener');
+      }
+    }
     function shareOrCopy() {
       var url = window.location.href;
       var title = {{ article.title | dump | safe }};
