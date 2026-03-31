@@ -20,11 +20,11 @@ activeNav: media
     <p style="color:rgba(67,52,48,0.6);font-size:0.9rem;margin-bottom:3rem;">每一集，帶你走進生活裡那些值得慢下來的時刻。</p>
 
     <!-- Podcast Episodes — 從 RSS 自動抓取 -->
-    <div style="display:flex;flex-direction:column;gap:0;">
+    <div id="podcast-list" style="display:flex;flex-direction:column;gap:0;">
 
       {% if podcast.episodes.length %}
         {% for ep in podcast.episodes %}
-          <article class="podcast-item">
+          <article class="podcast-item" data-ep-index="{{ loop.index0 }}" {% if loop.index > 4 %}style="display:none;"{% endif %}>
             <div style="display:flex;gap:1rem;align-items:flex-start;margin-bottom:1.25rem;">
               <div style="background:var(--sprout);width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;">🎙️</div>
               <div>
@@ -50,6 +50,39 @@ activeNav: media
             {% endif %}
           </article>
         {% endfor %}
+
+        {% if podcast.episodes.length > 4 %}
+          <div style="text-align:center;margin-top:2.5rem;">
+            <button id="podcast-load-more" class="btn-outline" onclick="loadMoreEpisodes()">
+              顯示更多集數
+            </button>
+            <p id="podcast-count" style="font-size:0.78rem;color:rgba(67,52,48,0.4);margin-top:0.75rem;">
+              顯示 4 / {{ podcast.episodes.length }} 集
+            </p>
+          </div>
+        {% endif %}
+
+        <script>
+          var podcastShown = 4;
+          var podcastTotal = {{ podcast.episodes.length }};
+          var podcastStep = 4;
+
+          function loadMoreEpisodes() {
+            var next = podcastShown + podcastStep;
+            var items = document.querySelectorAll('#podcast-list .podcast-item');
+            for (var i = podcastShown; i < next && i < items.length; i++) {
+              items[i].style.display = '';
+            }
+            podcastShown = Math.min(next, podcastTotal);
+            document.getElementById('podcast-count').textContent =
+              '顯示 ' + podcastShown + ' / ' + podcastTotal + ' 集';
+            if (podcastShown >= podcastTotal) {
+              document.getElementById('podcast-load-more').style.display = 'none';
+              document.getElementById('podcast-count').textContent = '已顯示全部 ' + podcastTotal + ' 集';
+            }
+          }
+        </script>
+
       {% else %}
         <!-- Placeholder: shown when RSS not connected -->
         <article class="podcast-item">
