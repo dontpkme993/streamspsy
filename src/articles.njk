@@ -196,15 +196,16 @@ pageScript: |
       <div style="background:white;border-radius:1rem;padding:1.5rem;margin-bottom:1.5rem;box-shadow:0 2px 12px rgba(140,106,93,0.06);">
         <h3 style="font-size:0.9rem;color:var(--oak);font-weight:700;letter-spacing:0.08em;margin-bottom:1.25rem;">推薦閱讀</h3>
         <ul style="list-style:none;display:flex;flex-direction:column;gap:1rem;">
-          {% if articles | where("recommended", true) | length %}
-            {% for rec in articles | where("recommended", true) | slice(0, 3) %}
+          {% set recList = articles | where("recommended", true) %}
+          {% if recList.length %}
+            {% for rec in recList %}{% if loop.index <= 3 %}
               <li {% if not loop.first %}style="border-top:1px solid rgba(140,106,93,0.1);padding-top:1rem;"{% endif %}>
                 <a href="{{ ('/articles/' + rec.slug + '/') | url }}" style="display:block;text-decoration:none;">
                   <p style="font-size:0.82rem;color:var(--oak);font-weight:600;line-height:1.5;">{{ rec.title }}</p>
                   <p style="font-size:0.75rem;color:rgba(67,52,48,0.45);margin-top:0.2rem;">{{ rec.date | dateDisplay }}</p>
                 </a>
               </li>
-            {% endfor %}
+            {% endif %}{% endfor %}
           {% else %}
             <li><p style="font-size:0.82rem;color:rgba(67,52,48,0.4);">尚無推薦文章</p></li>
           {% endif %}
