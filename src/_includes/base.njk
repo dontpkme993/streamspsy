@@ -6,7 +6,7 @@
   <meta name="description" content="{{ description }}">
   <title>{{ title }}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="stylesheet" href="/assets/styles.css">
+  <link rel="stylesheet" href="{{ '/assets/styles.css' | url }}">
   {% if pageStyle %}<style>{{ pageStyle | safe }}</style>{% endif %}
   {% if jsonLd %}<script type="application/ld+json">{{ jsonLd | safe }}</script>{% endif %}
 </head>

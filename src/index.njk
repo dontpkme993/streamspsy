@@ -25,8 +25,8 @@ jsonLd: |
     <h1>找回生活<br>最溫暖的樣子</h1>
     <p style="margin-top:0.75rem;">透過專業諮商、兒童閱讀與租書店的一手觀察</p>
     <div style="margin-top:2.5rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
-      <a href="/about/" class="btn-primary">認識我們</a>
-      <a href="/articles/" class="btn-outline" style="color:var(--rice);border-color:rgba(250,243,224,0.6);">閱讀專欄</a>
+      <a href="{{ '/about/' | url }}" class="btn-primary">認識我們</a>
+      <a href="{{ '/articles/' | url }}" class="btn-outline" style="color:var(--rice);border-color:rgba(250,243,224,0.6);">閱讀專欄</a>
     </div>
   </div>
 </section>
@@ -44,21 +44,21 @@ jsonLd: |
         <div style="width:52px;height:52px;background:var(--sprout);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1.25rem;">🌿</div>
         <h3 style="font-size:1.15rem;margin-bottom:0.75rem;">專業諮商</h3>
         <p style="font-size:0.88rem;color:rgba(67,52,48,0.72);margin-bottom:1.5rem;">在安靜的對話空間裡，重新聆聽自己內心深處最真實的聲音，找回屬於你的節奏。</p>
-        <a href="/events/" class="btn-outline" style="font-size:0.82rem;padding:0.5rem 1.4rem;">了解更多 →</a>
+        <a href="{{ '/events/' | url }}" class="btn-outline" style="font-size:0.82rem;padding:0.5rem 1.4rem;">了解更多 →</a>
       </article>
 
       <article class="card" style="padding:2.5rem 2rem;">
         <div style="width:52px;height:52px;background:var(--sprout);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1.25rem;">📚</div>
         <h3 style="font-size:1.15rem;margin-bottom:0.75rem;">兒童閱讀</h3>
         <p style="font-size:0.88rem;color:rgba(67,52,48,0.72);margin-bottom:1.5rem;">透過精選繪本與閱讀陪伴，讓孩子在故事裡長出探索世界的勇氣與溫柔的理解力。</p>
-        <a href="/articles/" class="btn-outline" style="font-size:0.82rem;padding:0.5rem 1.4rem;">閱讀文章 →</a>
+        <a href="{{ '/articles/' | url }}" class="btn-outline" style="font-size:0.82rem;padding:0.5rem 1.4rem;">閱讀文章 →</a>
       </article>
 
       <article class="card" style="padding:2.5rem 2rem;">
         <div style="width:52px;height:52px;background:var(--sprout);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1.25rem;">🃏</div>
         <h3 style="font-size:1.15rem;margin-bottom:0.75rem;">互動體驗</h3>
         <p style="font-size:0.88rem;color:rgba(67,52,48,0.72);margin-bottom:1.5rem;">一張牌卡，一個當下。讓直覺帶你看見今天最需要停下來看見的那道光。</p>
-        <a href="/cards/" class="btn-outline" style="font-size:0.82rem;padding:0.5rem 1.4rem;">為自己抽張卡 →</a>
+        <a href="{{ '/cards/' | url }}" class="btn-outline" style="font-size:0.82rem;padding:0.5rem 1.4rem;">為自己抽張卡 →</a>
       </article>
 
     </div>
@@ -94,11 +94,11 @@ jsonLd: |
             <p style="font-size:0.88rem;color:rgba(67,52,48,0.7);line-height:1.8;">
               <span class="placeholder-text">3秒摘要：文章重點內容佔位符。讀者能在3秒內了解這篇文章的核心觀點與閱讀價值。Article Excerpt Placeholder.</span>
             </p>
-            <a href="/articles/" style="display:inline-block;margin-top:1.25rem;color:var(--straw);font-size:0.88rem;font-weight:600;">閱讀全文 →</a>
+            <a href="{{ '/articles/' | url }}" style="display:inline-block;margin-top:1.25rem;color:var(--straw);font-size:0.88rem;font-weight:600;">閱讀全文 →</a>
           </div>
         </article>
 
-        <a href="/articles/" class="btn-outline" style="text-align:center;display:block;">查看所有文章</a>
+        <a href="{{ '/articles/' | url }}" class="btn-outline" style="text-align:center;display:block;">查看所有文章</a>
       </div>
     </div>
   </div>
@@ -130,8 +130,8 @@ jsonLd: |
         </p>
       </div>
       <div style="display:flex;flex-direction:column;gap:0.75rem;min-width:fit-content;">
-        <a href="/events/" class="btn-primary" style="text-align:center;">立即報名</a>
-        <a href="/events/" style="text-align:center;font-size:0.82rem;color:rgba(67,52,48,0.55);">查看更多場次</a>
+        <a href="{{ '/events/' | url }}" class="btn-primary" style="text-align:center;">立即報名</a>
+        <a href="{{ '/events/' | url }}" style="text-align:center;font-size:0.82rem;color:rgba(67,52,48,0.55);">查看更多場次</a>
       </div>
     </article>
 

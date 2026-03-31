@@ -44,6 +44,7 @@ jobs:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTION_ARTICLES_DB: ${{ secrets.NOTION_ARTICLES_DB }}
           NOTION_EVENTS_DB: ${{ secrets.NOTION_EVENTS_DB }}
+          SITE_BASE_PATH: /streamspsy/
 
       - uses: actions/upload-pages-artifact@v3
         with:

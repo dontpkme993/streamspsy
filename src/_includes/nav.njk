@@ -1,16 +1,16 @@
 <!-- ══════════════ NAV ══════════════ -->
 <header class="site-header" role="banner">
   <div class="nav-inner">
-    <a href="/" class="nav-logo" aria-label="溪水邊首頁">
+    <a href="{{ '/' | url }}" class="nav-logo" aria-label="溪水邊首頁">
       溪水邊 <span>Stream Side</span>
     </a>
     <nav aria-label="主選單">
       <ul class="nav-links" role="list">
-        <li><a href="/about/"{% if activeNav == 'about' %} class="active"{% endif %}>關於</a></li>
-        <li><a href="/articles/"{% if activeNav == 'articles' %} class="active"{% endif %}>專欄</a></li>
-        <li><a href="/media/"{% if activeNav == 'media' %} class="active"{% endif %}>聲音</a></li>
-        <li><a href="/events/"{% if activeNav == 'events' %} class="active"{% endif %}>講座</a></li>
-        <li><a href="/cards/"{% if activeNav == 'cards' %} class="active"{% endif %}>抽卡</a></li>
+        <li><a href="{{ '/about/' | url }}"{% if activeNav == 'about' %} class="active"{% endif %}>關於</a></li>
+        <li><a href="{{ '/articles/' | url }}"{% if activeNav == 'articles' %} class="active"{% endif %}>專欄</a></li>
+        <li><a href="{{ '/media/' | url }}"{% if activeNav == 'media' %} class="active"{% endif %}>聲音</a></li>
+        <li><a href="{{ '/events/' | url }}"{% if activeNav == 'events' %} class="active"{% endif %}>講座</a></li>
+        <li><a href="{{ '/cards/' | url }}"{% if activeNav == 'cards' %} class="active"{% endif %}>抽卡</a></li>
       </ul>
     </nav>
     <button class="hamburger" id="hamburger" aria-label="開啟選單" aria-expanded="false" aria-controls="mobile-menu">
@@ -18,10 +18,10 @@
     </button>
   </div>
   <nav class="mobile-menu" id="mobile-menu" aria-label="手機選單">
-    <a href="/about/">關於我們</a>
-    <a href="/articles/">專欄文章</a>
-    <a href="/media/">聲音與著作</a>
-    <a href="/events/">諮商講座</a>
-    <a href="/cards/">為自己抽張卡</a>
+    <a href="{{ '/about/' | url }}">關於我們</a>
+    <a href="{{ '/articles/' | url }}">專欄文章</a>
+    <a href="{{ '/media/' | url }}">聲音與著作</a>
+    <a href="{{ '/events/' | url }}">諮商講座</a>
+    <a href="{{ '/cards/' | url }}">為自己抽張卡</a>
   </nav>
 </header>

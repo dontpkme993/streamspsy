@@ -22,7 +22,7 @@
 
 <!-- ══════════════ BACK LINK ══════════════ -->
 <div class="content-max" style="padding-top:2rem;">
-  <a href="/articles/" style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.88rem;color:var(--oak);opacity:0.65;transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.65'">
+  <a href="{{ '/articles/' | url }}" style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.88rem;color:var(--oak);opacity:0.65;transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.65'">
     ← 返回專欄
   </a>
 </div>
@@ -57,7 +57,7 @@
 <!-- ══════════════ COVER IMAGE ══════════════ -->
 {% if article.image %}
   <div class="content-max" style="max-width:760px;margin-bottom:2.5rem;">
-    <img src="{{ article.image }}" alt="{{ article.title }}" style="width:100%;border-radius:1rem;box-shadow:0 4px 24px rgba(140,106,93,0.15);display:block;">
+    <img src="{{ article.image | url }}" alt="{{ article.title }}" style="width:100%;border-radius:1rem;box-shadow:0 4px 24px rgba(140,106,93,0.15);display:block;">
   </div>
 {% endif %}
 
@@ -73,6 +73,6 @@
 
   <!-- ── Bottom back link ── -->
   <div style="margin-top:4rem;padding-top:2rem;border-top:1px solid rgba(140,106,93,0.12);text-align:center;">
-    <a href="/articles/" class="btn-outline">← 返回專欄文章</a>
+    <a href="{{ '/articles/' | url }}" class="btn-outline">← 返回專欄文章</a>
   </div>
 </div>

@@ -78,9 +78,9 @@ pageScript: |
     {% if articles.length %}
       {% for article in articles %}
         <article class="article-card" data-tags="{{ article.tags | join(' ') }}">
-          <a href="/articles/{{ article.slug }}/" class="article-thumb" style="display:block;text-decoration:none;">
+          <a href="{{ ('/articles/' + article.slug + '/') | url }}" class="article-thumb" style="display:block;text-decoration:none;">
             {% if article.image %}
-              <img src="{{ article.image }}" alt="{{ article.title }}" style="width:100%;height:100%;object-fit:cover;">
+              <img src="{{ article.image | url }}" alt="{{ article.title }}" style="width:100%;height:100%;object-fit:cover;">
             {% else %}
               <span>封面圖<br>Placeholder</span>
             {% endif %}
@@ -92,10 +92,10 @@ pageScript: |
                 <span class="tag">#{{ tag }}</span>
               {% endfor %}
             </div>
-            <h3><a href="/articles/{{ article.slug }}/" style="color:inherit;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--straw)'" onmouseout="this.style.color='inherit'">{{ article.title }}</a></h3>
+            <h3><a href="{{ ('/articles/' + article.slug + '/') | url }}" style="color:inherit;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--straw)'" onmouseout="this.style.color='inherit'">{{ article.title }}</a></h3>
             <p class="summary-label">3 秒摘要</p>
             <p class="summary">{{ article.summary }}</p>
-            <a href="/articles/{{ article.slug }}/" style="display:inline-block;margin-top:0.75rem;font-size:0.82rem;color:var(--straw);font-weight:600;letter-spacing:0.04em;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">閱讀全文 →</a>
+            <a href="{{ ('/articles/' + article.slug + '/') | url }}" style="display:inline-block;margin-top:0.75rem;font-size:0.82rem;color:var(--straw);font-weight:600;letter-spacing:0.04em;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">閱讀全文 →</a>
           </div>
         </article>
       {% endfor %}
@@ -234,7 +234,7 @@ pageScript: |
       <!-- CTA -->
       <div style="background:linear-gradient(135deg,var(--oak),#6b4f45);border-radius:1rem;padding:1.5rem;text-align:center;">
         <p style="color:var(--rice);font-size:0.88rem;line-height:1.7;margin-bottom:1rem;">想要在溪水邊找到專屬的陪伴？</p>
-        <a href="/events/" class="btn-primary" style="font-size:0.82rem;padding:0.6rem 1.5rem;">預約諮商</a>
+        <a href="{{ '/events/' | url }}" class="btn-primary" style="font-size:0.82rem;padding:0.6rem 1.5rem;">預約諮商</a>
       </div>
 
     </div>

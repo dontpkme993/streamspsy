@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(npm --version)",
+      "Bash(npm init:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(ls /c/Work/Mr.9/streamspsy/_site/*.css /c/Work/Mr.9/streamspsy/_site/*.html)",
+      "Bash(node -e \":*)",
+      "Bash(node -e \"const n = require\\(''@notionhq/client''\\); console.log\\(Object.keys\\(n\\)\\);\")",
+      "Bash(node -e \"require\\(''markdown-it''\\); console.log\\(''markdown-it ok''\\)\")",
+      "WebFetch(domain:beautiful-pastelito-e7737d.netlify.app)",
+      "Bash(node -e \"require\\(''''dotenv''''\\).config\\(\\); process.env.GH_REPO=''''test/repo'''';\" .github/scripts/check-notion.js)",
+      "Bash(node -r dotenv/config .github/scripts/check-notion.js)",
+      "Bash(GH_REPO=test/repo node -r dotenv/config .github/scripts/check-notion.js)"
+    ]
+  }
+}
