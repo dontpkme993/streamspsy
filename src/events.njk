@@ -36,8 +36,15 @@ jsonLd: |
     <p style="font-size:0.8rem;letter-spacing:0.18em;color:var(--straw);margin-bottom:0.5rem;text-transform:uppercase;">Upcoming</p>
     <h2 class="section-title" id="upcoming-heading" style="margin-bottom:2.5rem;">即將到來</h2>
 
-    {% if events.length %}
-      {% for event in events %}
+    {% set upcomingEvents = [] %}
+    {% for event in events %}
+      {% if event.status == '即將舉辦' %}
+        {% set upcomingEvents = (upcomingEvents.push(event), upcomingEvents) %}
+      {% endif %}
+    {% endfor %}
+
+    {% if upcomingEvents.length %}
+      {% for event in upcomingEvents %}
         <article class="event-upcoming" role="article">
           <div class="event-date-badge" aria-label="活動日期">
             <div class="month">{{ event.date | dateDisplay }}</div>
@@ -61,7 +68,7 @@ jsonLd: |
         </article>
       {% endfor %}
     {% else %}
-      <!-- Placeholder events shown when Notion is not connected -->
+      <!-- Placeholder: shown when no upcoming events -->
       <article class="event-upcoming" role="article">
         <div class="event-date-badge" aria-label="活動日期">
           <div class="month">APR</div>
@@ -145,40 +152,45 @@ jsonLd: |
 
     <div style="position:relative;">
 
-      <article class="timeline-item past" role="article">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.3rem;">
-          <h3 style="font-size:0.92rem;color:rgba(67,52,48,0.5);font-weight:600;"><span class="placeholder-text">過往活動名稱一 Past Event Title 1</span></h3>
-          <span style="font-size:0.75rem;color:rgba(67,52,48,0.35);">2026年2月</span>
-        </div>
-        <p style="font-size:0.82rem;color:rgba(67,52,48,0.4);line-height:1.7;"><span class="placeholder-text">過往活動簡介與紀錄佔位符。Archive/Photo Placeholder — 活動回顧、參與人數、照片連結。</span></p>
-        <a href="#" style="font-size:0.78rem;color:rgba(140,106,93,0.5);margin-top:0.4rem;display:inline-block;" rel="noopener">查看相簿 →</a>
-      </article>
+      {% set pastEvents = [] %}
+      {% for event in events %}
+        {% if event.status == '已結束' %}
+          {% set pastEvents = (pastEvents.push(event), pastEvents) %}
+        {% endif %}
+      {% endfor %}
 
-      <article class="timeline-item past" role="article">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.3rem;">
-          <h3 style="font-size:0.92rem;color:rgba(67,52,48,0.5);font-weight:600;"><span class="placeholder-text">過往活動名稱二 Past Event Title 2</span></h3>
-          <span style="font-size:0.75rem;color:rgba(67,52,48,0.35);">2025年12月</span>
-        </div>
-        <p style="font-size:0.82rem;color:rgba(67,52,48,0.4);line-height:1.7;"><span class="placeholder-text">過往活動簡介與紀錄佔位符。Archive/Photo Placeholder.</span></p>
-        <a href="#" style="font-size:0.78rem;color:rgba(140,106,93,0.5);margin-top:0.4rem;display:inline-block;" rel="noopener">查看相簿 →</a>
-      </article>
-
-      <article class="timeline-item past" role="article">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.3rem;">
-          <h3 style="font-size:0.92rem;color:rgba(67,52,48,0.5);font-weight:600;"><span class="placeholder-text">過往活動名稱三 Past Event Title 3</span></h3>
-          <span style="font-size:0.75rem;color:rgba(67,52,48,0.35);">2025年10月</span>
-        </div>
-        <p style="font-size:0.82rem;color:rgba(67,52,48,0.4);line-height:1.7;"><span class="placeholder-text">過往活動簡介與紀錄佔位符。Archive/Photo Placeholder.</span></p>
-        <a href="#" style="font-size:0.78rem;color:rgba(140,106,93,0.5);margin-top:0.4rem;display:inline-block;" rel="noopener">查看相簿 →</a>
-      </article>
-
-      <article class="timeline-item past" role="article">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.3rem;">
-          <h3 style="font-size:0.92rem;color:rgba(67,52,48,0.5);font-weight:600;"><span class="placeholder-text">過往活動名稱四 Past Event Title 4</span></h3>
-          <span style="font-size:0.75rem;color:rgba(67,52,48,0.35);">2025年8月</span>
-        </div>
-        <p style="font-size:0.82rem;color:rgba(67,52,48,0.4);line-height:1.7;"><span class="placeholder-text">過往活動簡介與紀錄佔位符。Archive/Photo Placeholder.</span></p>
-      </article>
+      {% if pastEvents.length %}
+        {% for event in pastEvents %}
+          <article class="timeline-item past" role="article">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.3rem;">
+              <h3 style="font-size:0.92rem;color:rgba(67,52,48,0.5);font-weight:600;">{{ event.name }}</h3>
+              <span style="font-size:0.75rem;color:rgba(67,52,48,0.35);">{{ event.date | dateDisplay }}</span>
+            </div>
+            {% if event.description %}
+              <p style="font-size:0.82rem;color:rgba(67,52,48,0.4);line-height:1.7;">{{ event.description }}</p>
+            {% endif %}
+            {% if event.location %}
+              <p style="font-size:0.78rem;color:rgba(67,52,48,0.35);margin-top:0.25rem;">📍 {{ event.location }}</p>
+            {% endif %}
+          </article>
+        {% endfor %}
+      {% else %}
+        <!-- Placeholder: shown when no past events -->
+        <article class="timeline-item past" role="article">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.3rem;">
+            <h3 style="font-size:0.92rem;color:rgba(67,52,48,0.5);font-weight:600;"><span class="placeholder-text">過往活動名稱一 Past Event Title 1</span></h3>
+            <span style="font-size:0.75rem;color:rgba(67,52,48,0.35);">2026年2月</span>
+          </div>
+          <p style="font-size:0.82rem;color:rgba(67,52,48,0.4);line-height:1.7;"><span class="placeholder-text">過往活動簡介與紀錄佔位符。</span></p>
+        </article>
+        <article class="timeline-item past" role="article">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.3rem;">
+            <h3 style="font-size:0.92rem;color:rgba(67,52,48,0.5);font-weight:600;"><span class="placeholder-text">過往活動名稱二 Past Event Title 2</span></h3>
+            <span style="font-size:0.75rem;color:rgba(67,52,48,0.35);">2025年12月</span>
+          </div>
+          <p style="font-size:0.82rem;color:rgba(67,52,48,0.4);line-height:1.7;"><span class="placeholder-text">過往活動簡介與紀錄佔位符。</span></p>
+        </article>
+      {% endif %}
 
     </div>
   </div>
