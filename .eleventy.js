@@ -26,6 +26,9 @@ module.exports = function(eleventyConfig) {
     return str.length > length ? str.slice(0, length) + '...' : str;
   });
 
+  // where filter — 依屬性值篩選陣列
+  eleventyConfig.addFilter('where', (arr, key, val) => (arr || []).filter(item => item[key] === val));
+
   // Date filter
   eleventyConfig.addFilter("dateDisplay", (dateStr) => {
     const d = new Date(dateStr);
