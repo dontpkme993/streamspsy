@@ -71,8 +71,50 @@
     <p style="color:rgba(67,52,48,0.4);font-style:italic;text-align:center;padding:4rem 0;">文章內容尚未發布。</p>
   {% endif %}
 
+  <!-- ── Share ── -->
+  <div style="margin-top:4rem;padding-top:2rem;border-top:1px solid rgba(140,106,93,0.12);">
+    <p style="font-size:0.8rem;color:rgba(67,52,48,0.45);letter-spacing:0.08em;margin-bottom:1rem;text-align:center;">分享這篇文章</p>
+    <div style="display:flex;justify-content:center;gap:0.75rem;flex-wrap:wrap;">
+
+      <a href="https://www.facebook.com/sharer/sharer.php?u={{ page.url | url | urlencode }}"
+         target="_blank" rel="noopener"
+         style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.55rem 1.2rem;border-radius:2rem;background:#1877F2;color:white;font-size:0.82rem;font-weight:600;text-decoration:none;">
+        Facebook
+      </a>
+
+      <a href="https://social-plugins.line.me/lineit/share?url={{ page.url | url | urlencode }}"
+         target="_blank" rel="noopener"
+         style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.55rem 1.2rem;border-radius:2rem;background:#06C755;color:white;font-size:0.82rem;font-weight:600;text-decoration:none;">
+        LINE
+      </a>
+
+      <button onclick="shareOrCopy()"
+              style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.55rem 1.2rem;border-radius:2rem;background:var(--rice);border:1px solid rgba(140,106,93,0.2);color:var(--oak);font-size:0.82rem;font-weight:600;cursor:pointer;">
+        複製連結
+      </button>
+
+    </div>
+    <p id="share-toast" style="text-align:center;font-size:0.78rem;color:var(--straw);margin-top:0.75rem;opacity:0;transition:opacity 0.3s;">已複製連結！</p>
+  </div>
+
+  <script>
+    function shareOrCopy() {
+      var url = window.location.href;
+      var title = {{ article.title | dump | safe }};
+      if (navigator.share) {
+        navigator.share({ title: title, url: url });
+      } else {
+        navigator.clipboard.writeText(url).then(function() {
+          var toast = document.getElementById('share-toast');
+          toast.style.opacity = '1';
+          setTimeout(function() { toast.style.opacity = '0'; }, 2000);
+        });
+      }
+    }
+  </script>
+
   <!-- ── Bottom back link ── -->
-  <div style="margin-top:4rem;padding-top:2rem;border-top:1px solid rgba(140,106,93,0.12);text-align:center;">
+  <div style="margin-top:2.5rem;text-align:center;">
     <a href="{{ '/articles/' | url }}" class="btn-outline">← 返回專欄文章</a>
   </div>
 </div>

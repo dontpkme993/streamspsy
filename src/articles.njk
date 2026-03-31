@@ -192,28 +192,22 @@ pageScript: |
   <aside aria-label="側邊欄" style="display:none;" class="lg-show">
     <div class="sidebar-sticky">
 
-      <!-- Recommended -->
+      <!-- Recommended — 自動取最新 3 篇 -->
       <div style="background:white;border-radius:1rem;padding:1.5rem;margin-bottom:1.5rem;box-shadow:0 2px 12px rgba(140,106,93,0.06);">
         <h3 style="font-size:0.9rem;color:var(--oak);font-weight:700;letter-spacing:0.08em;margin-bottom:1.25rem;">推薦閱讀</h3>
         <ul style="list-style:none;display:flex;flex-direction:column;gap:1rem;">
-          <li>
-            <a href="#" style="display:block;">
-              <p style="font-size:0.82rem;color:var(--oak);font-weight:600;line-height:1.5;"><span class="placeholder-text">推薦文章標題一 Recommended Article 1</span></p>
-              <p style="font-size:0.75rem;color:rgba(67,52,48,0.45);margin-top:0.2rem;">2026年3月</p>
-            </a>
-          </li>
-          <li style="border-top:1px solid rgba(140,106,93,0.1);padding-top:1rem;">
-            <a href="#">
-              <p style="font-size:0.82rem;color:var(--oak);font-weight:600;line-height:1.5;"><span class="placeholder-text">推薦文章標題二 Recommended Article 2</span></p>
-              <p style="font-size:0.75rem;color:rgba(67,52,48,0.45);margin-top:0.2rem;">2026年2月</p>
-            </a>
-          </li>
-          <li style="border-top:1px solid rgba(140,106,93,0.1);padding-top:1rem;">
-            <a href="#">
-              <p style="font-size:0.82rem;color:var(--oak);font-weight:600;line-height:1.5;"><span class="placeholder-text">推薦文章標題三 Recommended Article 3</span></p>
-              <p style="font-size:0.75rem;color:rgba(67,52,48,0.45);margin-top:0.2rem;">2026年1月</p>
-            </a>
-          </li>
+          {% if articles.length %}
+            {% for rec in articles | slice(0, 3) %}
+              <li {% if not loop.first %}style="border-top:1px solid rgba(140,106,93,0.1);padding-top:1rem;"{% endif %}>
+                <a href="{{ ('/articles/' + rec.slug + '/') | url }}" style="display:block;text-decoration:none;">
+                  <p style="font-size:0.82rem;color:var(--oak);font-weight:600;line-height:1.5;">{{ rec.title }}</p>
+                  <p style="font-size:0.75rem;color:rgba(67,52,48,0.45);margin-top:0.2rem;">{{ rec.date | dateDisplay }}</p>
+                </a>
+              </li>
+            {% endfor %}
+          {% else %}
+            <li><p style="font-size:0.82rem;color:rgba(67,52,48,0.4);">文章更新後顯示</p></li>
+          {% endif %}
         </ul>
       </div>
 
