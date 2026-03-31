@@ -19,78 +19,53 @@ activeNav: media
     <h2 class="section-title" id="podcast-heading" style="margin-bottom:0.5rem;">聲音節目</h2>
     <p style="color:rgba(67,52,48,0.6);font-size:0.9rem;margin-bottom:3rem;">每一集，帶你走進生活裡那些值得慢下來的時刻。</p>
 
-    <!-- Podcast Episodes -->
+    <!-- Podcast Episodes — 從 RSS 自動抓取 -->
     <div style="display:flex;flex-direction:column;gap:0;">
 
-      <!-- Episode 1 -->
-      <article class="podcast-item">
-        <div style="display:flex;gap:1rem;align-items:flex-start;margin-bottom:1.25rem;">
-          <div style="background:var(--sprout);width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;">🎙️</div>
-          <div>
-            <p style="font-size:0.75rem;color:var(--straw);letter-spacing:0.08em;font-weight:600;">EP. 01</p>
-            <h3 style="font-size:1rem;color:var(--oak);line-height:1.5;margin-bottom:0.25rem;"><span class="placeholder-text">Podcast 集數標題一 Episode Title 1 Placeholder</span></h3>
-            <p style="font-size:0.75rem;color:rgba(67,52,48,0.45);">2026年3月 · 約28分鐘</p>
-          </div>
-        </div>
-        <div class="podcast-player-placeholder" aria-label="音頻播放器佔位符">
-          <span>🎵</span>
-          <span>Podcast 播放器 iframe Placeholder<br><small style="opacity:0.7;">&lt;iframe&gt; embed from Spotify / Apple Podcasts / SoundOn&lt;/iframe&gt;</small></span>
-        </div>
-        <div style="background:var(--rice);border-radius:0.75rem;padding:1rem 1.25rem;">
-          <p style="font-size:0.8rem;font-weight:700;color:var(--oak);letter-spacing:0.08em;margin-bottom:0.5rem;">本集重點</p>
-          <ul style="list-style:none;display:flex;flex-direction:column;gap:0.3rem;">
-            <li style="font-size:0.82rem;color:rgba(67,52,48,0.72);display:flex;gap:0.5rem;"><span style="color:var(--straw);">·</span><span class="placeholder-text">重點一 Topic Outline Point 1 Placeholder</span></li>
-            <li style="font-size:0.82rem;color:rgba(67,52,48,0.72);display:flex;gap:0.5rem;"><span style="color:var(--straw);">·</span><span class="placeholder-text">重點二 Topic Outline Point 2 Placeholder</span></li>
-            <li style="font-size:0.82rem;color:rgba(67,52,48,0.72);display:flex;gap:0.5rem;"><span style="color:var(--straw);">·</span><span class="placeholder-text">重點三 Topic Outline Point 3 Placeholder</span></li>
-          </ul>
-        </div>
-      </article>
+      {% if podcast.episodes.length %}
+        {% for ep in podcast.episodes %}
+          <article class="podcast-item">
+            <div style="display:flex;gap:1rem;align-items:flex-start;margin-bottom:1.25rem;">
+              <div style="background:var(--sprout);width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;">🎙️</div>
+              <div>
+                <h3 style="font-size:1rem;color:var(--oak);line-height:1.5;margin-bottom:0.25rem;">{{ ep.title }}</h3>
+                <p style="font-size:0.75rem;color:rgba(67,52,48,0.45);">
+                  {{ ep.date | dateDisplay }}{% if ep.duration %} · {{ ep.duration }}{% endif %}
+                </p>
+              </div>
+            </div>
 
-      <!-- Episode 2 -->
-      <article class="podcast-item">
-        <div style="display:flex;gap:1rem;align-items:flex-start;margin-bottom:1.25rem;">
-          <div style="background:var(--sprout);width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;">🎙️</div>
-          <div>
-            <p style="font-size:0.75rem;color:var(--straw);letter-spacing:0.08em;font-weight:600;">EP. 02</p>
-            <h3 style="font-size:1rem;color:var(--oak);line-height:1.5;margin-bottom:0.25rem;"><span class="placeholder-text">Podcast 集數標題二 Episode Title 2 Placeholder</span></h3>
-            <p style="font-size:0.75rem;color:rgba(67,52,48,0.45);">2026年2月 · 約35分鐘</p>
-          </div>
-        </div>
-        <div class="podcast-player-placeholder" aria-label="音頻播放器佔位符">
-          <span>🎵</span>
-          <span>Podcast 播放器 iframe Placeholder</span>
-        </div>
-        <div style="background:var(--rice);border-radius:0.75rem;padding:1rem 1.25rem;">
-          <p style="font-size:0.8rem;font-weight:700;color:var(--oak);letter-spacing:0.08em;margin-bottom:0.5rem;">本集重點</p>
-          <ul style="list-style:none;display:flex;flex-direction:column;gap:0.3rem;">
-            <li style="font-size:0.82rem;color:rgba(67,52,48,0.72);display:flex;gap:0.5rem;"><span style="color:var(--straw);">·</span><span class="placeholder-text">重點一 Topic Outline Point 1 Placeholder</span></li>
-            <li style="font-size:0.82rem;color:rgba(67,52,48,0.72);display:flex;gap:0.5rem;"><span style="color:var(--straw);">·</span><span class="placeholder-text">重點二 Topic Outline Point 2 Placeholder</span></li>
-          </ul>
-        </div>
-      </article>
+            {% if ep.embedUrl %}
+              <div style="margin-bottom:1.25rem;border-radius:0.75rem;overflow:hidden;">
+                <iframe src="{{ ep.embedUrl }}" width="100%" height="161" frameborder="0" scrolling="no" loading="lazy" style="display:block;"></iframe>
+              </div>
+            {% endif %}
 
-      <!-- Episode 3 -->
-      <article class="podcast-item">
-        <div style="display:flex;gap:1rem;align-items:flex-start;margin-bottom:1.25rem;">
-          <div style="background:var(--sprout);width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;">🎙️</div>
-          <div>
-            <p style="font-size:0.75rem;color:var(--straw);letter-spacing:0.08em;font-weight:600;">EP. 03</p>
-            <h3 style="font-size:1rem;color:var(--oak);line-height:1.5;margin-bottom:0.25rem;"><span class="placeholder-text">Podcast 集數標題三 Episode Title 3 Placeholder</span></h3>
-            <p style="font-size:0.75rem;color:rgba(67,52,48,0.45);">2026年1月 · 約22分鐘</p>
+            {% if ep.summary %}
+              <div style="background:var(--rice);border-radius:0.75rem;padding:1rem 1.25rem;">
+                <p style="font-size:0.8rem;font-weight:700;color:var(--oak);letter-spacing:0.08em;margin-bottom:0.5rem;">本集重點</p>
+                <p style="font-size:0.82rem;color:rgba(67,52,48,0.72);line-height:1.8;">{{ ep.summary | striptags | truncate(200) }}</p>
+                <a href="{{ ep.link }}" target="_blank" rel="noopener" style="display:inline-block;margin-top:0.75rem;font-size:0.78rem;color:var(--straw);font-weight:600;">前往平台完整收聽 →</a>
+              </div>
+            {% endif %}
+          </article>
+        {% endfor %}
+      {% else %}
+        <!-- Placeholder: shown when RSS not connected -->
+        <article class="podcast-item">
+          <div style="display:flex;gap:1rem;align-items:flex-start;margin-bottom:1.25rem;">
+            <div style="background:var(--sprout);width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;">🎙️</div>
+            <div>
+              <h3 style="font-size:1rem;color:var(--oak);line-height:1.5;margin-bottom:0.25rem;"><span class="placeholder-text">Podcast 集數標題 Episode Title Placeholder</span></h3>
+              <p style="font-size:0.75rem;color:rgba(67,52,48,0.45);">2026年 · 約30分鐘</p>
+            </div>
           </div>
-        </div>
-        <div class="podcast-player-placeholder" aria-label="音頻播放器佔位符">
-          <span>🎵</span>
-          <span>Podcast 播放器 iframe Placeholder</span>
-        </div>
-        <div style="background:var(--rice);border-radius:0.75rem;padding:1rem 1.25rem;">
-          <p style="font-size:0.8rem;font-weight:700;color:var(--oak);letter-spacing:0.08em;margin-bottom:0.5rem;">本集重點</p>
-          <ul style="list-style:none;display:flex;flex-direction:column;gap:0.3rem;">
-            <li style="font-size:0.82rem;color:rgba(67,52,48,0.72);display:flex;gap:0.5rem;"><span style="color:var(--straw);">·</span><span class="placeholder-text">重點一 Topic Outline Point 1 Placeholder</span></li>
-            <li style="font-size:0.82rem;color:rgba(67,52,48,0.72);display:flex;gap:0.5rem;"><span style="color:var(--straw);">·</span><span class="placeholder-text">重點二 Topic Outline Point 2 Placeholder</span></li>
-          </ul>
-        </div>
-      </article>
+          <div class="podcast-player-placeholder" aria-label="音頻播放器佔位符">
+            <span>🎵</span>
+            <span>Podcast 播放器 iframe Placeholder</span>
+          </div>
+        </article>
+      {% endif %}
 
     </div>
   </div>

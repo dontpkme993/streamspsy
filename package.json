@@ -25,6 +25,8 @@
     "@notionhq/client": "^5.15.0",
     "dotenv": "^17.3.1",
     "markdown-it": "^14.1.1",
-    "notion-to-md": "^3.1.9"
+    "notion-to-md": "^3.1.9",
+    "rss-parser": "^3.13.0",
+    "striptags": "^3.2.0"
   }
 }

@@ -1,144 +1,84 @@
-  程式碼架構
+  服務關聯圖
 
-  streamspsy/
-  ├── src/
-  │   ├── _includes/
-  │   │   ├── base.njk        # 共用 HTML 結構
-  │   │   ├── nav.njk         # 導覽列
-  │   │   └── footer.njk      # 頁尾
-  │   ├── _data/
-  │   │   ├── articles.js     # 呼叫 adapter 取文章
-  │   │   └── events.js       # 呼叫 adapter 取活動
-  │   ├── adapters/
-  │   │   └── notion.js       # 所有 Notion 邏輯集中在這
-  │   ├── assets/
-  │   │   └── styles.css
-  │   ├── index.njk           # 首頁
-  │   ├── about.njk
-  │   ├── article.njk         # 文章內頁（逐篇產生）
-  │   ├── articles.njk        # 文章列表
-  │   ├── events.njk
-  │   ├── media.njk
-  │   └── cards.njk
-  ├── .github/
-  │   ├── workflows/
-  │   │   └── notion-deploy.yml   # 排程偵測 Notion 更新
-  │   └── scripts/
-  │       └── check-notion.js     # 偵測邏輯
-  ├── .eleventy.js            # 11ty 設定
-  └── netlify.toml            # Netlify build 設定
+  Notion（內容編輯）
+    └── Integration「溪水邊」（Read content）
+          ├── 連接「專欄文章」DB
+          └── 連接「諮商講座」DB
+                ↓ 每小時偵測
+  GitHub Actions（自動化核心）
+    ├── notion-deploy.yml — 偵測 Notion 更新
+    │     └── 有更新 → 呼叫 deploy.yml
+    └── deploy.yml — Build + 部署
+          ├── npm run build（11ty + Notion API）
+          │     ├── 抓文章、活動資料
+          │     ├── 下載 Notion 圖片
+          │     └── 產出 _site/
+          └── 部署到 GitHub Pages
+                ↓
+  https://dontpkme993.github.io/streamspsy/
 
   ---
-  服務與環境變數
+  程式碼結構
 
-  本地開發（.env，不進 git）
+  src/
+    _includes/        # 共用版型（nav、footer、base）
+    _data/            # 資料層（呼叫 adapter）
+    adapters/
+      notion.js       # 所有 Notion 邏輯集中於此（換 CMS 只改這裡）
+    assets/
+      styles.css
+    *.njk             # 6 個頁面 + 文章內頁模板
 
-  ┌────────────────────┬──────────────────────────┐
-  │        變數        │           用途           │
-  ├────────────────────┼──────────────────────────┤
-  │ NOTION_TOKEN       │ Notion Integration Token │
-  ├────────────────────┼──────────────────────────┤
-  │ NOTION_ARTICLES_DB │ 專欄文章 DB ID           │
-  ├────────────────────┼──────────────────────────┤
-  │ NOTION_EVENTS_DB   │ 諮商講座 DB ID           │
-  └────────────────────┴──────────────────────────┘
-
-  ---
-  Netlify（Site configuration → Environment variables）
-
-  ┌────────────────────┬─────────────────────────┐
-  │        變數        │          用途           │
-  ├────────────────────┼─────────────────────────┤
-  │ NOTION_TOKEN       │ build 時呼叫 Notion API │
-  ├────────────────────┼─────────────────────────┤
-  │ NOTION_ARTICLES_DB │ 文章 DB ID              │
-  ├────────────────────┼─────────────────────────┤
-  │ NOTION_EVENTS_DB   │ 活動 DB ID              │
-  └────────────────────┴─────────────────────────┘
+  .github/
+    workflows/
+      deploy.yml          # Build + GitHub Pages 部署
+      notion-deploy.yml   # Notion 偵測排程
+    scripts/
+      check-notion.js     # 偵測邏輯
 
   ---
-  GitHub（Settings → Secrets and variables → Actions）
+  環境變數設定位置
 
-  ┌──────────┬────────────────────┬─────────────────────────────────┐
-  │   類型   │        名稱        │              用途               │
-  ├──────────┼────────────────────┼─────────────────────────────────┤
-  │ Secret   │ NOTION_TOKEN       │ 查詢 Notion DB                  │
-  ├──────────┼────────────────────┼─────────────────────────────────┤
-  │ Secret   │ NOTION_ARTICLES_DB │ 文章 DB ID                      │
-  ├──────────┼────────────────────┼─────────────────────────────────┤
-  │ Secret   │ NOTION_EVENTS_DB   │ 活動 DB ID                      │
-  ├──────────┼────────────────────┼─────────────────────────────────┤
-  │ Secret   │ NETLIFY_BUILD_HOOK │ 觸發 Netlify build              │
-  ├──────────┼────────────────────┼─────────────────────────────────┤
-  │ Secret   │ GH_TOKEN           │ 更新 LAST_BUILD_TIME            │
-  ├──────────┼────────────────────┼─────────────────────────────────┤
-  │ Variable │ LAST_BUILD_TIME    │ 上次 build 時間戳記（自動更新） │
-  └──────────┴────────────────────┴─────────────────────────────────┘
+  ┌────────────────────┬───────────┬────────────────┬──────────────────┐
+  │        變數        │ 本地 .env │ GitHub Secrets │ GitHub Variables │
+  ├────────────────────┼───────────┼────────────────┼──────────────────┤
+  │ NOTION_TOKEN       │    ✅     │       ✅       │        —         │
+  ├────────────────────┼───────────┼────────────────┼──────────────────┤
+  │ NOTION_ARTICLES_DB │    ✅     │       ✅       │        —         │
+  ├────────────────────┼───────────┼────────────────┼──────────────────┤
+  │ NOTION_EVENTS_DB   │    ✅     │       ✅       │        —         │
+  ├────────────────────┼───────────┼────────────────┼──────────────────┤
+  │ GH_TOKEN           │     —     │       ✅       │        —         │
+  ├────────────────────┼───────────┼────────────────┼──────────────────┤
+  │ LAST_BUILD_TIME    │     —     │       —        │  ✅（自動更新）  │
+  └────────────────────┴───────────┴────────────────┴──────────────────┘
 
   ---
-  部署流程
+  部署觸發方式
 
-  Notion 編輯內容
-        ↓
-  GitHub Actions 每小時偵測（或手動觸發）
-        ↓ 有變動
-  POST https://api.netlify.com/build_hooks/69cad309a6a79f9059c1449c
-        ↓
-  Netlify 執行 npm run build（11ty + Notion API）
-        ↓
-  靜態 HTML 部署到 CDN
-        ↓
-  https://beautiful-pastelito-e7737d.netlify.app
-
-
-
-
-
-
-  ● 關聯與權限設定總覽
-
-  Notion
-
-  Integration 設定（https://www.notion.so/my-integrations）
-  - 建立 Integration 名稱：溪水邊
-  - Capability 開啟：Read content
-
-  Database 連接（每個 DB 頁面 → ⋯ → Connections）
-  - 專欄文章 DB → 連接「溪水邊」Integration
-  - 諮商講座 DB → 連接「溪水邊」Integration
+  ┌────────────────────────┬────────────────────────────────────┐
+  │          方式          │                情境                │
+  ├────────────────────────┼────────────────────────────────────┤
+  │ git push to main       │ code 改動自動觸發                  │
+  ├────────────────────────┼────────────────────────────────────┤
+  │ GitHub Actions 排程    │ 每小時偵測 Notion，有更新才 deploy │
+  ├────────────────────────┼────────────────────────────────────┤
+  │ Actions → Run workflow │ 手動立即觸發                       │
+  └────────────────────────┴────────────────────────────────────┘
 
   ---
-  GitHub
+  內容發布流程
 
-  Repository Secrets（Settings → Secrets and variables → Actions → Secrets）
-  - 存放 5 個 secrets（NOTION_TOKEN、兩個 DB ID、NETLIFY_BUILD_HOOK、GH_TOKEN）
-
-  GH_TOKEN 權限（Settings → Developer settings → Fine-grained tokens）
-  - Repository：streamspsy
-  - Permission：Actions variables → Read and write
-
-  ---
-  Netlify
-
-  GitHub 連接（建立 site 時授權）
-  - 授權 Netlify 讀取 GitHub repo streamspsy
-  - 每次 push 到 main 自動 build
-
-  Environment variables
-  - 設定 3 個變數（NOTION_TOKEN、兩個 DB ID）
-
-  Build Hook
-  - 建立 Notion Publish hook，提供 POST URL 給 GitHub Actions 使用
+  1. Notion 寫文章 / 活動
+  2. 欄位填好（標題、日期、標籤、3秒摘要、網址別名、封面圖）
+  3. 狀態改「已發布」／「即將舉辦」
+  4. 等最多 1 小時自動上線
+     （或手動 Run workflow 立即上線）
 
   ---
-  關聯圖
+  未來遷移提醒
 
-  GitHub repo
-    ├── 授權 Netlify 讀取 → Netlify 自動 build on push
-    └── GitHub Actions
-          ├── 用 NOTION_TOKEN 查詢 Notion DB
-          └── 用 NETLIFY_BUILD_HOOK 觸發 Netlify build
-
-  Notion Integration「溪水邊」
-    ├── 連接「專欄文章」DB
-    └── 連接「諮商講座」DB
+  換自訂網域時只需改：
+  1. deploy.yml — SITE_BASE_PATH: /
+  2. 各頁 JSON-LD 的 url
+  3. GitHub Pages 設定 Custom domain + DNS

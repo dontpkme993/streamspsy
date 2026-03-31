@@ -1,5 +1,6 @@
 const markdownIt = require('markdown-it');
 const md = markdownIt({ html: true, linkify: true, typographer: true });
+const striptags = require('striptags');
 
 module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy("src/assets");
@@ -13,6 +14,16 @@ module.exports = function(eleventyConfig) {
     const prefix = (process.env.SITE_BASE_PATH || '/').replace(/\/$/, '');
     if (!prefix) return rendered;
     return rendered.replace(/src="\/assets\//g, `src="${prefix}/assets/`);
+  });
+
+  // striptags filter — 清除 HTML 標籤
+  eleventyConfig.addFilter('striptags', content => content ? striptags(content) : '');
+
+  // truncate filter — 截斷文字並加上省略號
+  eleventyConfig.addFilter('truncate', (content, length = 150) => {
+    if (!content) return '';
+    const str = String(content);
+    return str.length > length ? str.slice(0, length) + '...' : str;
   });
 
   // Date filter

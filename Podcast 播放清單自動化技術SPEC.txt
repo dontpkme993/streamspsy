@@ -1,0 +1,66 @@
+Podcast 播放清單自動化技術規範 (Technical Spec)
+
+1. 核心開發目標全自動同步： 透過 GitHub Actions 每日定時抓取 RSS，無需手動更新 HTML。多媒體整合： 自動將 RSS 連結轉換為可直接播放的 <iframe> 內嵌播放器。內容結構化： 提取時長、日期與重點摘要，建立易於閱讀的清單。零成本維護： 避開 Netlify/Vercel 的 Build Credits 限制，完全在 GitHub 環境編譯。
+
+2. 資料來源與解析 (Data Mapping)需求項目RSS 原始標籤11ty 處理邏輯範例輸出
+  1. 內嵌播放器<link>使用 .replace('/episodes/', '/embed/episodes/') 轉換。https://anchor.fm/.../embed/episodes/...
+  2. 發布時間<pubDate>使用 11ty Filter 轉換為 YYYY-MM-DD 格式。2026-03-313. 標題<title>直接提取純文字。EP123｜溪水邊的午茶時光4. 內容時長<itunes:duration>提取時分秒格式。00:45:305. 本集重點<description>先執行 striptags 清洗 HTML，再進行 truncate 截斷。本集邀請到... (查看更多)
+
+3. 自動化流程設計 (Workflow)Environment: GitHub Actions 每 24 小時啟動一次。Fetch: 執行 src/_data/podcast.js，利用 rss-parser 抓取 Anchor RSS。Transform: 在 JS 腳本中即時計算 embedUrl 並清洗 description。Template: 11ty 讀取產出的 JSON 資料集，並循環生成播放清單 HTML。Deploy: 將成品推送到 GitHub Pages。
+
+4. 關鍵程式碼實作，以 https://anchor.fm/s/1ea77470/podcast/rss 當作RSS範例資料來源
+
+A. 資料處理層 (src/_data/podcast.js)
+
+JavaScript
+
+const Parser = require('rss-parser');
+const parser = new Parser();
+
+module.exports = async function() {
+  const FEED_URL = "https://anchor.fm/s/1ea77470/podcast/rss";
+  try {
+    const feed = await parser.parseURL(FEED_URL);
+    return feed.items.map(item => ({
+      title: item.title,
+      date: item.pubDate,
+      duration: item.itunes.duration,
+      // 核心邏輯：將網頁連結轉換為內嵌播放器網址
+      embedUrl: item.link.includes('/episodes/') 
+                ? item.link.replace('/episodes/', '/embed/episodes/') 
+                : null,
+      summary: item.contentSnippet, 
+      link: item.link
+    }));
+  } catch (e) {
+    return []; // 避免因 RSS 暫時失效導致全站 Build 失敗
+  }
+};
+
+B. 頁面渲染層 (Nunjucks 模板)HTML<div class="podcast-container">
+  {% for ep in podcast %}
+  <article class="episode-card">
+    <header>
+      <h3>{{ ep.title }}</h3>
+      <div class="meta">
+        <span>🕒 發布日期：{{ ep.date | dateFilter }}</span>
+        <span>⌛ 內容時長：{{ ep.duration }}</span>
+      </div>
+    </header>
+
+    {% if ep.embedUrl %}
+    <div class="player-wrapper">
+      <iframe src="{{ ep.embedUrl }}" width="100%" height="161px" frameborder="0" scrolling="no"></iframe>
+    </div>
+    {% endif %}
+
+    <div class="summary">
+      <strong>本集重點：</strong>
+      <p>{{ ep.summary | striptags | truncate(150) }}</p>
+      <a href="{{ ep.link }}" target="_blank">前往平台完整收聽 →</a>
+    </div>
+  </article>
+  {% endfor %}
+</div>
+
+5. 異常處理與優化 (Best Practices)播放器響應式： <iframe> 寬度應設為 100%，高度依據 Anchor 預設建議設為 161px 以維持外觀。內容清洗： RSS 描述中常帶有贊助連結或換行，使用 striptags 過濾器能確保網頁樣式不被原始 HTML 破壞。懶加載 (Lazy Loading)： 建議在 <iframe> 加入 loading="lazy"，當使用者捲動到該位置時才載入播放器，優化首屏速度。

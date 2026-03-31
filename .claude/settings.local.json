@@ -15,7 +15,11 @@
       "WebFetch(domain:beautiful-pastelito-e7737d.netlify.app)",
       "Bash(node -e \"require\\(''''dotenv''''\\).config\\(\\); process.env.GH_REPO=''''test/repo'''';\" .github/scripts/check-notion.js)",
       "Bash(node -r dotenv/config .github/scripts/check-notion.js)",
-      "Bash(GH_REPO=test/repo node -r dotenv/config .github/scripts/check-notion.js)"
+      "Bash(GH_REPO=test/repo node -r dotenv/config .github/scripts/check-notion.js)",
+      "Bash(SITE_BASE_PATH=/streamspsy/ npm run build)",
+      "WebFetch(domain:anchor.fm)",
+      "Bash(curl -s \"https://anchor.fm/s/1ea77470/podcast/rss\")",
+      "Bash(node -r dotenv/config -e \":*)"
     ]
   }
 }

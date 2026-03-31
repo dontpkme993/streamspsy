@@ -3,6 +3,8 @@ name: Build and Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: '0 2 * * *'  # 每天 UTC 02:00（台灣時間 10:00）自動更新 Podcast
   workflow_dispatch:
   workflow_call:
 
@@ -44,6 +46,7 @@ jobs:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTION_ARTICLES_DB: ${{ secrets.NOTION_ARTICLES_DB }}
           NOTION_EVENTS_DB: ${{ secrets.NOTION_EVENTS_DB }}
+          PODCAST_RSS_URL: ${{ secrets.PODCAST_RSS_URL }}
           SITE_BASE_PATH: /streamspsy/
 
       - uses: actions/upload-pages-artifact@v4
