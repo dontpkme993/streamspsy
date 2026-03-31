@@ -6,15 +6,12 @@ const path = require('path');
 
 const notion = new Client({ auth: process.env.NOTION_TOKEN });
 
-// 下載 Notion 圖片到本地，避免 URL 過期問題
-async function downloadImage(url, slug) {
+// 下載單張圖片到本地，避免 Notion URL 過期問題
+async function downloadImage(url, filename) {
   const dir = path.join(__dirname, '../../src/assets/images');
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
-  const ext = url.split('?')[0].split('.').pop().replace(/[^a-z0-9]/gi, '') || 'jpg';
-  const filename = `${slug}.${ext}`;
   const dest = path.join(dir, filename);
-
   if (fs.existsSync(dest)) return `/assets/images/${filename}`;
 
   return new Promise((resolve, reject) => {
@@ -24,15 +21,35 @@ async function downloadImage(url, slug) {
       if (res.statusCode === 301 || res.statusCode === 302) {
         file.close();
         fs.unlinkSync(dest);
-        return downloadImage(res.headers.location, slug).then(resolve).catch(reject);
+        return downloadImage(res.headers.location, filename).then(resolve).catch(reject);
       }
       res.pipe(file);
       file.on('finish', () => { file.close(); resolve(`/assets/images/${filename}`); });
     }).on('error', err => {
-      fs.unlinkSync(dest);
+      if (fs.existsSync(dest)) fs.unlinkSync(dest);
       reject(err);
     });
   });
+}
+
+// 掃描 Markdown 內文，下載所有圖片並替換為本地路徑
+async function downloadBodyImages(markdown, slug) {
+  const imgRegex = /!\[([^\]]*)\]\((https?:\/\/[^)]+)\)/g;
+  const matches = [...markdown.matchAll(imgRegex)];
+  if (!matches.length) return markdown;
+
+  let result = markdown;
+  await Promise.all(matches.map(async ([full, alt, url], i) => {
+    try {
+      const ext = url.split('?')[0].split('.').pop().replace(/[^a-z0-9]/gi, '') || 'jpg';
+      const filename = `${slug}-body-${i}.${ext}`;
+      const localPath = await downloadImage(url, filename);
+      result = result.replace(full, `![${alt}](${localPath})`);
+    } catch(e) {
+      console.warn(`內文圖片下載失敗 (${url.slice(0, 60)}...):`, e.message);
+    }
+  }));
+  return result;
 }
 
 async function getArticles() {
@@ -46,7 +63,10 @@ async function getArticles() {
 
   return Promise.all(db.results.map(async page => {
     const id = page.id;
-    const slug = id.replace(/-/g, '');
+    const idSlug = id.replace(/-/g, '');
+
+    // 網址別名：優先用 Notion 欄位，否則 fallback 到 page ID
+    const slug = page.properties['網址別名']?.rich_text?.[0]?.plain_text?.trim() || idSlug;
 
     // 抓文章內文 Markdown（v5 內建）
     let body = '';
@@ -57,14 +77,23 @@ async function getArticles() {
       console.warn(`retrieveMarkdown failed for ${id}:`, e.message);
     }
 
+    // 下載內文圖片
+    if (body) {
+      try { body = await downloadBodyImages(body, idSlug); }
+      catch(e) { console.warn('內文圖片處理失敗:', e.message); }
+    }
+
     // 處理封面圖
     let image = '';
     const rawImage = page.properties['封面圖']?.files?.[0]?.file?.url
       || page.properties['封面圖']?.files?.[0]?.external?.url
       || '';
     if (rawImage) {
-      try { image = await downloadImage(rawImage, `article-${slug}`); }
-      catch(e) { console.warn('圖片下載失敗:', e.message); image = ''; }
+      try {
+        const ext = rawImage.split('?')[0].split('.').pop().replace(/[^a-z0-9]/gi, '') || 'jpg';
+        image = await downloadImage(rawImage, `article-${idSlug}.${ext}`);
+      }
+      catch(e) { console.warn('封面圖下載失敗:', e.message); image = ''; }
     }
 
     return {
