@@ -6,8 +6,14 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy("src/llms.txt");
   eleventyConfig.addPassthroughCopy("src/assets/images");
 
-  // Markdown filter
-  eleventyConfig.addFilter('markdown', content => content ? md.render(content) : '');
+  // Markdown filter — 渲染後修正內文圖片路徑，補上 pathPrefix
+  eleventyConfig.addFilter('markdown', content => {
+    if (!content) return '';
+    const rendered = md.render(content);
+    const prefix = (process.env.SITE_BASE_PATH || '/').replace(/\/$/, '');
+    if (!prefix) return rendered;
+    return rendered.replace(/src="\/assets\//g, `src="${prefix}/assets/`);
+  });
 
   // Date filter
   eleventyConfig.addFilter("dateDisplay", (dateStr) => {
