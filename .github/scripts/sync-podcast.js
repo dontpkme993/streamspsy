@@ -102,7 +102,11 @@ async function getExistingGuids() {
   return guids;
 }
 
-async function createEpisode(ep, channelName, platform) {
+async function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function createEpisode(ep, channelName, platform, retries = 3) {
   const properties = {
     '標題': { title: [{ text: { content: ep.title.slice(0, 2000) } }] },
     'GUID': { rich_text: [{ text: { content: ep.guid.slice(0, 2000) } }] },
@@ -116,7 +120,19 @@ async function createEpisode(ep, channelName, platform) {
   if (ep.image) properties['封面圖'] = { url: ep.image };
   if (ep.embedUrl) properties['播放連結'] = { url: ep.embedUrl };
 
-  await notion.pages.create({ parent: { database_id: DB_ID }, properties });
+  for (let i = 0; i < retries; i++) {
+    try {
+      // Notion v5：data_source 需用 data_source_id 作為 parent type
+      await notion.pages.create({ parent: { type: 'data_source_id', data_source_id: DB_ID }, properties });
+      return;
+    } catch (e) {
+      if (i < retries - 1) {
+        await sleep(1500);
+      } else {
+        throw e;
+      }
+    }
+  }
 }
 
 // ── 主程式 ────────────────────────────────────────────────────
