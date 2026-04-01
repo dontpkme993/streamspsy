@@ -46,6 +46,7 @@ jobs:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTION_ARTICLES_DB: ${{ secrets.NOTION_ARTICLES_DB }}
           NOTION_EVENTS_DB: ${{ secrets.NOTION_EVENTS_DB }}
+          NOTION_PODCAST_DB: ${{ secrets.NOTION_PODCAST_DB }}
           PODCAST_RSS_URL: ${{ secrets.PODCAST_RSS_URL }}
           SITE_BASE_PATH: /streamspsy/
 

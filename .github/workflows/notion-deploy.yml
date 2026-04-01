@@ -6,10 +6,10 @@ on:
   workflow_dispatch:       # 允許手動觸發
 
 jobs:
-  check:
+  check-and-sync:
     runs-on: ubuntu-latest
     outputs:
-      has_updates: ${{ steps.check.outputs.has_updates }}
+      should_deploy: ${{ steps.decide.outputs.should_deploy }}
     steps:
       - uses: actions/checkout@v4
 
@@ -20,8 +20,8 @@ jobs:
 
       - run: npm ci
 
-      - name: Check Notion for updates
-        id: check
+      - name: Check Notion for article/event updates
+        id: check-notion
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTION_ARTICLES_DB: ${{ secrets.NOTION_ARTICLES_DB }}
@@ -31,9 +31,26 @@ jobs:
           GH_REPO: ${{ github.repository }}
         run: node .github/scripts/check-notion.js
 
+      - name: Sync Podcast RSS to Notion
+        id: sync-podcast
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_PODCAST_DB: ${{ secrets.NOTION_PODCAST_DB }}
+          PODCAST_RSS_URL: ${{ secrets.PODCAST_RSS_URL }}
+        run: node .github/scripts/sync-podcast.js
+
+      - name: Decide if deploy needed
+        id: decide
+        run: |
+          if [ "${{ steps.check-notion.outputs.has_updates }}" == "true" ] || [ "${{ steps.sync-podcast.outputs.new_episodes }}" == "true" ]; then
+            echo "should_deploy=true" >> $GITHUB_OUTPUT
+          else
+            echo "should_deploy=false" >> $GITHUB_OUTPUT
+          fi
+
   deploy:
-    needs: check
-    if: needs.check.outputs.has_updates == 'true'
+    needs: check-and-sync
+    if: needs.check-and-sync.outputs.should_deploy == 'true'
     uses: ./.github/workflows/deploy.yml
     permissions:
       contents: read

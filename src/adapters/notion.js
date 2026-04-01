@@ -131,4 +131,27 @@ async function getEvents() {
   }));
 }
 
-module.exports = { getArticles, getEvents };
+async function getPodcastEpisodes() {
+  if (!process.env.NOTION_TOKEN || !process.env.NOTION_PODCAST_DB) return [];
+
+  const db = await notion.dataSources.query({
+    data_source_id: process.env.NOTION_PODCAST_DB,
+    sorts: [{ property: '發布日期', direction: 'descending' }],
+  });
+
+  return db.results.map(page => ({
+    id: page.id,
+    title: page.properties['標題']?.title?.[0]?.plain_text || '',
+    guid: page.properties['GUID']?.rich_text?.[0]?.plain_text || '',
+    channel: page.properties['頻道']?.rich_text?.[0]?.plain_text || '',
+    platform: page.properties['平台']?.rich_text?.[0]?.plain_text || '',
+    date: page.properties['發布日期']?.date?.start || '',
+    duration: page.properties['時長']?.rich_text?.[0]?.plain_text || '',
+    summary: page.properties['摘要']?.rich_text?.[0]?.plain_text || '',
+    image: page.properties['封面圖']?.url || '',
+    embedUrl: page.properties['播放連結']?.url || '',
+    featured: page.properties['精選']?.checkbox ?? false,
+  }));
+}
+
+module.exports = { getArticles, getEvents, getPodcastEpisodes };
