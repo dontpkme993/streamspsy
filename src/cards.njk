@@ -7,17 +7,6 @@ pageToast: true
 pageStyle: |
   body { background: var(--rice); }
 
-  /* Shuffle animation */
-  @keyframes shuffle {
-    0%   { transform: translateX(0) rotate(0deg); }
-    25%  { transform: translateX(-8px) rotate(-3deg); }
-    50%  { transform: translateX(8px) rotate(3deg); }
-    75%  { transform: translateX(-4px) rotate(-1.5deg); }
-    100% { transform: translateX(0) rotate(0deg); }
-  }
-
-  .shuffling .card-3d { animation: shuffle 0.5s ease; }
-
   /* Share toast */
   .toast {
     position: fixed;
@@ -34,7 +23,6 @@ pageStyle: |
     letter-spacing: 0.04em;
     white-space: nowrap;
   }
-
   .toast.show { transform: translateX(-50%) translateY(0); }
 
   /* Fade-in animation */
@@ -42,9 +30,77 @@ pageStyle: |
     from { opacity: 0; transform: translateY(16px); }
     to   { opacity: 1; transform: translateY(0); }
   }
+
+  /* ── Fan Layout ── */
+  .card-fan {
+    position: relative;
+    width: min(240px, 64vw);
+    height: min(360px, 54vw + 110px);
+    margin: 0 auto 6rem; /* bottom space for arc overflow */
+  }
+
+  .fan-card {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    cursor: pointer;
+    transform-origin: 50% 100%;
+    transform: rotate(0deg);
+    transition: transform 0.55s cubic-bezier(0.34, 1.15, 0.64, 1);
+    border-radius: 1.25rem;
+    will-change: transform;
+  }
+
+  .fan-card.spread {
+    transform: rotate(var(--fan-angle, 0deg));
+  }
+
+  .fan-card.hovered {
+    transform: rotate(var(--fan-angle, 0deg)) translateY(-22px);
+    transition: transform 0.18s ease-out;
+    z-index: 20;
+  }
+
+  .fan-card.collapsing {
+    transform: rotate(0deg);
+    transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .fan-card-back {
+    width: 100%; height: 100%;
+    border-radius: 1.25rem;
+    background: linear-gradient(135deg, var(--oak) 0%, #6b4f45 50%, var(--bark) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--rice);
+    position: relative;
+    box-shadow: 0 16px 48px rgba(140,106,93,0.22);
+    pointer-events: none;
+  }
+
+  .fan-card-back::before {
+    content: '';
+    position: absolute;
+    inset: 10px;
+    border: 1.5px solid rgba(250,243,224,0.22);
+    border-radius: 0.85rem;
+  }
+
+  .fan-card-back .card-pattern {
+    font-size: 2.2rem;
+    opacity: 0.45;
+  }
+
+  /* Result card — hidden until a fan card is clicked */
+  #cardResultWrap {
+    display: none;
+    margin-bottom: 2.5rem;
+  }
+
 pageScript: |
   <script>
-    // ── Card data — replace these with real card content ──
+    // ── Card data ──
     const CARDS = [
       {
         number: 'No. 01', emoji: '🌊', title: '流動', keyword: '放手 · 信任 · 流動',
@@ -96,70 +152,109 @@ pageScript: |
       }
     ];
 
-    let currentCardIndex = -1;
-    let isFlipped = false;
+    // Spread angles for 10 fan positions (-24° to +24°)
+    const FAN_ANGLES = [-24, -18, -13, -9, -4, 4, 9, 13, 18, 24];
+    let fanState = 'fan'; // 'fan' | 'collapsing' | 'result'
+    let selectedCardIndex = -1;
 
-    function getRandomCard() {
-      let newIndex;
-      do {
-        newIndex = Math.floor(Math.random() * CARDS.length);
-      } while (newIndex === currentCardIndex && CARDS.length > 1);
-      return newIndex;
+    function buildFan() {
+      const fan = document.getElementById('cardFan');
+      fan.innerHTML = '';
+      FAN_ANGLES.forEach((angle, i) => {
+        const el = document.createElement('div');
+        el.className = 'fan-card';
+        el.style.setProperty('--fan-angle', angle + 'deg');
+        el.setAttribute('role', 'button');
+        el.setAttribute('tabindex', '0');
+        el.setAttribute('aria-label', '翻牌 ' + (i + 1));
+        el.innerHTML = '<div class="fan-card-back"><span class="card-pattern" aria-hidden="true">✦</span></div>';
+
+        el.addEventListener('mouseenter', () => {
+          if (fanState !== 'fan') return;
+          el.classList.add('hovered');
+        });
+        el.addEventListener('mouseleave', () => el.classList.remove('hovered'));
+        el.addEventListener('click', () => { if (fanState === 'fan') pickCard(); });
+        el.addEventListener('keydown', e => {
+          if ((e.key === 'Enter' || e.key === ' ') && fanState === 'fan') pickCard();
+        });
+
+        fan.appendChild(el);
+      });
     }
 
-    function flipCard() {
-      if (isFlipped) return;
-      if (currentCardIndex === -1) currentCardIndex = getRandomCard();
-
-      const card = CARDS[currentCardIndex];
-      document.getElementById('cardNumber').textContent = card.number;
-      document.getElementById('cardEmoji').textContent = card.emoji;
-      document.getElementById('cardTitle').textContent = card.title;
-      document.getElementById('cardKeyword').textContent = card.keyword;
-      document.getElementById('interpretTitle').textContent = card.interpretTitle;
-      document.getElementById('interpretBody').textContent = card.interpretBody;
-      document.getElementById('interpretMessage').textContent = '「' + card.interpretMessage + '」';
-
-      document.getElementById('card3d').classList.add('flipped');
-      document.getElementById('cardWrap').setAttribute('aria-pressed', 'true');
-      isFlipped = true;
-
-      // Show interpretation
-      setTimeout(() => {
-        const interp = document.getElementById('interpretation');
-        interp.classList.add('visible');
-        interp.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }, 600);
-    }
-
-    function resetCard() {
+    function showFan() {
+      fanState = 'fan';
+      selectedCardIndex = -1;
+      document.getElementById('cardFan').style.display = '';
+      document.getElementById('cardResultWrap').style.display = 'none';
       document.getElementById('card3d').classList.remove('flipped');
-      document.getElementById('cardWrap').setAttribute('aria-pressed', 'false');
       document.getElementById('interpretation').classList.remove('visible');
-      isFlipped = false;
+
+      // Trigger spread animation after paint
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        document.querySelectorAll('.fan-card').forEach(c => c.classList.add('spread'));
+      }));
+    }
+
+    function pickCard() {
+      if (fanState !== 'fan') return;
+      fanState = 'collapsing';
+
+      // Collapse all fan cards to center
+      document.querySelectorAll('.fan-card').forEach(c => {
+        c.classList.remove('hovered', 'spread');
+        c.classList.add('collapsing');
+      });
+
+      // Choose a random card from deck
+      selectedCardIndex = Math.floor(Math.random() * CARDS.length);
+
+      // After collapse animation → show result card
+      setTimeout(() => {
+        document.getElementById('cardFan').style.display = 'none';
+
+        const card = CARDS[selectedCardIndex];
+        document.getElementById('cardNumber').textContent = card.number;
+        document.getElementById('cardEmoji').textContent = card.emoji;
+        document.getElementById('cardTitle').textContent = card.title;
+        document.getElementById('cardKeyword').textContent = card.keyword;
+        document.getElementById('interpretTitle').textContent = card.interpretTitle;
+        document.getElementById('interpretBody').textContent = card.interpretBody;
+        document.getElementById('interpretMessage').textContent = '「' + card.interpretMessage + '」';
+
+        document.getElementById('cardResultWrap').style.display = '';
+
+        // Flip the result card
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          document.getElementById('card3d').classList.add('flipped');
+          fanState = 'result';
+
+          setTimeout(() => {
+            const interp = document.getElementById('interpretation');
+            interp.classList.add('visible');
+            interp.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }, 650);
+        }));
+      }, 450);
     }
 
     function redraw() {
-      resetCard();
-      currentCardIndex = getRandomCard();
-      setTimeout(() => flipCard(), 400);
-    }
-
-    function shuffle() {
-      resetCard();
-      currentCardIndex = -1;
-      const wrap = document.getElementById('cardWrap');
-      wrap.classList.add('shuffling');
-      setTimeout(() => wrap.classList.remove('shuffling'), 600);
-      showToast('🔀 已洗牌，點擊牌卡抽一張');
+      if (fanState === 'result') {
+        document.getElementById('card3d').classList.remove('flipped');
+        document.getElementById('interpretation').classList.remove('visible');
+        setTimeout(() => { buildFan(); showFan(); }, 420);
+      } else {
+        buildFan();
+        showFan();
+      }
     }
 
     function shareCard() {
-      const card = currentCardIndex >= 0 ? CARDS[currentCardIndex] : null;
+      const card = selectedCardIndex >= 0 ? CARDS[selectedCardIndex] : null;
       const text = card
-        ? `我從溪水邊抽到了「${card.title}」${card.emoji}\n${card.interpretMessage}\n\n溪水邊 Stream Side · 為自己抽張卡`
+        ? '我從溪水邊抽到了「' + card.title + '」' + card.emoji + '\n' + card.interpretMessage + '\n\n溪水邊 Stream Side · 為自己抽張卡'
         : '我正在溪水邊為自己抽張卡 🃏\n溪水邊 Stream Side';
-
       if (navigator.share) {
         navigator.share({ title: '溪水邊 · 為自己抽張卡', text, url: window.location.href })
           .catch(() => copyToClipboard(text));
@@ -180,6 +275,11 @@ pageScript: |
       toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 2800);
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      buildFan();
+      showFan();
+    });
   </script>
 ---
 
@@ -189,7 +289,7 @@ pageScript: |
   <h1 style="font-size:clamp(1.8rem,3.5vw,2.5rem);color:var(--oak);margin-bottom:0.75rem;">為自己抽張卡</h1>
   <p style="color:rgba(67,52,48,0.6);font-size:0.95rem;max-width:420px;margin:0 auto;line-height:1.9;">
     深呼吸，靜下心來，<br>
-    讓直覺帶你翻開今天最需要看見的那道光。
+    點擊任意一張牌，翻開今天最需要看見的那道光。
   </p>
 </div>
 
@@ -197,28 +297,24 @@ pageScript: |
 <section class="card-stage" aria-labelledby="card-heading">
   <h2 id="card-heading" style="position:absolute;opacity:0;pointer-events:none;">互動抽卡區</h2>
 
-  <!-- 3D Card Flip -->
-  <div class="card-3d-wrap" id="cardWrap" role="button" tabindex="0"
-       aria-label="點擊翻牌" aria-pressed="false"
-       onclick="flipCard()" onkeydown="if(event.key==='Enter'||event.key===' ')flipCard()">
+  <!-- Fan of 10 cards (populated by JS) -->
+  <div class="card-fan" id="cardFan" aria-label="牌卡組，點擊任一張翻牌"></div>
+
+  <!-- Result card — shown after fan collapses -->
+  <div class="card-3d-wrap" id="cardResultWrap">
     <div class="card-3d" id="card3d">
 
       <!-- Back face -->
       <div class="card-face card-back-face" aria-hidden="true">
         <div class="card-pattern">✦</div>
-        <p>點擊翻牌</p>
       </div>
 
-      <!-- Front face (shown when flipped) -->
+      <!-- Front face -->
       <div class="card-face card-front-face" id="cardFront">
         <p class="card-number" id="cardNumber">No. —</p>
         <div class="card-image-area" id="cardEmoji" aria-hidden="true">✨</div>
-        <h3 id="cardTitle">
-          <span class="placeholder-text">牌卡名稱 Card Name Placeholder</span>
-        </h3>
-        <p id="cardKeyword" style="font-size:0.78rem;color:var(--straw);font-weight:600;margin:0.2rem 0 0.4rem;">
-          <span class="placeholder-text">關鍵詞 Keyword</span>
-        </p>
+        <h3 id="cardTitle"></h3>
+        <p id="cardKeyword" style="font-size:0.78rem;color:var(--straw);font-weight:600;margin:0.2rem 0 0.4rem;"></p>
       </div>
 
     </div>
@@ -226,9 +322,6 @@ pageScript: |
 
   <!-- ── Control Buttons ── -->
   <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-bottom:2.5rem;" role="group" aria-label="抽卡操作">
-    <button class="btn-outline" id="shuffleBtn" onclick="shuffle()" aria-label="洗牌" style="font-size:0.85rem;padding:0.6rem 1.5rem;">
-      🔀 洗牌
-    </button>
     <button class="btn-primary" id="redrawBtn" onclick="redraw()" aria-label="重新抽卡" style="font-size:0.85rem;padding:0.6rem 1.5rem;">
       ✦ 重新抽卡
     </button>
@@ -240,15 +333,9 @@ pageScript: |
   <!-- ── Interpretation Area ── -->
   <div class="card-interpretation" id="interpretation" role="region" aria-live="polite" aria-label="牌卡解析">
     <div style="width:40px;height:2px;background:var(--straw);margin:0 auto 1.5rem;border-radius:2px;"></div>
-    <h2 id="interpretTitle">
-      <span class="placeholder-text">牌卡標題 Card Title Placeholder</span>
-    </h2>
-    <p id="interpretBody" style="margin-top:0.75rem;">
-      <span class="placeholder-text">牌卡解析文字佔位符：每一張牌卡都有其獨特的意涵與引導問句，以溫柔的文字邀請抽卡者向內探索。Interpretation Text Placeholder — a warm, contemplative message unique to this card, inviting the reader to reflect inward.</span>
-    </p>
-    <p class="card-message" id="interpretMessage">
-      「<span class="placeholder-text">牌卡金句 Card Message Placeholder</span>」
-    </p>
+    <h2 id="interpretTitle"></h2>
+    <p id="interpretBody" style="margin-top:0.75rem;white-space:pre-line;"></p>
+    <p class="card-message" id="interpretMessage"></p>
     <div style="margin-top:2rem;display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
       <button onclick="shareCard()" class="btn-outline" style="font-size:0.82rem;padding:0.5rem 1.4rem;">分享這張卡</button>
       <a href="{{ '/articles/' | url }}" class="btn-outline" style="font-size:0.82rem;padding:0.5rem 1.4rem;">閱讀相關文章</a>
@@ -257,7 +344,7 @@ pageScript: |
 
 </section>
 
-<!-- ══════════════ INTRO SECTION ══════════════ -->
+<!-- ══════════════ HOW TO USE ══════════════ -->
 <section style="padding:3rem 1.5rem 6rem;max-width:640px;margin:0 auto;text-align:center;">
   <div class="divider" style="margin:0 0 3rem;"></div>
   <h2 style="font-size:1.2rem;color:var(--oak);margin-bottom:1rem;">如何使用牌卡？</h2>
@@ -272,7 +359,7 @@ pageScript: |
     </div>
     <div>
       <div style="font-size:1.5rem;margin-bottom:0.5rem;">🃏</div>
-      <p style="font-size:0.85rem;color:rgba(67,52,48,0.65);line-height:1.7;">點擊翻牌，<br>接收今天的訊息</p>
+      <p style="font-size:0.85rem;color:rgba(67,52,48,0.65);line-height:1.7;">點擊任一張牌，<br>接收今天的訊息</p>
     </div>
   </div>
 </section>
