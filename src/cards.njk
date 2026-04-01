@@ -225,8 +225,8 @@ pageScript: |
 
         document.getElementById('cardResultWrap').style.display = 'block';
 
-        // Flip the result card
-        requestAnimationFrame(() => requestAnimationFrame(() => {
+        // Flip the result card — small delay ensures reflow before transition starts
+        setTimeout(() => {
           document.getElementById('card3d').classList.add('flipped');
           fanState = 'result';
 
@@ -235,7 +235,7 @@ pageScript: |
             interp.classList.add('visible');
             interp.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
           }, 650);
-        }));
+        }, 40);
       }, 450);
     }
 
