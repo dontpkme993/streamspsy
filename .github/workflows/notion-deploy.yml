@@ -2,7 +2,7 @@ name: Deploy on Notion Update
 
 on:
   schedule:
-    - cron: '0 5 * * *'  # 每天台灣時間 13:00（UTC 05:00）
+    - cron: '0 * * * *'  # 每小時整點檢查一次
   workflow_dispatch:       # 允許手動觸發
 
 jobs:
