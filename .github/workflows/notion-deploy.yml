@@ -35,4 +35,8 @@ jobs:
     needs: check
     if: needs.check.outputs.has_updates == 'true'
     uses: ./.github/workflows/deploy.yml
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     secrets: inherit
