@@ -152,10 +152,29 @@ pageScript: |
       }
     ];
 
-    // Spread angles — narrow on mobile, wide on desktop
-    const FAN_ANGLES = window.innerWidth < 700
-      ? [-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]
-      : [-36, -27, -19, -12, -5, 5, 12, 19, 27, 36];
+    // Calculate fan angles dynamically so outermost card stays within viewport
+    function calcFanAngles() {
+      const W = window.innerWidth;
+      const cardW = Math.min(240, W * 0.64);
+      const cardH = Math.min(360, W * 0.54 + 110);
+      const radius = cardH * 1.12; // pivot is 12% below card bottom (matches transform-origin)
+      const available = W / 2 - 16; // leave 16px margin from each edge
+
+      // Binary search for the largest angle whose outermost card edge fits within 'available'
+      let lo = 0, hi = Math.PI / 2;
+      for (let i = 0; i < 40; i++) {
+        const mid = (lo + hi) / 2;
+        const extent = Math.sin(mid) * radius + (cardW / 2) * Math.cos(mid);
+        if (extent <= available) lo = mid; else hi = mid;
+      }
+      const maxDeg = Math.min(40, Math.max(5, lo * 180 / Math.PI));
+
+      // 10 cards evenly from -maxDeg to +maxDeg
+      return Array.from({length: 10}, (_, i) =>
+        +(-maxDeg + i * (2 * maxDeg / 9)).toFixed(1)
+      );
+    }
+    const FAN_ANGLES = calcFanAngles();
     let fanState = 'fan'; // 'fan' | 'collapsing' | 'result'
     let selectedCardIndex = -1;
 
