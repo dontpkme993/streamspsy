@@ -152,8 +152,10 @@ pageScript: |
       }
     ];
 
-    // Spread angles for 10 fan positions (-36° to +36°)
-    const FAN_ANGLES = [-36, -27, -19, -12, -5, 5, 12, 19, 27, 36];
+    // Spread angles — narrow on mobile, wide on desktop
+    const FAN_ANGLES = window.innerWidth < 700
+      ? [-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]
+      : [-36, -27, -19, -12, -5, 5, 12, 19, 27, 36];
     let fanState = 'fan'; // 'fan' | 'collapsing' | 'result'
     let selectedCardIndex = -1;
 
