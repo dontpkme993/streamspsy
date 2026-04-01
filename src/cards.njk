@@ -225,9 +225,11 @@ pageScript: |
         document.getElementById('interpretBody').textContent = card.interpretBody;
         document.getElementById('interpretMessage').textContent = '「' + card.interpretMessage + '」';
 
-        document.getElementById('cardResultWrap').style.display = 'block';
+        const resultWrap = document.getElementById('cardResultWrap');
+        resultWrap.style.display = 'block';
+        void resultWrap.offsetHeight; // force reflow so CSS transition triggers correctly
 
-        // Flip the result card — small delay ensures reflow before transition starts
+        // Flip the result card
         setTimeout(() => {
           document.getElementById('card3d').classList.add('flipped');
           fanState = 'result';
