@@ -1,5 +1,5 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://streamside.tw/sitemap.xml
-LLMs-Txt: https://streamside.tw/llms.txt
+Sitemap: https://beautiful-pastelito-e7737d.netlify.app/sitemap.xml
+LLMs-Txt: https://beautiful-pastelito-e7737d.netlify.app/llms.txt
