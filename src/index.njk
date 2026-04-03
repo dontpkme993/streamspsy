@@ -6,14 +6,62 @@ activeNav: home
 jsonLd: |
   {
     "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "溪水邊 Stream Side",
-    "description": "透過專業諮商、兒童閱讀與租書店的一手觀察，找回生活最溫暖的樣子。",
-    "url": "https://streamside.tw",
-    "author": {
-      "@type": "Person",
-      "name": "溪水邊創辦人"
-    }
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "name": "溪水邊 Stream Side",
+        "description": "透過專業諮商、兒童閱讀與租書店的一手觀察，找回生活最溫暖的樣子。",
+        "url": "https://streamside.tw"
+      },
+      {
+        "@type": "Organization",
+        "name": "溪水邊 Stream Side",
+        "url": "https://streamside.tw",
+        "description": "由諮商心理師創辦，結合專業諮商、兒童閱讀推廣與空間經營的溫暖品牌。",
+        "founder": {
+          "@type": "Person",
+          "jobTitle": "諮商心理師"
+        },
+        "sameAs": []
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "溪水邊提供哪些服務？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "溪水邊提供三項核心服務：個別心理諮商、兒童閱讀陪伴（繪本導讀）與互動式牌卡體驗，由持照諮商心理師主持。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "如何預約心理諮商或工作坊？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "請至「諮商講座」頁面查看最新場次與報名連結，或透過 Email 與溪水邊聯繫洽詢。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "溪水邊的服務適合哪些人？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "適合希望透過專業對話重新認識自己的成人，以及想為孩子建立閱讀習慣、陪伴情緒發展的家長。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "什麼是溪水邊的牌卡體驗？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "「為自己抽張卡」是一個線上互動體驗，翻開一張牌卡，獲得當日的引導訊息，讓直覺帶你看見當下最需要的提醒。"
+            }
+          }
+        ]
+      }
+    ]
   }
 ---
 

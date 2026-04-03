@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://streamside.tw/sitemap.xml
+LLMs-Txt: https://streamside.tw/llms.txt

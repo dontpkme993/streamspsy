@@ -5,6 +5,7 @@ const striptags = require('striptags');
 module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy("src/assets");
   eleventyConfig.addPassthroughCopy("src/llms.txt");
+  eleventyConfig.addPassthroughCopy("src/robots.txt");
   eleventyConfig.addPassthroughCopy("src/assets/images");
 
   // Markdown filter — 渲染後修正內文圖片路徑，補上 pathPrefix
