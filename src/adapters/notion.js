@@ -6,6 +6,92 @@ const path = require('path');
 
 const notion = new Client({ auth: process.env.NOTION_TOKEN });
 
+// 將 rich_text 陣列轉為 Markdown 字串，處理 bold/italic/code/link
+function richTextToMd(richTexts) {
+  return (richTexts || []).map(t => {
+    let s = t.plain_text;
+    if (!s) return '';
+    if (t.annotations?.code) s = `\`${s}\``;
+    if (t.annotations?.bold) s = `**${s}**`;
+    if (t.annotations?.italic) s = `*${s}*`;
+    if (t.annotations?.strikethrough) s = `~~${s}~~`;
+    if (t.href) s = `[${s}](${t.href})`;
+    return s;
+  }).join('');
+}
+
+// 將 Notion blocks 陣列轉為 Markdown 字串
+function blocksToMarkdown(blocks) {
+  const lines = [];
+  let numberedIdx = 0;
+
+  for (const block of blocks) {
+    const type = block.type;
+    const data = block[type];
+
+    if (type === 'heading_1') {
+      lines.push(`# ${richTextToMd(data.rich_text)}`);
+      numberedIdx = 0;
+    } else if (type === 'heading_2') {
+      lines.push(`## ${richTextToMd(data.rich_text)}`);
+      numberedIdx = 0;
+    } else if (type === 'heading_3') {
+      lines.push(`### ${richTextToMd(data.rich_text)}`);
+      numberedIdx = 0;
+    } else if (type === 'paragraph') {
+      lines.push(richTextToMd(data.rich_text));
+      numberedIdx = 0;
+    } else if (type === 'bulleted_list_item') {
+      lines.push(`- ${richTextToMd(data.rich_text)}`);
+      numberedIdx = 0;
+    } else if (type === 'numbered_list_item') {
+      numberedIdx++;
+      lines.push(`${numberedIdx}. ${richTextToMd(data.rich_text)}`);
+    } else if (type === 'quote') {
+      lines.push(`> ${richTextToMd(data.rich_text)}`);
+      numberedIdx = 0;
+    } else if (type === 'code') {
+      const lang = data.language || '';
+      lines.push(`\`\`\`${lang}\n${richTextToMd(data.rich_text)}\n\`\`\``);
+      numberedIdx = 0;
+    } else if (type === 'divider') {
+      lines.push('---');
+      numberedIdx = 0;
+    } else if (type === 'image') {
+      const url = data.file?.url || data.external?.url || '';
+      const caption = richTextToMd(data.caption) || '';
+      lines.push(`![${caption}](${url})`);
+      numberedIdx = 0;
+    } else if (type === 'callout') {
+      lines.push(`> ${richTextToMd(data.rich_text)}`);
+      numberedIdx = 0;
+    } else if (type === 'to_do') {
+      const checked = data.checked ? 'x' : ' ';
+      lines.push(`- [${checked}] ${richTextToMd(data.rich_text)}`);
+      numberedIdx = 0;
+    }
+    // 其他類型忽略
+  }
+
+  return lines.join('\n\n');
+}
+
+// 取得頁面所有 blocks（處理分頁）
+async function getPageBlocks(pageId) {
+  const blocks = [];
+  let cursor;
+  do {
+    const res = await notion.blocks.children.list({
+      block_id: pageId,
+      page_size: 100,
+      ...(cursor ? { start_cursor: cursor } : {}),
+    });
+    blocks.push(...res.results);
+    cursor = res.has_more ? res.next_cursor : null;
+  } while (cursor);
+  return blocks;
+}
+
 // 下載單張圖片到本地，避免 Notion URL 過期問題
 async function downloadImage(url, filename) {
   const dir = path.join(__dirname, '../../src/assets/images');
@@ -54,8 +140,8 @@ async function downloadBodyImages(markdown, slug) {
 async function getArticles() {
   if (!process.env.NOTION_TOKEN || !process.env.NOTION_ARTICLES_DB) return [];
 
-  const db = await notion.dataSources.query({
-    data_source_id: process.env.NOTION_ARTICLES_DB,
+  const db = await notion.databases.query({
+    database_id: process.env.NOTION_ARTICLES_DB,
     filter: { property: '狀態', select: { equals: '已發布' } },
     sorts: [{ property: '發布日期', direction: 'descending' }],
   });
@@ -67,13 +153,13 @@ async function getArticles() {
     // 網址別名：優先用 Notion 欄位，否則 fallback 到 page ID
     const slug = page.properties['網址別名']?.rich_text?.[0]?.plain_text?.trim() || idSlug;
 
-    // 抓文章內文 Markdown（v5 內建）
+    // 抓文章內文 Markdown
     let body = '';
     try {
-      const md = await notion.pages.retrieveMarkdown({ page_id: id });
-      body = md.markdown || '';
+      const blocks = await getPageBlocks(id);
+      body = blocksToMarkdown(blocks);
     } catch(e) {
-      console.warn(`retrieveMarkdown failed for ${id}:`, e.message);
+      console.warn(`blocks fetch failed for ${id}:`, e.message);
     }
 
     // 下載內文圖片
@@ -112,8 +198,8 @@ async function getArticles() {
 async function getEvents() {
   if (!process.env.NOTION_TOKEN || !process.env.NOTION_EVENTS_DB) return [];
 
-  const db = await notion.dataSources.query({
-    data_source_id: process.env.NOTION_EVENTS_DB,
+  const db = await notion.databases.query({
+    database_id: process.env.NOTION_EVENTS_DB,
     sorts: [{ property: '日期', direction: 'descending' }],
   });
 
@@ -134,8 +220,8 @@ async function getEvents() {
 async function getPodcastEpisodes() {
   if (!process.env.NOTION_TOKEN || !process.env.NOTION_PODCAST_DB) return [];
 
-  const db = await notion.dataSources.query({
-    data_source_id: process.env.NOTION_PODCAST_DB,
+  const db = await notion.databases.query({
+    database_id: process.env.NOTION_PODCAST_DB,
     sorts: [{ property: '發布日期', direction: 'descending' }],
   });
 
