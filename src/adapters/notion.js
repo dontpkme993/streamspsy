@@ -129,7 +129,7 @@ async function downloadBodyImages(markdown, slug) {
       const ext = url.split('?')[0].split('.').pop().replace(/[^a-z0-9]/gi, '') || 'jpg';
       const filename = `${slug}-body-${i}.${ext}`;
       const localPath = await downloadImage(url, filename);
-      result = result.replace(full, `![${alt}](${localPath})`);
+      result = result.replace(full, () => `![${alt}](${localPath})`);
     } catch(e) {
       console.warn(`內文圖片下載失敗 (${url.slice(0, 60)}...):`, e.message);
     }
