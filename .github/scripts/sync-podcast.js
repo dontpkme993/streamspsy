@@ -88,8 +88,8 @@ async function getExistingGuids() {
   const guids = new Set();
   let cursor;
   do {
-    const res = await notion.dataSources.query({
-      data_source_id: DB_ID,
+    const res = await notion.databases.query({
+      database_id: DB_ID,
       start_cursor: cursor,
       page_size: 100,
     });
@@ -123,7 +123,7 @@ async function createEpisode(ep, channelName, platform, retries = 3) {
   for (let i = 0; i < retries; i++) {
     try {
       // Notion v5：data_source 需用 data_source_id 作為 parent type
-      await notion.pages.create({ parent: { type: 'data_source_id', data_source_id: DB_ID }, properties });
+      await notion.pages.create({ parent: { type: 'database_id', database_id: DB_ID }, properties });
       return;
     } catch (e) {
       if (i < retries - 1) {

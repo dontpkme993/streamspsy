@@ -49,8 +49,8 @@ function githubRequest(method, path, body) {
 }
 
 async function checkDB(dbId) {
-  const res = await notion.dataSources.query({
-    data_source_id: dbId,
+  const res = await notion.databases.query({
+    database_id: dbId,
     filter: {
       timestamp: 'last_edited_time',
       last_edited_time: { after: LAST_BUILD_TIME },
