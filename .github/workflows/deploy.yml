@@ -3,8 +3,6 @@ name: Build and Deploy to GitHub Pages
 on:
   push:
     branches: [main]
-  schedule:
-    - cron: '0 2 * * *'  # 每天 UTC 02:00（台灣時間 10:00）自動更新 Podcast
   workflow_dispatch:
   workflow_call:
 

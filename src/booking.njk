@@ -1,0 +1,384 @@
+---
+layout: base.njk
+title: 諮商預約｜溪水邊 Stream Side
+description: 預約溪水邊的專業諮商心理師，目前有六位優秀的心理師可供選擇，點擊預約按鈕即可直接開啟連結。
+activeNav: booking
+pageStyle: |
+  /* ── 整體佈局 ── */
+  .booking-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+  @media (max-width: 860px) {
+    .booking-layout { grid-template-columns: 1fr; }
+  }
+
+  /* ── 說明欄 ── */
+  .booking-intro {
+    position: sticky;
+    top: 6rem;
+    background: #fff;
+    border: 1px solid rgba(140,106,93,0.18);
+    border-radius: 1rem;
+    padding: 1.75rem 1.5rem;
+    box-shadow: 0 2px 12px rgba(67,52,48,0.06);
+    font-size: 0.92rem;
+    line-height: 1.95;
+    color: rgba(67,52,48,0.82);
+  }
+  .booking-intro h2 {
+    font-size: 1rem;
+    color: var(--bark);
+    margin-bottom: 0.75rem;
+  }
+  @media (max-width: 860px) {
+    .booking-intro { position: static; }
+  }
+
+  /* ── 心理師卡片格線 ── */
+  .therapist-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+  @media (max-width: 600px) {
+    .therapist-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── 單張卡片 ── */
+  .therapist-card {
+    background: #728B62;
+    border-radius: 1.25rem;
+    padding: 0 0 1.5rem;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(67,52,48,0.15);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── 照片區 ── */
+  .tc-photo-wrap {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    padding: 1.75rem 1.5rem 1rem;
+  }
+  .tc-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid #C8A96E;
+    background: rgba(255,255,255,0.15);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: rgba(255,255,255,0.5);
+    flex-shrink: 0;
+  }
+  .tc-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .tc-badge {
+    position: absolute;
+    bottom: 0.6rem;
+    right: calc(50% - 72px);
+    background: #C8A96E;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.4rem;
+    white-space: nowrap;
+    letter-spacing: 0.03em;
+  }
+
+  /* ── 名字 ── */
+  .tc-name {
+    text-align: center;
+    color: #fff;
+    font-size: 1.15rem;
+    font-weight: 700;
+    padding: 0 1.25rem 1rem;
+    line-height: 1.4;
+  }
+  .tc-name span {
+    font-size: 0.78rem;
+    opacity: 0.75;
+    font-weight: 400;
+  }
+
+  /* ── 標籤列 ── */
+  .tc-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0 1.25rem 0.6rem;
+    flex-wrap: wrap;
+  }
+  .tc-row-label {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.7);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .tc-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+  .tc-tag-audience {
+    background: rgba(255,255,255,0.82);
+    color: #5C6B4A;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+  }
+  .tc-tag-focus {
+    background: rgba(255,255,255,0.18);
+    color: rgba(255,255,255,0.92);
+    font-size: 0.72rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+
+  /* ── 預約按鈕 ── */
+  .tc-book-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0.75rem 1.25rem 0;
+    padding: 0.7rem 1rem;
+    background: #C4703C;
+    color: #fff;
+    border-radius: 0.6rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .tc-book-btn:hover { background: #A85C2E; color: #fff; }
+  .tc-book-btn .arrow { font-size: 0.8rem; opacity: 0.85; }
+  .tc-book-btn--disabled {
+    background: rgba(255,255,255,0.15);
+    cursor: default;
+    pointer-events: none;
+  }
+  .tc-book-btn--disabled:hover { background: rgba(255,255,255,0.15); }
+
+  /* ── 底部連結 ── */
+  .tc-footer {
+    display: flex;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    margin-top: 1.1rem;
+  }
+  .tc-footer a {
+    flex: 1;
+    text-align: center;
+    padding: 0.7rem 0.5rem;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+  }
+  .tc-footer a:hover {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+  }
+  .tc-footer a + a {
+    border-left: 1px solid rgba(255,255,255,0.15);
+  }
+---
+
+<!-- ══════════════ PAGE HERO ══════════════ -->
+<div class="page-hero">
+  <p style="font-size:0.8rem;letter-spacing:0.18em;color:var(--straw);margin-bottom:0.5rem;text-transform:uppercase;">Counseling Booking</p>
+  <h1>諮商預約</h1>
+  <p>在溪水邊，你可以慢慢說，我陪你一起聽。</p>
+</div>
+
+<!-- ══════════════ 主體 ══════════════ -->
+<section class="py-section">
+  <div class="content-max">
+    <div class="booking-layout">
+
+      <!-- 說明欄 -->
+      <aside class="booking-intro" aria-label="預約說明">
+        <h2>說明：</h2>
+        <p>
+          歡迎光臨「溪水邊」諮商預約專區。我們的專業心理師致力於陪伴您。
+          點擊「諮商預約」按鈕即可直接開啟連結。目前我們有四位優秀的心理師可供選擇。
+        </p>
+      </aside>
+
+      <!-- 心理師卡片格線 -->
+      <div class="therapist-grid" aria-label="心理師列表">
+
+        <!-- 江玲承 諮商心理師 -->
+        <article class="therapist-card">
+          <div class="tc-photo-wrap">
+            <div class="tc-photo" aria-hidden="true">👤</div>
+            <span class="tc-badge">35+ 歲資歷</span>
+          </div>
+          <div class="tc-name">江玲承 諮商心理師</div>
+          <div class="tc-row">
+            <span class="tc-row-label">服務<br>對象</span>
+            <div class="tc-tags">
+              <span class="tc-tag-audience">成人</span>
+              <span class="tc-tag-audience">兒童</span>
+              <span class="tc-tag-audience">青少年</span>
+            </div>
+          </div>
+          <div class="tc-row">
+            <span class="tc-row-label">重點<br>標籤</span>
+            <div class="tc-tags">
+              <span class="tc-tag-focus">#陪伴者支持</span>
+              <span class="tc-tag-focus">#創傷修復</span>
+              <span class="tc-tag-focus">#職場壓力調適</span>
+              <span class="tc-tag-focus">#敘事治療</span>
+            </div>
+          </div>
+          <a href="https://forms.gle/PCJ7TUomGzicMcVr6" class="tc-book-btn" target="_blank" rel="noopener">
+            <span>預約點我</span>
+            <span class="arrow">諮商預約直通 →</span>
+          </a>
+          <div class="tc-footer">
+            <a href="{{ '/articles/' | url }}">
+              <span>📖</span> 專業文章專區
+            </a>
+            <a href="{{ '/media/' | url }}">
+              <span>🎙</span> 系列作品/Podcast →
+            </a>
+          </div>
+        </article>
+
+        <!-- 張皓涵 臨床心理師 -->
+        <article class="therapist-card">
+          <div class="tc-photo-wrap">
+            <div class="tc-photo" aria-hidden="true">👤</div>
+            <span class="tc-badge">35+ 歲資歷</span>
+          </div>
+          <div class="tc-name">張皓涵 臨床心理師</div>
+          <div class="tc-row">
+            <span class="tc-row-label">服務<br>對象</span>
+            <div class="tc-tags">
+              <span class="tc-tag-audience">成人</span>
+              <span class="tc-tag-audience">兒童</span>
+              <span class="tc-tag-audience">青少年</span>
+            </div>
+          </div>
+          <div class="tc-row">
+            <span class="tc-row-label">重點<br>標籤</span>
+            <div class="tc-tags">
+              <span class="tc-tag-focus">#陪伴者支持</span>
+              <span class="tc-tag-focus">#創傷修復</span>
+              <span class="tc-tag-focus">#職場壓力調適</span>
+              <span class="tc-tag-focus">#敘事治療</span>
+            </div>
+          </div>
+          <a href="https://reurl.cc/K2jp3y" class="tc-book-btn" target="_blank" rel="noopener">
+            <span>預約點我</span>
+            <span class="arrow">諮商預約直通 →</span>
+          </a>
+          <div class="tc-footer">
+            <a href="{{ '/articles/' | url }}">
+              <span>📖</span> 專業文章專區
+            </a>
+            <a href="{{ '/media/' | url }}">
+              <span>🎙</span> 系列作品/Podcast →
+            </a>
+          </div>
+        </article>
+
+        <!-- 蘇怡因 諮商心理師 -->
+        <article class="therapist-card">
+          <div class="tc-photo-wrap">
+            <div class="tc-photo" aria-hidden="true">👤</div>
+            <span class="tc-badge">35+ 歲資歷</span>
+          </div>
+          <div class="tc-name">蘇怡因 諮商心理師</div>
+          <div class="tc-row">
+            <span class="tc-row-label">服務<br>對象</span>
+            <div class="tc-tags">
+              <span class="tc-tag-audience">成人</span>
+              <span class="tc-tag-audience">兒童</span>
+              <span class="tc-tag-audience">青少年</span>
+            </div>
+          </div>
+          <div class="tc-row">
+            <span class="tc-row-label">重點<br>標籤</span>
+            <div class="tc-tags">
+              <span class="tc-tag-focus">#陪伴者支持</span>
+              <span class="tc-tag-focus">#創傷修復</span>
+              <span class="tc-tag-focus">#職場壓力調適</span>
+              <span class="tc-tag-focus">#敘事治療</span>
+            </div>
+          </div>
+          <a href="https://www.holduandme.com" class="tc-book-btn" target="_blank" rel="noopener">
+            <span>預約點我</span>
+            <span class="arrow">諮商預約直通 →</span>
+          </a>
+          <div class="tc-footer">
+            <a href="{{ '/articles/' | url }}">
+              <span>📖</span> 專業文章專區
+            </a>
+            <a href="{{ '/media/' | url }}">
+              <span>🎙</span> 系列作品/Podcast →
+            </a>
+          </div>
+        </article>
+
+        <!-- 張凱琪 臨床心理師（預約暫無） -->
+        <article class="therapist-card">
+          <div class="tc-photo-wrap">
+            <div class="tc-photo" aria-hidden="true">👤</div>
+            <span class="tc-badge">35+ 歲資歷</span>
+          </div>
+          <div class="tc-name">張凱琪 臨床心理師</div>
+          <div class="tc-row">
+            <span class="tc-row-label">服務<br>對象</span>
+            <div class="tc-tags">
+              <span class="tc-tag-audience">成人</span>
+              <span class="tc-tag-audience">兒童</span>
+              <span class="tc-tag-audience">青少年</span>
+            </div>
+          </div>
+          <div class="tc-row">
+            <span class="tc-row-label">重點<br>標籤</span>
+            <div class="tc-tags">
+              <span class="tc-tag-focus">#陪伴者支持</span>
+              <span class="tc-tag-focus">#創傷修復</span>
+              <span class="tc-tag-focus">#職場壓力調適</span>
+              <span class="tc-tag-focus">#敘事治療</span>
+            </div>
+          </div>
+          <span class="tc-book-btn tc-book-btn--disabled" aria-disabled="true">
+            <span>預約即將開放</span>
+            <span class="arrow">敬請期待</span>
+          </span>
+          <div class="tc-footer">
+            <a href="{{ '/articles/' | url }}">
+              <span>📖</span> 專業文章專區
+            </a>
+            <a href="{{ '/media/' | url }}">
+              <span>🎙</span> 系列作品/Podcast →
+            </a>
+          </div>
+        </article>
+
+      </div><!-- /.therapist-grid -->
+    </div><!-- /.booking-layout -->
+  </div>
+</section>
