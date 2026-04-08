@@ -7,8 +7,8 @@
         <h3>{{ ui.site_name }} {{ ui.site_tagline }}</h3>
         <p>{{ ui.footer_brand_desc }}</p>
         <div style="display:flex;gap:1rem;margin-top:1.25rem;flex-wrap:wrap;">
-          <a href="#" style="color:rgba(250,243,224,0.55);font-size:0.82rem;" rel="noopener">📧 <span class="placeholder-text" style="color:rgba(250,243,224,0.4);">Email Placeholder</span></a>
-          <a href="#" style="color:rgba(250,243,224,0.55);font-size:0.82rem;" rel="noopener">📍 <span class="placeholder-text" style="color:rgba(250,243,224,0.4);">Location Placeholder</span></a>
+          {% if ui.footer_email %}<a href="{{ ui.footer_email_link or ('mailto:' + ui.footer_email) }}" style="color:rgba(250,243,224,0.55);font-size:0.82rem;" rel="noopener">📧 {{ ui.footer_email }}</a>{% endif %}
+          {% if ui.footer_location %}<span style="color:rgba(250,243,224,0.55);font-size:0.82rem;">📍 {{ ui.footer_location }}</span>{% endif %}
         </div>
       </div>
       <nav class="footer-nav" aria-label="頁尾導覽">
@@ -25,9 +25,9 @@
       <nav class="footer-nav" aria-label="社群連結">
         <h4>{{ ui.footer_social_title }}</h4>
         <ul>
-          <li><a href="#" rel="noopener">Instagram</a></li>
-          <li><a href="#" rel="noopener">Facebook</a></li>
-          <li><a href="#" rel="noopener">Podcast</a></li>
+          {% if ui.footer_social_instagram %}<li><a href="{{ ui.footer_social_instagram }}" target="_blank" rel="noopener">Instagram</a></li>{% endif %}
+          {% if ui.footer_social_facebook %}<li><a href="{{ ui.footer_social_facebook }}" target="_blank" rel="noopener">Facebook</a></li>{% endif %}
+          {% if ui.footer_social_podcast %}<li><a href="{{ ui.footer_social_podcast }}" target="_blank" rel="noopener">Podcast</a></li>{% endif %}
           <li><a href="{{ '/llms.txt' | url }}" rel="noopener">llms.txt</a></li>
         </ul>
       </nav>

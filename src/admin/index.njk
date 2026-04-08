@@ -287,12 +287,18 @@ pageScript: |
       {
         id: 'footer', label: '頁尾',
         fields: [
-          { key: 'footer_quote',       label: '頁尾名言' },
-          { key: 'footer_brand_desc',  label: '品牌說明', long: true },
-          { key: 'footer_nav_title',   label: '網站地圖標題' },
-          { key: 'footer_social_title',label: '社群媒體標題' },
-          { key: 'footer_copyright',   label: '版權聲明' },
-          { key: 'footer_tagline',     label: '頁尾小標語' },
+          { key: 'footer_quote',            label: '頁尾名言', full: true },
+          { key: 'footer_brand_desc',       label: '品牌說明', long: true, full: true },
+          { key: 'footer_email',            label: 'Email 顯示文字' },
+          { key: 'footer_email_link',       label: 'Email 連結（選填，留空自動用 mailto:）' },
+          { key: 'footer_location',         label: '地址／位置' },
+          { key: 'footer_nav_title',        label: '網站地圖標題' },
+          { key: 'footer_social_title',     label: '社群媒體標題' },
+          { key: 'footer_social_instagram', label: 'Instagram 連結' },
+          { key: 'footer_social_facebook',  label: 'Facebook 連結' },
+          { key: 'footer_social_podcast',   label: 'Podcast 連結' },
+          { key: 'footer_copyright',        label: '版權聲明', full: true },
+          { key: 'footer_tagline',          label: '頁尾小標語', full: true },
         ]
       },
       {
