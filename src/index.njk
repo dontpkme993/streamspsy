@@ -69,12 +69,12 @@ jsonLd: |
 <section class="hero-banner" aria-label="主視覺橫幅">
   <div class="hero-image-placeholder" aria-hidden="true"></div>
   <div class="hero-text">
-    <p style="font-size:0.82rem;letter-spacing:0.2em;color:rgba(250,243,224,0.65);margin-bottom:1rem;text-transform:uppercase;">Stream Side</p>
-    <h1>找回生活<br>最溫暖的樣子</h1>
-    <p style="margin-top:0.75rem;">透過專業諮商、兒童閱讀與租書店的一手觀察</p>
+    <p style="font-size:0.82rem;letter-spacing:0.2em;color:rgba(250,243,224,0.65);margin-bottom:1rem;text-transform:uppercase;">{{ ui.home_hero_label }}</p>
+    <h1>{{ ui.home_hero_title_1 }}<br>{{ ui.home_hero_title_2 }}</h1>
+    <p style="margin-top:0.75rem;">{{ ui.home_hero_subtitle }}</p>
     <div style="margin-top:2.5rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
-      <a href="{{ '/booking/' | url }}" class="btn-primary">諮商預約</a>
-      <a href="{{ '/cards/' | url }}" class="btn-outline" style="color:var(--rice);border-color:rgba(250,243,224,0.6);">牌卡互動</a>
+      <a href="{{ '/booking/' | url }}" class="btn-primary">{{ ui.home_hero_btn1 }}</a>
+      <a href="{{ '/cards/' | url }}" class="btn-outline" style="color:var(--rice);border-color:rgba(250,243,224,0.6);">{{ ui.home_hero_btn2 }}</a>
     </div>
   </div>
 </section>
@@ -82,31 +82,31 @@ jsonLd: |
 <!-- ══════════════ QUICK ENTRY CARDS ══════════════ -->
 <section class="py-section" aria-labelledby="services-heading">
   <div class="content-max">
-    <p style="text-align:center;font-size:0.8rem;letter-spacing:0.18em;color:var(--straw);margin-bottom:0.5rem;text-transform:uppercase;">Our Focus</p>
-    <h2 class="section-title" id="services-heading" style="text-align:center;">三個溫暖的入口</h2>
-    <p class="section-subtitle" style="text-align:center;">每一個方向，都是回到自己的路</p>
+    <p style="text-align:center;font-size:0.8rem;letter-spacing:0.18em;color:var(--straw);margin-bottom:0.5rem;text-transform:uppercase;">{{ ui.home_services_label }}</p>
+    <h2 class="section-title" id="services-heading" style="text-align:center;">{{ ui.home_services_title }}</h2>
+    <p class="section-subtitle" style="text-align:center;">{{ ui.home_services_subtitle }}</p>
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;">
 
       <article class="card" style="padding:2.5rem 2rem;">
         <div style="width:52px;height:52px;background:var(--sprout);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1.25rem;">🌿</div>
-        <h3 style="font-size:1.15rem;margin-bottom:0.75rem;">專業諮商</h3>
-        <p style="font-size:0.88rem;color:rgba(67,52,48,0.72);margin-bottom:1.5rem;">在安靜的對話空間裡，重新聆聽自己內心深處最真實的聲音，找回屬於你的節奏。</p>
-        <a href="{{ '/booking/' | url }}" class="btn-outline" style="font-size:0.82rem;padding:0.5rem 1.4rem;">諮商預約 →</a>
+        <h3 style="font-size:1.15rem;margin-bottom:0.75rem;">{{ ui.home_s1_title }}</h3>
+        <p style="font-size:0.88rem;color:rgba(67,52,48,0.72);margin-bottom:1.5rem;">{{ ui.home_s1_desc }}</p>
+        <a href="{{ '/booking/' | url }}" class="btn-outline" style="font-size:0.82rem;padding:0.5rem 1.4rem;">{{ ui.home_s1_btn }}</a>
       </article>
 
       <article class="card" style="padding:2.5rem 2rem;">
         <div style="width:52px;height:52px;background:var(--sprout);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1.25rem;">📚</div>
-        <h3 style="font-size:1.15rem;margin-bottom:0.75rem;">探索閱讀</h3>
-        <p style="font-size:0.88rem;color:rgba(67,52,48,0.72);margin-bottom:1.5rem;">從一本書出發，走進不同的生命經驗。閱讀是最安靜的探險，也是找回自己的一種方式。</p>
-        <a href="{{ '/articles/' | url }}" class="btn-outline" style="font-size:0.82rem;padding:0.5rem 1.4rem;">閱讀文章 →</a>
+        <h3 style="font-size:1.15rem;margin-bottom:0.75rem;">{{ ui.home_s2_title }}</h3>
+        <p style="font-size:0.88rem;color:rgba(67,52,48,0.72);margin-bottom:1.5rem;">{{ ui.home_s2_desc }}</p>
+        <a href="{{ '/articles/' | url }}" class="btn-outline" style="font-size:0.82rem;padding:0.5rem 1.4rem;">{{ ui.home_s2_btn }}</a>
       </article>
 
       <article class="card" style="padding:2.5rem 2rem;">
         <div style="width:52px;height:52px;background:var(--sprout);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1.25rem;">🃏</div>
-        <h3 style="font-size:1.15rem;margin-bottom:0.75rem;">聲音與著作</h3>
-        <p style="font-size:0.88rem;color:rgba(67,52,48,0.72);margin-bottom:1.5rem;">透過 Podcast 與文字，把諮商室裡的思考帶到你耳邊。在日常的縫隙裡，讓聲音陪你慢慢走。</p>
-        <a href="{{ '/media/' | url }}" class="btn-outline" style="font-size:0.82rem;padding:0.5rem 1.4rem;">前往收聽 →</a>
+        <h3 style="font-size:1.15rem;margin-bottom:0.75rem;">{{ ui.home_s3_title }}</h3>
+        <p style="font-size:0.88rem;color:rgba(67,52,48,0.72);margin-bottom:1.5rem;">{{ ui.home_s3_desc }}</p>
+        <a href="{{ '/media/' | url }}" class="btn-outline" style="font-size:0.82rem;padding:0.5rem 1.4rem;">{{ ui.home_s3_btn }}</a>
       </article>
 
     </div>
@@ -122,8 +122,8 @@ jsonLd: |
       <div style="display:grid;grid-template-columns:1fr;gap:2rem;">
 
         <div>
-          <p style="font-size:0.8rem;letter-spacing:0.18em;color:var(--straw);margin-bottom:0.5rem;text-transform:uppercase;">Latest Article</p>
-          <h2 class="section-title" id="latest-heading">最新專欄</h2>
+          <p style="font-size:0.8rem;letter-spacing:0.18em;color:var(--straw);margin-bottom:0.5rem;text-transform:uppercase;">{{ ui.home_latest_label }}</p>
+          <h2 class="section-title" id="latest-heading">{{ ui.home_latest_title }}</h2>
         </div>
 
         <article style="display:grid;grid-template-columns:1fr;gap:1.5rem;background:white;border-radius:1rem;overflow:hidden;box-shadow:0 2px 16px rgba(140,106,93,0.08);">
@@ -142,11 +142,11 @@ jsonLd: |
             <p style="font-size:0.88rem;color:rgba(67,52,48,0.7);line-height:1.8;">
               <span class="placeholder-text">3秒摘要：文章重點內容佔位符。讀者能在3秒內了解這篇文章的核心觀點與閱讀價值。Article Excerpt Placeholder.</span>
             </p>
-            <a href="{{ '/articles/' | url }}" style="display:inline-block;margin-top:1.25rem;color:var(--straw);font-size:0.88rem;font-weight:600;">閱讀全文 →</a>
+            <a href="{{ '/articles/' | url }}" style="display:inline-block;margin-top:1.25rem;color:var(--straw);font-size:0.88rem;font-weight:600;">{{ ui.home_latest_readmore }}</a>
           </div>
         </article>
 
-        <a href="{{ '/articles/' | url }}" class="btn-outline" style="text-align:center;display:block;">查看所有文章</a>
+        <a href="{{ '/articles/' | url }}" class="btn-outline" style="text-align:center;display:block;">{{ ui.home_latest_all }}</a>
       </div>
     </div>
   </div>
@@ -157,8 +157,8 @@ jsonLd: |
 <!-- ══════════════ EVENT PREVIEW ══════════════ -->
 <section class="py-section" aria-labelledby="event-heading">
   <div class="content-max">
-    <p style="font-size:0.8rem;letter-spacing:0.18em;color:var(--straw);margin-bottom:0.5rem;text-transform:uppercase;">Upcoming Event</p>
-    <h2 class="section-title" id="event-heading" style="margin-bottom:2.5rem;">近期活動預告</h2>
+    <p style="font-size:0.8rem;letter-spacing:0.18em;color:var(--straw);margin-bottom:0.5rem;text-transform:uppercase;">{{ ui.home_event_label }}</p>
+    <h2 class="section-title" id="event-heading" style="margin-bottom:2.5rem;">{{ ui.home_event_title }}</h2>
 
     {% set latestEvent = events[0] %}
     {% if latestEvent %}
@@ -178,9 +178,9 @@ jsonLd: |
         </div>
         <div style="display:flex;flex-direction:column;gap:0.75rem;min-width:fit-content;">
           {% if latestEvent.link %}
-            <a href="{{ latestEvent.link }}" class="btn-primary" style="text-align:center;" rel="noopener">立即報名</a>
+            <a href="{{ latestEvent.link }}" class="btn-primary" style="text-align:center;" rel="noopener">{{ ui.home_event_signup }}</a>
           {% endif %}
-          <a href="{{ '/events/' | url }}" style="text-align:center;font-size:0.82rem;color:rgba(67,52,48,0.55);">查看更多場次</a>
+          <a href="{{ '/events/' | url }}" style="text-align:center;font-size:0.82rem;color:rgba(67,52,48,0.55);">{{ ui.home_event_more }}</a>
         </div>
       </article>
     {% else %}
@@ -202,8 +202,8 @@ jsonLd: |
           </p>
         </div>
         <div style="display:flex;flex-direction:column;gap:0.75rem;min-width:fit-content;">
-          <a href="{{ '/events/' | url }}" class="btn-primary" style="text-align:center;">立即報名</a>
-          <a href="{{ '/events/' | url }}" style="text-align:center;font-size:0.82rem;color:rgba(67,52,48,0.55);">查看更多場次</a>
+          <a href="{{ '/events/' | url }}" class="btn-primary" style="text-align:center;">{{ ui.home_event_signup }}</a>
+          <a href="{{ '/events/' | url }}" style="text-align:center;font-size:0.82rem;color:rgba(67,52,48,0.55);">{{ ui.home_event_more }}</a>
         </div>
       </article>
     {% endif %}
@@ -215,8 +215,8 @@ jsonLd: |
 <section style="padding:5rem 1.5rem;text-align:center;background:linear-gradient(135deg,rgba(233,237,201,0.4) 0%,rgba(212,163,115,0.2) 100%);" aria-label="品牌語錄">
   <div style="max-width:640px;margin:0 auto;">
     <p style="font-size:clamp(1.1rem,2.5vw,1.5rem);color:var(--oak);font-weight:500;line-height:2;letter-spacing:0.08em;">
-      「在溪水邊坐下，<br>讓時間慢下來，<br>讓心靠近自己。」
+      「{{ ui.home_quote_line1 }}<br>{{ ui.home_quote_line2 }}<br>{{ ui.home_quote_line3 }}」
     </p>
-    <p style="margin-top:1.5rem;font-size:0.82rem;color:rgba(67,52,48,0.45);letter-spacing:0.12em;">— 溪水邊 Stream Side</p>
+    <p style="margin-top:1.5rem;font-size:0.82rem;color:rgba(67,52,48,0.45);letter-spacing:0.12em;">{{ ui.home_quote_author }}</p>
   </div>
 </section>

@@ -1,29 +1,29 @@
 <!-- ══════════════ FOOTER ══════════════ -->
 <footer class="site-footer" role="contentinfo">
   <div class="footer-inner">
-    <p class="footer-quote">「在溪水邊，找回生活最溫暖的樣子。」</p>
+    <p class="footer-quote">{{ ui.footer_quote }}</p>
     <div class="footer-grid">
       <div class="footer-brand">
-        <h3>溪水邊 Stream Side</h3>
-        <p>透過專業諮商、兒童閱讀與租書店的一手觀察，陪伴你找回內心最溫柔的角落。</p>
+        <h3>{{ ui.site_name }} {{ ui.site_tagline }}</h3>
+        <p>{{ ui.footer_brand_desc }}</p>
         <div style="display:flex;gap:1rem;margin-top:1.25rem;flex-wrap:wrap;">
           <a href="#" style="color:rgba(250,243,224,0.55);font-size:0.82rem;" rel="noopener">📧 <span class="placeholder-text" style="color:rgba(250,243,224,0.4);">Email Placeholder</span></a>
           <a href="#" style="color:rgba(250,243,224,0.55);font-size:0.82rem;" rel="noopener">📍 <span class="placeholder-text" style="color:rgba(250,243,224,0.4);">Location Placeholder</span></a>
         </div>
       </div>
       <nav class="footer-nav" aria-label="頁尾導覽">
-        <h4>網站地圖</h4>
+        <h4>{{ ui.footer_nav_title }}</h4>
         <ul>
-          <li><a href="{{ '/about/' | url }}">關於我們</a></li>
-          <li><a href="{{ '/booking/' | url }}">諮商預約</a></li>
-          <li><a href="{{ '/articles/' | url }}">專欄文章</a></li>
-          <li><a href="{{ '/media/' | url }}">聲音與著作</a></li>
-          <li><a href="{{ '/events/' | url }}">諮商講座</a></li>
-          <li><a href="{{ '/cards/' | url }}">為自己抽張卡</a></li>
+          <li><a href="{{ '/about/' | url }}">{{ ui.nav_mobile_about }}</a></li>
+          <li><a href="{{ '/booking/' | url }}">{{ ui.nav_mobile_booking }}</a></li>
+          <li><a href="{{ '/articles/' | url }}">{{ ui.nav_mobile_articles }}</a></li>
+          <li><a href="{{ '/media/' | url }}">{{ ui.nav_mobile_media }}</a></li>
+          <li><a href="{{ '/events/' | url }}">{{ ui.nav_mobile_events }}</a></li>
+          <li><a href="{{ '/cards/' | url }}">{{ ui.nav_mobile_cards }}</a></li>
         </ul>
       </nav>
       <nav class="footer-nav" aria-label="社群連結">
-        <h4>社群媒體</h4>
+        <h4>{{ ui.footer_social_title }}</h4>
         <ul>
           <li><a href="#" rel="noopener">Instagram</a></li>
           <li><a href="#" rel="noopener">Facebook</a></li>
@@ -33,8 +33,8 @@
       </nav>
     </div>
     <div class="footer-bottom">
-      <p>© 2026 溪水邊 Stream Side. All Rights Reserved.</p>
-      <p>以愛與溫度，陪你走每一段路。</p>
+      <p>{{ ui.footer_copyright }}</p>
+      <p>{{ ui.footer_tagline }}</p>
     </div>
   </div>
 </footer>

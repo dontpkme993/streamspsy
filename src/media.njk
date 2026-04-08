@@ -7,17 +7,17 @@ activeNav: media
 
 <!-- ══════════════ PAGE HERO ══════════════ -->
 <div class="page-hero">
-  <p style="font-size:0.8rem;letter-spacing:0.18em;color:var(--straw);margin-bottom:0.5rem;text-transform:uppercase;">Sound & Works</p>
-  <h1>聲音與著作</h1>
-  <p>用聲音說故事，用文字留下溫度。</p>
+  <p style="font-size:0.8rem;letter-spacing:0.18em;color:var(--straw);margin-bottom:0.5rem;text-transform:uppercase;">{{ ui.media_hero_label }}</p>
+  <h1>{{ ui.media_hero_title }}</h1>
+  <p>{{ ui.media_hero_subtitle }}</p>
 </div>
 
 <!-- ══════════════ PODCAST SECTION ══════════════ -->
 <section class="py-section" aria-labelledby="podcast-heading">
   <div class="content-max">
-    <p style="font-size:0.8rem;letter-spacing:0.18em;color:var(--straw);margin-bottom:0.5rem;text-transform:uppercase;">Podcast</p>
-    <h2 class="section-title" id="podcast-heading" style="margin-bottom:0.5rem;">聲音節目</h2>
-    <p style="color:rgba(67,52,48,0.6);font-size:0.9rem;margin-bottom:3rem;">每一集，帶你走進生活裡那些值得慢下來的時刻。</p>
+    <p style="font-size:0.8rem;letter-spacing:0.18em;color:var(--straw);margin-bottom:0.5rem;text-transform:uppercase;">{{ ui.media_podcast_label }}</p>
+    <h2 class="section-title" id="podcast-heading" style="margin-bottom:0.5rem;">{{ ui.media_podcast_title }}</h2>
+    <p style="color:rgba(67,52,48,0.6);font-size:0.9rem;margin-bottom:3rem;">{{ ui.media_podcast_subtitle }}</p>
 
     {% if podcast.episodes.length %}
 
@@ -50,7 +50,7 @@ activeNav: media
                 {% if ep.summary %}
                   <div style="flex:1;min-width:260px;background:var(--rice);border-radius:0.75rem;padding:1.25rem;">
                     <p style="font-size:0.85rem;color:rgba(67,52,48,0.72);line-height:1.9;">{{ ep.summary | striptags | truncate(300) }}</p>
-                    <a href="{{ ep.embedUrl or ep.link }}" target="_blank" rel="noopener" style="display:inline-block;margin-top:1rem;font-size:0.78rem;color:var(--straw);font-weight:600;">前往平台完整收聽 →</a>
+                    <a href="{{ ep.embedUrl or ep.link }}" target="_blank" rel="noopener" style="display:inline-block;margin-top:1rem;font-size:0.78rem;color:var(--straw);font-weight:600;">{{ ui.media_podcast_listen }}</a>
                   </div>
                 {% endif %}
               </div>
@@ -90,7 +90,7 @@ activeNav: media
                   {% if ep.summary %}
                     <div style="flex:1;min-width:260px;background:var(--rice);border-radius:0.75rem;padding:1.25rem;">
                       <p style="font-size:0.85rem;color:rgba(67,52,48,0.72);line-height:1.9;">{{ ep.summary | striptags | truncate(300) }}</p>
-                      <a href="{{ ep.embedUrl or ep.link }}" target="_blank" rel="noopener" style="display:inline-block;margin-top:1rem;font-size:0.78rem;color:var(--straw);font-weight:600;">前往平台完整收聽 →</a>
+                      <a href="{{ ep.embedUrl or ep.link }}" target="_blank" rel="noopener" style="display:inline-block;margin-top:1rem;font-size:0.78rem;color:var(--straw);font-weight:600;">{{ ui.media_podcast_listen }}</a>
                     </div>
                   {% endif %}
                 </div>
@@ -124,14 +124,14 @@ activeNav: media
               {% if ep.summary %}
                 <p style="font-size:0.82rem;color:rgba(67,52,48,0.6);line-height:1.8;margin-bottom:0.75rem;">{{ ep.summary | striptags | truncate(120) }}</p>
               {% endif %}
-              <a href="{{ ep.embedUrl or ep.link }}" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--straw);font-weight:600;">收聽 →</a>
+              <a href="{{ ep.embedUrl or ep.link }}" target="_blank" rel="noopener" style="font-size:0.78rem;color:var(--straw);font-weight:600;">{{ ui.media_podcast_listen_short }}</a>
             </article>
           {% endfor %}
         </div>
 
         {% if podcast.episodes.length > 4 %}
           <div style="text-align:center;margin-top:2.5rem;">
-            <button id="podcast-load-more" class="btn-outline" onclick="loadMoreEpisodes()">顯示更多集數</button>
+            <button id="podcast-load-more" class="btn-outline" onclick="loadMoreEpisodes()">{{ ui.media_podcast_load_more }}</button>
             <p id="podcast-count" style="font-size:0.78rem;color:rgba(67,52,48,0.4);margin-top:0.75rem;">顯示 4 / {{ podcast.episodes.length }} 集</p>
           </div>
         {% endif %}
@@ -178,9 +178,9 @@ activeNav: media
 <!-- ══════════════ BOOKS SECTION ══════════════ -->
 <section class="py-section" aria-labelledby="books-heading">
   <div class="content-max">
-    <p style="font-size:0.8rem;letter-spacing:0.18em;color:var(--straw);margin-bottom:0.5rem;text-transform:uppercase;">Publications</p>
-    <h2 class="section-title" id="books-heading" style="margin-bottom:0.5rem;">著作展示</h2>
-    <p style="color:rgba(67,52,48,0.6);font-size:0.9rem;margin-bottom:3rem;">每一本書，都是一段思索的結晶。</p>
+    <p style="font-size:0.8rem;letter-spacing:0.18em;color:var(--straw);margin-bottom:0.5rem;text-transform:uppercase;">{{ ui.media_books_label }}</p>
+    <h2 class="section-title" id="books-heading" style="margin-bottom:0.5rem;">{{ ui.media_books_title }}</h2>
+    <p style="color:rgba(67,52,48,0.6);font-size:0.9rem;margin-bottom:3rem;">{{ ui.media_books_subtitle }}</p>
 
     <div class="book-grid">
 

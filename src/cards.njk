@@ -307,11 +307,11 @@ pageScript: |
 
 <!-- ══════════════ PAGE INTRO ══════════════ -->
 <div style="text-align:center;padding:4rem 1.5rem 1rem;">
-  <p style="font-size:0.8rem;letter-spacing:0.18em;color:var(--straw);margin-bottom:0.5rem;text-transform:uppercase;">Card Reading</p>
-  <h1 style="font-size:clamp(1.8rem,3.5vw,2.5rem);color:var(--oak);margin-bottom:0.75rem;">為自己抽張卡</h1>
+  <p style="font-size:0.8rem;letter-spacing:0.18em;color:var(--straw);margin-bottom:0.5rem;text-transform:uppercase;">{{ ui.cards_label }}</p>
+  <h1 style="font-size:clamp(1.8rem,3.5vw,2.5rem);color:var(--oak);margin-bottom:0.75rem;">{{ ui.cards_title }}</h1>
   <p style="color:rgba(67,52,48,0.6);font-size:0.95rem;max-width:420px;margin:0 auto;line-height:1.9;">
-    深呼吸，靜下心來，<br>
-    點擊任意一張牌，翻開今天最需要看見的那道光。
+    {{ ui.cards_subtitle_1 }}<br>
+    {{ ui.cards_subtitle_2 }}
   </p>
 </div>
 
@@ -345,10 +345,10 @@ pageScript: |
   <!-- ── Control Buttons ── -->
   <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-bottom:2.5rem;" role="group" aria-label="抽卡操作">
     <button class="btn-primary" id="redrawBtn" onclick="redraw()" aria-label="重新抽卡" style="font-size:0.85rem;padding:0.6rem 1.5rem;">
-      ✦ 重新抽卡
+      {{ ui.cards_btn_redraw }}
     </button>
     <button class="btn-outline" id="shareBtn" onclick="shareCard()" aria-label="分享牌卡" style="font-size:0.85rem;padding:0.6rem 1.5rem;">
-      ↗ 分享
+      {{ ui.cards_btn_share }}
     </button>
   </div>
 
@@ -359,8 +359,8 @@ pageScript: |
     <p id="interpretBody" style="margin-top:0.75rem;white-space:pre-line;"></p>
     <p class="card-message" id="interpretMessage"></p>
     <div style="margin-top:2rem;display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
-      <button onclick="shareCard()" class="btn-outline" style="font-size:0.82rem;padding:0.5rem 1.4rem;">分享這張卡</button>
-      <a href="{{ '/articles/' | url }}" class="btn-outline" style="font-size:0.82rem;padding:0.5rem 1.4rem;">閱讀相關文章</a>
+      <button onclick="shareCard()" class="btn-outline" style="font-size:0.82rem;padding:0.5rem 1.4rem;">{{ ui.cards_btn_share2 }}</button>
+      <a href="{{ '/articles/' | url }}" class="btn-outline" style="font-size:0.82rem;padding:0.5rem 1.4rem;">{{ ui.cards_btn_articles }}</a>
     </div>
   </div>
 
@@ -369,19 +369,19 @@ pageScript: |
 <!-- ══════════════ HOW TO USE ══════════════ -->
 <section style="padding:3rem 1.5rem 6rem;max-width:640px;margin:0 auto;text-align:center;">
   <div class="divider" style="margin:0 0 3rem;"></div>
-  <h2 style="font-size:1.2rem;color:var(--oak);margin-bottom:1rem;">如何使用牌卡？</h2>
+  <h2 style="font-size:1.2rem;color:var(--oak);margin-bottom:1rem;">{{ ui.cards_howto_title }}</h2>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1.5rem;text-align:center;margin-top:2rem;">
     <div>
       <div style="font-size:1.5rem;margin-bottom:0.5rem;">🌬️</div>
-      <p style="font-size:0.85rem;color:rgba(67,52,48,0.65);line-height:1.7;">深呼吸，<br>讓心安靜下來</p>
+      <p style="font-size:0.85rem;color:rgba(67,52,48,0.65);line-height:1.7;">{{ ui.cards_step1 }}</p>
     </div>
     <div>
       <div style="font-size:1.5rem;margin-bottom:0.5rem;">💭</div>
-      <p style="font-size:0.85rem;color:rgba(67,52,48,0.65);line-height:1.7;">心中帶著一個<br>此刻的疑問或感受</p>
+      <p style="font-size:0.85rem;color:rgba(67,52,48,0.65);line-height:1.7;">{{ ui.cards_step2 }}</p>
     </div>
     <div>
       <div style="font-size:1.5rem;margin-bottom:0.5rem;">🃏</div>
-      <p style="font-size:0.85rem;color:rgba(67,52,48,0.65);line-height:1.7;">點擊任一張牌，<br>接收今天的訊息</p>
+      <p style="font-size:0.85rem;color:rgba(67,52,48,0.65);line-height:1.7;">{{ ui.cards_step3 }}</p>
     </div>
   </div>
 </section>

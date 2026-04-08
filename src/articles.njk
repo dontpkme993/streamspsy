@@ -50,16 +50,16 @@ pageScript: |
 
 <!-- ══════════════ PAGE HERO ══════════════ -->
 <div class="page-hero">
-  <p style="font-size:0.8rem;letter-spacing:0.18em;color:var(--straw);margin-bottom:0.5rem;text-transform:uppercase;">Articles</p>
-  <h1>專欄文章</h1>
-  <p>每一篇文字，都是一次溫柔的相遇。</p>
+  <p style="font-size:0.8rem;letter-spacing:0.18em;color:var(--straw);margin-bottom:0.5rem;text-transform:uppercase;">{{ ui.articles_hero_label }}</p>
+  <h1>{{ ui.articles_hero_title }}</h1>
+  <p>{{ ui.articles_hero_subtitle }}</p>
 </div>
 
 <!-- ══════════════ TAG FILTER ══════════════ -->
 <div style="max-width:1100px;margin:0 auto;padding:0 1.5rem 2.5rem;" role="search" aria-label="文章標籤過濾">
-  <p style="font-size:0.8rem;color:rgba(67,52,48,0.5);margin-bottom:1rem;letter-spacing:0.05em;">依主題瀏覽：</p>
+  <p style="font-size:0.8rem;color:rgba(67,52,48,0.5);margin-bottom:1rem;letter-spacing:0.05em;">{{ ui.articles_filter_label }}</p>
   <div style="display:flex;flex-wrap:wrap;gap:0.6rem;" id="tag-filter">
-    <button class="tag-btn active" data-tag="all" onclick="filterTags(this,'all')">全部</button>
+    <button class="tag-btn active" data-tag="all" onclick="filterTags(this,'all')">{{ ui.articles_all_btn }}</button>
     <button class="tag-btn" data-tag="心理" onclick="filterTags(this,'心理')">#心理</button>
     <button class="tag-btn" data-tag="繪本" onclick="filterTags(this,'繪本')">#繪本</button>
     <button class="tag-btn" data-tag="租書店觀察" onclick="filterTags(this,'租書店觀察')">#租書店觀察</button>
@@ -183,7 +183,7 @@ pageScript: |
 
     <!-- Load more placeholder -->
     <div style="text-align:center;margin-top:2rem;">
-      <button class="btn-outline">載入更多文章</button>
+      <button class="btn-outline">{{ ui.articles_load_more }}</button>
     </div>
 
   </section>
@@ -194,7 +194,7 @@ pageScript: |
 
       <!-- Recommended — 自動取最新 3 篇 -->
       <div style="background:white;border-radius:1rem;padding:1.5rem;margin-bottom:1.5rem;box-shadow:0 2px 12px rgba(140,106,93,0.06);">
-        <h3 style="font-size:0.9rem;color:var(--oak);font-weight:700;letter-spacing:0.08em;margin-bottom:1.25rem;">推薦閱讀</h3>
+        <h3 style="font-size:0.9rem;color:var(--oak);font-weight:700;letter-spacing:0.08em;margin-bottom:1.25rem;">{{ ui.articles_sidebar_rec }}</h3>
         <ul style="list-style:none;display:flex;flex-direction:column;gap:1rem;">
           {% set recList = articles | where("recommended", true) %}
           {% if recList.length %}
@@ -214,7 +214,7 @@ pageScript: |
 
       <!-- Hot Tags -->
       <div style="background:white;border-radius:1rem;padding:1.5rem;margin-bottom:1.5rem;box-shadow:0 2px 12px rgba(140,106,93,0.06);">
-        <h3 style="font-size:0.9rem;color:var(--oak);font-weight:700;letter-spacing:0.08em;margin-bottom:1.25rem;">熱門標籤</h3>
+        <h3 style="font-size:0.9rem;color:var(--oak);font-weight:700;letter-spacing:0.08em;margin-bottom:1.25rem;">{{ ui.articles_sidebar_tags }}</h3>
         <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
           <span class="tag">#心理</span>
           <span class="tag">#繪本</span>
@@ -228,8 +228,8 @@ pageScript: |
 
       <!-- CTA -->
       <div style="background:linear-gradient(135deg,var(--oak),#6b4f45);border-radius:1rem;padding:1.5rem;text-align:center;">
-        <p style="color:var(--rice);font-size:0.88rem;line-height:1.7;margin-bottom:1rem;">想要在溪水邊找到專屬的陪伴？</p>
-        <a href="{{ '/events/' | url }}" class="btn-primary" style="font-size:0.82rem;padding:0.6rem 1.5rem;">預約諮商</a>
+        <p style="color:var(--rice);font-size:0.88rem;line-height:1.7;margin-bottom:1rem;">{{ ui.articles_sidebar_cta }}</p>
+        <a href="{{ '/events/' | url }}" class="btn-primary" style="font-size:0.82rem;padding:0.6rem 1.5rem;">{{ ui.articles_sidebar_btn }}</a>
       </div>
 
     </div>
