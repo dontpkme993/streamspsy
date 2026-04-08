@@ -137,7 +137,10 @@ async function downloadBodyImages(markdown, slug) {
   return result;
 }
 
+let _articlesCache = null;
+
 async function getArticles() {
+  if (_articlesCache) return _articlesCache;
   if (!process.env.NOTION_TOKEN || !process.env.NOTION_ARTICLES_DB) return [];
 
   const db = await notion.databases.query({
@@ -146,7 +149,7 @@ async function getArticles() {
     sorts: [{ property: '發布日期', direction: 'descending' }],
   });
 
-  return Promise.all(db.results.map(async page => {
+  _articlesCache = Promise.all(db.results.map(async page => {
     const id = page.id;
     const idSlug = id.replace(/-/g, '');
 
@@ -193,6 +196,7 @@ async function getArticles() {
       body,
     };
   }));
+  return _articlesCache;
 }
 
 async function getEvents() {

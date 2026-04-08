@@ -19,29 +19,41 @@ pageStyle: |
   .sidebar-sticky { position: sticky; top: 88px; }
 pageScript: |
   <script>
-    // Tag filter
-    function filterTags(btn, tag) {
-      document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const articles = document.querySelectorAll('.article-card');
-      articles.forEach(a => {
+    // Tag filter — driven by URL hash (e.g. /articles/#心理)
+    function applyFilter(tag) {
+      document.querySelectorAll('.tag-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.tag === tag);
+      });
+      document.querySelectorAll('.article-card').forEach(a => {
         if (tag === 'all') {
           a.style.display = '';
         } else {
-          const tags = a.dataset.tags || '';
-          a.style.display = tags.includes(tag) ? '' : 'none';
+          a.style.display = (a.dataset.tags || '').includes(tag) ? '' : 'none';
         }
       });
     }
 
+    function getTagFromHash() {
+      return decodeURIComponent(location.hash.slice(1)) || 'all';
+    }
+
+    // Click sets hash; hash change drives filter
+    document.querySelectorAll('.tag-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tag = btn.dataset.tag;
+        location.hash = tag === 'all' ? '' : encodeURIComponent(tag);
+      });
+    });
+
+    window.addEventListener('hashchange', () => applyFilter(getTagFromHash()));
+
+    // Initial load
+    applyFilter(getTagFromHash());
+
     // Show sidebar on desktop
     function updateSidebar() {
       const sidebar = document.querySelector('aside');
-      if (window.innerWidth >= 1024) {
-        sidebar.style.display = 'block';
-      } else {
-        sidebar.style.display = 'none';
-      }
+      sidebar.style.display = window.innerWidth >= 1024 ? 'block' : 'none';
     }
     updateSidebar();
     window.addEventListener('resize', updateSidebar);
@@ -59,12 +71,10 @@ pageScript: |
 <div style="max-width:1100px;margin:0 auto;padding:0 1.5rem 2.5rem;" role="search" aria-label="文章標籤過濾">
   <p style="font-size:0.8rem;color:rgba(67,52,48,0.5);margin-bottom:1rem;letter-spacing:0.05em;">{{ ui.articles_filter_label }}</p>
   <div style="display:flex;flex-wrap:wrap;gap:0.6rem;" id="tag-filter">
-    <button class="tag-btn active" data-tag="all" onclick="filterTags(this,'all')">{{ ui.articles_all_btn }}</button>
-    <button class="tag-btn" data-tag="心理" onclick="filterTags(this,'心理')">#心理</button>
-    <button class="tag-btn" data-tag="繪本" onclick="filterTags(this,'繪本')">#繪本</button>
-    <button class="tag-btn" data-tag="租書店觀察" onclick="filterTags(this,'租書店觀察')">#租書店觀察</button>
-    <button class="tag-btn" data-tag="親子" onclick="filterTags(this,'親子')">#親子</button>
-    <button class="tag-btn" data-tag="自我探索" onclick="filterTags(this,'自我探索')">#自我探索</button>
+    <button class="tag-btn active" data-tag="all">{{ ui.articles_all_btn }}</button>
+    {% for item in articleTags %}
+      <button class="tag-btn" data-tag="{{ item.tag }}">#{{ item.tag }}</button>
+    {% endfor %}
   </div>
 </div>
 
@@ -216,13 +226,9 @@ pageScript: |
       <div style="background:white;border-radius:1rem;padding:1.5rem;margin-bottom:1.5rem;box-shadow:0 2px 12px rgba(140,106,93,0.06);">
         <h3 style="font-size:0.9rem;color:var(--oak);font-weight:700;letter-spacing:0.08em;margin-bottom:1.25rem;">{{ ui.articles_sidebar_tags }}</h3>
         <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
-          <span class="tag">#心理</span>
-          <span class="tag">#繪本</span>
-          <span class="tag">#租書店觀察</span>
-          <span class="tag">#親子</span>
-          <span class="tag">#自我探索</span>
-          <span class="tag">#諮商</span>
-          <span class="tag">#書單</span>
+          {% for item in articleTags %}{% if loop.index <= 10 %}
+            <span class="tag">#{{ item.tag }}</span>
+          {% endif %}{% endfor %}
         </div>
       </div>
 
