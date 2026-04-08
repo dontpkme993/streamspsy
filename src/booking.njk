@@ -16,11 +16,12 @@ pageStyle: |
 
   /* ── 單張卡片 ── */
   .therapist-card {
-    background: var(--oak);
+    background: #fff;
     border-radius: 1.25rem;
     padding: 0 0 1.5rem;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(67,52,48,0.18);
+    box-shadow: 0 4px 20px rgba(67,52,48,0.12);
+    border: 1px solid rgba(140,106,93,0.12);
     display: flex;
     flex-direction: column;
   }
@@ -33,17 +34,17 @@ pageStyle: |
     padding: 1.75rem 1.5rem 1rem;
   }
   .tc-photo {
-    width: 110px;
-    height: 110px;
+    width: 240px;
+    height: 240px;
     border-radius: 50%;
-    border: 3px solid var(--straw);
-    background: rgba(255,255,255,0.12);
+    border: 4px solid var(--straw);
+    background: var(--sprout);
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2.5rem;
-    color: rgba(255,255,255,0.4);
+    font-size: 5rem;
+    color: rgba(67,52,48,0.25);
     flex-shrink: 0;
   }
   .tc-photo img {
@@ -54,7 +55,7 @@ pageStyle: |
   .tc-badge {
     position: absolute;
     bottom: 0.6rem;
-    right: calc(50% - 68px);
+    right: calc(50% - 128px);
     background: var(--straw);
     color: var(--bark);
     font-size: 0.7rem;
@@ -68,7 +69,7 @@ pageStyle: |
   /* ── 名字 ── */
   .tc-name {
     text-align: center;
-    color: var(--rice);
+    color: var(--bark);
     font-size: 1.1rem;
     font-weight: 700;
     padding: 0 1.25rem 1rem;
@@ -76,7 +77,7 @@ pageStyle: |
   }
   .tc-name span {
     font-size: 0.78rem;
-    opacity: 0.7;
+    opacity: 0.6;
     font-weight: 400;
   }
 
@@ -90,7 +91,7 @@ pageStyle: |
   }
   .tc-row-label {
     font-size: 0.72rem;
-    color: rgba(250,243,224,0.65);
+    color: rgba(67,52,48,0.5);
     white-space: nowrap;
     flex-shrink: 0;
   }
@@ -100,7 +101,7 @@ pageStyle: |
     gap: 0.35rem;
   }
   .tc-tag-audience {
-    background: var(--rice);
+    background: var(--sprout);
     color: var(--bark);
     font-size: 0.72rem;
     font-weight: 600;
@@ -108,12 +109,12 @@ pageStyle: |
     border-radius: 999px;
   }
   .tc-tag-focus {
-    background: rgba(255,255,255,0.14);
-    color: rgba(250,243,224,0.88);
+    background: rgba(140,106,93,0.08);
+    color: var(--oak);
     font-size: 0.7rem;
     padding: 0.18rem 0.5rem;
     border-radius: 999px;
-    border: 1px solid rgba(212,163,115,0.35);
+    border: 1px solid rgba(140,106,93,0.2);
   }
 
   /* ── 預約按鈕 ── */
@@ -135,17 +136,17 @@ pageStyle: |
   .tc-book-btn:hover { background: #c49060; color: var(--bark); }
   .tc-book-btn .arrow { font-size: 0.78rem; opacity: 0.75; }
   .tc-book-btn--disabled {
-    background: rgba(255,255,255,0.12);
-    color: rgba(250,243,224,0.55);
+    background: rgba(67,52,48,0.06);
+    color: rgba(67,52,48,0.35);
     cursor: default;
     pointer-events: none;
   }
-  .tc-book-btn--disabled:hover { background: rgba(255,255,255,0.12); }
+  .tc-book-btn--disabled:hover { background: rgba(67,52,48,0.06); }
 
   /* ── 底部連結 ── */
   .tc-footer {
     display: flex;
-    border-top: 1px solid rgba(212,163,115,0.2);
+    border-top: 1px solid rgba(140,106,93,0.12);
     margin-top: 1.1rem;
   }
   .tc-footer a {
@@ -153,7 +154,7 @@ pageStyle: |
     text-align: center;
     padding: 0.65rem 0.5rem;
     font-size: 0.73rem;
-    color: rgba(250,243,224,0.7);
+    color: rgba(67,52,48,0.55);
     text-decoration: none;
     transition: background 0.15s, color 0.15s;
     display: flex;
@@ -162,11 +163,11 @@ pageStyle: |
     gap: 0.3rem;
   }
   .tc-footer a:hover {
-    background: rgba(255,255,255,0.08);
-    color: var(--rice);
+    background: rgba(67,52,48,0.04);
+    color: var(--bark);
   }
   .tc-footer a + a {
-    border-left: 1px solid rgba(212,163,115,0.2);
+    border-left: 1px solid rgba(140,106,93,0.12);
   }
 ---
 
