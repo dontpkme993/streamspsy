@@ -126,25 +126,36 @@ jsonLd: |
           <h2 class="section-title" id="latest-heading">{{ ui.home_latest_title }}</h2>
         </div>
 
+        {% set latestArticle = articles[0] %}
+        {% if latestArticle %}
         <article style="display:grid;grid-template-columns:1fr;gap:1.5rem;background:white;border-radius:1rem;overflow:hidden;box-shadow:0 2px 16px rgba(140,106,93,0.08);">
-          <div class="img-placeholder" style="height:200px;border-radius:0;">
-            <span>文章封面圖片佔位符<br>Article Cover Placeholder</span>
-          </div>
+          {% if latestArticle.image %}
+            <img src="{{ latestArticle.image | url }}" alt="{{ latestArticle.title }}" style="width:100%;height:200px;object-fit:cover;display:block;">
+          {% else %}
+            <div class="img-placeholder" style="height:200px;border-radius:0;"><span>封面圖<br>Placeholder</span></div>
+          {% endif %}
           <div style="padding:1.5rem 2rem 2rem;">
             <div style="display:flex;gap:0.5rem;margin-bottom:0.75rem;flex-wrap:wrap;">
-              <span class="tag">#心理</span>
-              <span class="tag">#繪本</span>
+              {% for tag in latestArticle.tags %}
+                <span class="tag">#{{ tag }}</span>
+              {% endfor %}
             </div>
-            <h3 style="font-size:1.2rem;color:var(--oak);margin-bottom:0.5rem;line-height:1.5;">
-              <span class="placeholder-text">文章標題 Article Title Placeholder</span>
-            </h3>
-            <p style="font-size:0.78rem;color:rgba(67,52,48,0.5);margin-bottom:0.75rem;">2026年3月30日</p>
-            <p style="font-size:0.88rem;color:rgba(67,52,48,0.7);line-height:1.8;">
-              <span class="placeholder-text">3秒摘要：文章重點內容佔位符。讀者能在3秒內了解這篇文章的核心觀點與閱讀價值。Article Excerpt Placeholder.</span>
-            </p>
+            <h3 style="font-size:1.2rem;color:var(--oak);margin-bottom:0.5rem;line-height:1.5;">{{ latestArticle.title }}</h3>
+            <p style="font-size:0.78rem;color:rgba(67,52,48,0.5);margin-bottom:0.75rem;">{{ latestArticle.date | dateDisplay }}</p>
+            <p style="font-size:0.88rem;color:rgba(67,52,48,0.7);line-height:1.8;">{{ latestArticle.summary }}</p>
+            <a href="{{ ('/articles/' + latestArticle.slug + '/') | url }}" style="display:inline-block;margin-top:1.25rem;color:var(--straw);font-size:0.88rem;font-weight:600;">{{ ui.home_latest_readmore }}</a>
+          </div>
+        </article>
+        {% else %}
+        <article style="display:grid;grid-template-columns:1fr;gap:1.5rem;background:white;border-radius:1rem;overflow:hidden;box-shadow:0 2px 16px rgba(140,106,93,0.08);">
+          <div class="img-placeholder" style="height:200px;border-radius:0;"><span>文章封面圖片佔位符</span></div>
+          <div style="padding:1.5rem 2rem 2rem;">
+            <h3 style="font-size:1.2rem;color:var(--oak);margin-bottom:0.5rem;"><span class="placeholder-text">文章標題 Placeholder</span></h3>
+            <p style="font-size:0.88rem;color:rgba(67,52,48,0.7);line-height:1.8;"><span class="placeholder-text">3秒摘要佔位符</span></p>
             <a href="{{ '/articles/' | url }}" style="display:inline-block;margin-top:1.25rem;color:var(--straw);font-size:0.88rem;font-weight:600;">{{ ui.home_latest_readmore }}</a>
           </div>
         </article>
+        {% endif %}
 
         <a href="{{ '/articles/' | url }}" class="btn-outline" style="text-align:center;display:block;">{{ ui.home_latest_all }}</a>
       </div>
