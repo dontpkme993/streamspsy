@@ -7,7 +7,7 @@
         <h3>{{ ui.site_name }} {{ ui.site_tagline }}</h3>
         <p>{{ ui.footer_brand_desc }}</p>
         <div style="display:flex;gap:1rem;margin-top:1.25rem;flex-wrap:wrap;">
-          {% if ui.footer_email %}<a href="{{ ui.footer_email_link or ('mailto:' + ui.footer_email) }}" style="color:rgba(250,243,224,0.55);font-size:0.82rem;" rel="noopener">📧 {{ ui.footer_email }}</a>{% endif %}
+          {% if ui.footer_email %}<a href="mailto:{{ ui.footer_email }}" style="color:rgba(250,243,224,0.55);font-size:0.82rem;" rel="noopener">📧 {{ ui.footer_email }}</a>{% endif %}
           {% if ui.footer_location %}<span style="color:rgba(250,243,224,0.55);font-size:0.82rem;">📍 {{ ui.footer_location }}</span>{% endif %}
         </div>
       </div>
