@@ -217,51 +217,61 @@ pageScript: |
       }));
     }
 
-    function pickCard() {
-      if (fanState !== 'fan') return;
-      fanState = 'collapsing';
+    function showCardResult(cardIndex, animate) {
+      selectedCardIndex = cardIndex;
+      const card = CARDS[cardIndex];
 
-      // Collapse all fan cards to center
-      document.querySelectorAll('.fan-card').forEach(c => {
-        c.classList.remove('hovered', 'spread');
-        c.classList.add('collapsing');
-      });
+      document.getElementById('cardNumber').textContent = card.number;
+      document.getElementById('cardEmoji').textContent = card.emoji;
+      document.getElementById('cardTitle').textContent = card.title;
+      document.getElementById('cardKeyword').textContent = card.keyword;
+      document.getElementById('interpretTitle').textContent = card.interpretTitle;
+      document.getElementById('interpretBody').textContent = card.interpretBody;
+      document.getElementById('interpretMessage').textContent = '「' + card.interpretMessage + '」';
 
-      // Choose a random card from deck
-      selectedCardIndex = Math.floor(Math.random() * CARDS.length);
+      // Update hash (without adding a history entry)
+      history.replaceState(null, '', '#' + encodeURIComponent(card.interpretTitle));
 
-      // After collapse animation → show result card
-      setTimeout(() => {
-        document.getElementById('cardFan').style.display = 'none';
+      const resultWrap = document.getElementById('cardResultWrap');
+      resultWrap.style.display = 'block';
+      void resultWrap.offsetHeight;
 
-        const card = CARDS[selectedCardIndex];
-        document.getElementById('cardNumber').textContent = card.number;
-        document.getElementById('cardEmoji').textContent = card.emoji;
-        document.getElementById('cardTitle').textContent = card.title;
-        document.getElementById('cardKeyword').textContent = card.keyword;
-        document.getElementById('interpretTitle').textContent = card.interpretTitle;
-        document.getElementById('interpretBody').textContent = card.interpretBody;
-        document.getElementById('interpretMessage').textContent = '「' + card.interpretMessage + '」';
-
-        const resultWrap = document.getElementById('cardResultWrap');
-        resultWrap.style.display = 'block';
-        void resultWrap.offsetHeight; // force reflow so CSS transition triggers correctly
-
-        // Flip the result card
+      if (animate) {
         setTimeout(() => {
           document.getElementById('card3d').classList.add('flipped');
           fanState = 'result';
-
           setTimeout(() => {
             const interp = document.getElementById('interpretation');
             interp.classList.add('visible');
             interp.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
           }, 650);
         }, 40);
+      } else {
+        document.getElementById('card3d').classList.add('flipped');
+        fanState = 'result';
+        document.getElementById('interpretation').classList.add('visible');
+      }
+    }
+
+    function pickCard() {
+      if (fanState !== 'fan') return;
+      fanState = 'collapsing';
+
+      document.querySelectorAll('.fan-card').forEach(c => {
+        c.classList.remove('hovered', 'spread');
+        c.classList.add('collapsing');
+      });
+
+      const cardIndex = Math.floor(Math.random() * CARDS.length);
+
+      setTimeout(() => {
+        document.getElementById('cardFan').style.display = 'none';
+        showCardResult(cardIndex, true);
       }, 450);
     }
 
     function redraw() {
+      history.replaceState(null, '', location.pathname); // clear hash
       if (fanState === 'result') {
         document.getElementById('card3d').classList.remove('flipped');
         document.getElementById('interpretation').classList.remove('visible');
@@ -272,21 +282,33 @@ pageScript: |
       }
     }
 
+    // 第一顆分享按鈕：固定分享 /cards 不帶結果
+    function sharePage() {
+      const text = '我正在溪水邊為自己抽張卡 🃏\n溪水邊 Stream Side';
+      const url = location.origin + location.pathname;
+      if (navigator.share) {
+        navigator.share({ title: '溪水邊 · 為自己抽張卡', text, url }).catch(() => copyToClipboard(text, url));
+      } else {
+        copyToClipboard(text, url);
+      }
+    }
+
+    // 分享這張卡：帶 hash 的完整連結
     function shareCard() {
       const card = selectedCardIndex >= 0 ? CARDS[selectedCardIndex] : null;
       const text = card
         ? '我從溪水邊抽到了「' + card.title + '」' + card.emoji + '\n' + card.interpretMessage + '\n\n溪水邊 Stream Side · 為自己抽張卡'
         : '我正在溪水邊為自己抽張卡 🃏\n溪水邊 Stream Side';
+      const url = window.location.href; // includes hash
       if (navigator.share) {
-        navigator.share({ title: '溪水邊 · 為自己抽張卡', text, url: window.location.href })
-          .catch(() => copyToClipboard(text));
+        navigator.share({ title: '溪水邊 · 為自己抽張卡', text, url }).catch(() => copyToClipboard(text, url));
       } else {
-        copyToClipboard(text);
+        copyToClipboard(text, url);
       }
     }
 
-    function copyToClipboard(text) {
-      navigator.clipboard.writeText(text + '\n' + window.location.href)
+    function copyToClipboard(text, url) {
+      navigator.clipboard.writeText(text + '\n' + url)
         .then(() => showToast('✓ 已複製到剪貼板'))
         .catch(() => showToast('請手動複製頁面連結分享'));
     }
@@ -299,8 +321,17 @@ pageScript: |
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      buildFan();
-      showFan();
+      const hash = decodeURIComponent(location.hash.slice(1));
+      const cardIndex = hash ? CARDS.findIndex(c => c.interpretTitle === hash) : -1;
+
+      if (cardIndex >= 0) {
+        // Direct link to a specific card — skip fan, show result immediately
+        document.getElementById('cardFan').style.display = 'none';
+        showCardResult(cardIndex, false);
+      } else {
+        buildFan();
+        showFan();
+      }
     });
   </script>
 ---
@@ -347,7 +378,7 @@ pageScript: |
     <button class="btn-primary" id="redrawBtn" onclick="redraw()" aria-label="重新抽卡" style="font-size:0.85rem;padding:0.6rem 1.5rem;">
       {{ ui.cards_btn_redraw }}
     </button>
-    <button class="btn-outline" id="shareBtn" onclick="shareCard()" aria-label="分享牌卡" style="font-size:0.85rem;padding:0.6rem 1.5rem;">
+    <button class="btn-outline" id="shareBtn" onclick="sharePage()" aria-label="分享牌卡" style="font-size:0.85rem;padding:0.6rem 1.5rem;">
       {{ ui.cards_btn_share }}
     </button>
   </div>
