@@ -1,115 +1,80 @@
 ---
 layout: base.njk
-title: 編輯者後台｜溪水邊
+title: 網站文字管理｜溪水邊
 description: 溪水邊內部管理頁面
 permalink: /admin/
 eleventyExcludeFromCollections: true
 pageStyle: |
   .admin-wrap {
-    max-width: 560px;
-    margin: 4rem auto;
-    padding: 0 1.5rem 4rem;
+    max-width: 780px;
+    margin: 3rem auto;
+    padding: 0 1.5rem 6rem;
   }
-  .admin-card {
+  .admin-header {
+    margin-bottom: 2rem;
+  }
+  .admin-header h1 {
+    font-size: 1.5rem;
+    color: var(--bark);
+    margin-bottom: 0.3rem;
+  }
+  .admin-header p {
+    font-size: 0.875rem;
+    color: var(--oak);
+    opacity: 0.75;
+  }
+
+  /* Token card */
+  .token-card {
     background: #fff;
     border: 1px solid rgba(140,106,93,0.15);
     border-radius: 12px;
-    padding: 2rem 2rem 2.4rem;
-    box-shadow: 0 2px 12px rgba(67,52,48,0.06);
+    padding: 1.5rem 1.75rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 10px rgba(67,52,48,0.05);
   }
-  .admin-card h1 {
-    font-size: 1.3rem;
-    margin-bottom: 0.3rem;
-  }
-  .admin-card .subtitle {
-    font-size: 0.875rem;
+  .token-card h2 {
+    font-size: 0.92rem;
     color: var(--oak);
-    opacity: 0.7;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
   }
-  .field { margin-bottom: 1.4rem; }
-  .field label {
-    display: block;
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: var(--oak);
-    margin-bottom: 0.4rem;
+  .token-row {
+    display: flex;
+    gap: 0.6rem;
+    align-items: stretch;
+    flex-wrap: wrap;
   }
-  .field input {
-    width: 100%;
-    padding: 0.6rem 0.85rem;
+  .token-input {
+    flex: 1;
+    min-width: 200px;
+    padding: 0.55rem 0.85rem;
     border: 1px solid rgba(140,106,93,0.3);
     border-radius: 8px;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     background: var(--rice);
     color: var(--bark);
     font-family: monospace;
-    letter-spacing: 0.04em;
     transition: border-color 0.2s;
   }
-  .field input:focus {
-    outline: none;
-    border-color: var(--oak);
-  }
-  .field .hint {
+  .token-input:focus { outline: none; border-color: var(--oak); }
+  .token-hint {
     font-size: 0.78rem;
     color: var(--oak);
     opacity: 0.6;
-    margin-top: 0.3rem;
-  }
-  .btn-deploy {
-    width: 100%;
-    padding: 0.8rem 1rem;
-    background: var(--oak);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    cursor: pointer;
-    transition: background 0.2s, opacity 0.2s;
-  }
-  .btn-deploy:hover { background: var(--bark); }
-  .btn-deploy:disabled { opacity: 0.5; cursor: not-allowed; }
-  .status-box {
-    margin-top: 1.4rem;
-    padding: 0.9rem 1rem;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    display: none;
-  }
-  .status-box.success {
-    background: #edf7ee;
-    color: #2d6a31;
-    border: 1px solid #b7dfb9;
-    display: block;
-  }
-  .status-box.error {
-    background: #fdf0f0;
-    color: #a33;
-    border: 1px solid #f5c6c6;
-    display: block;
-  }
-  .status-box.loading {
-    background: var(--sprout);
-    color: var(--bark);
-    border: 1px solid rgba(140,106,93,0.2);
-    display: block;
-  }
-  .divider {
-    border: none;
-    border-top: 1px solid rgba(140,106,93,0.12);
-    margin: 1.8rem 0;
+    margin-top: 0.5rem;
   }
   .token-actions {
     display: flex;
-    gap: 0.6rem;
-    margin-top: 0.5rem;
+    gap: 0.5rem;
+    margin-top: 0.6rem;
+    flex-wrap: wrap;
   }
+
+  /* Buttons */
   .btn-sm {
     font-size: 0.78rem;
-    padding: 0.3rem 0.7rem;
+    padding: 0.35rem 0.75rem;
     border: 1px solid rgba(140,106,93,0.3);
     border-radius: 6px;
     background: transparent;
@@ -118,105 +83,591 @@ pageStyle: |
     transition: background 0.15s;
   }
   .btn-sm:hover { background: var(--sprout); }
+  .btn-load {
+    font-size: 0.875rem;
+    padding: 0.55rem 1.25rem;
+    border: none;
+    border-radius: 8px;
+    background: var(--oak);
+    color: #fff;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .btn-load:hover { background: var(--bark); }
+  .btn-load:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  /* Section groups */
+  .field-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .field-group {
+    background: #fff;
+    border: 1px solid rgba(140,106,93,0.15);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(67,52,48,0.05);
+  }
+  .group-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    gap: 1rem;
+  }
+  .group-summary::-webkit-details-marker { display: none; }
+  .group-summary:hover { background: rgba(233,237,201,0.3); }
+  .group-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--bark);
+  }
+  .group-meta {
+    font-size: 0.75rem;
+    color: rgba(67,52,48,0.45);
+  }
+  .group-chevron {
+    font-size: 0.7rem;
+    color: var(--oak);
+    transition: transform 0.2s;
+  }
+  details[open] .group-chevron { transform: rotate(180deg); }
+  .group-fields {
+    padding: 0 1.5rem 1.5rem;
+    border-top: 1px solid rgba(140,106,93,0.1);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem 1.5rem;
+  }
+  @media (max-width: 600px) {
+    .group-fields { grid-template-columns: 1fr; }
+  }
+  .field-full { grid-column: 1 / -1; }
+
+  /* Individual field */
+  .field-item label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--oak);
+    margin-bottom: 0.3rem;
+    opacity: 0.85;
+  }
+  .field-item input,
+  .field-item textarea {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid rgba(140,106,93,0.25);
+    border-radius: 7px;
+    font-size: 0.875rem;
+    background: var(--rice);
+    color: var(--bark);
+    font-family: inherit;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+  }
+  .field-item input:focus,
+  .field-item textarea:focus {
+    outline: none;
+    border-color: var(--oak);
+    background: #fff;
+  }
+  .field-item textarea {
+    resize: vertical;
+    min-height: 70px;
+    line-height: 1.6;
+  }
+  .field-item input.changed,
+  .field-item textarea.changed {
+    border-color: #c8a96e;
+    background: #fffdf5;
+  }
+
+  /* Save bar */
+  .save-bar {
+    position: sticky;
+    bottom: 1.5rem;
+    margin-top: 1.5rem;
+    background: #fff;
+    border: 1px solid rgba(140,106,93,0.2);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    box-shadow: 0 4px 20px rgba(67,52,48,0.12);
+    flex-wrap: wrap;
+  }
+  .save-info {
+    font-size: 0.85rem;
+    color: rgba(67,52,48,0.55);
+  }
+  .save-info.dirty { color: #a07030; font-weight: 600; }
+  .btn-save {
+    padding: 0.65rem 1.75rem;
+    border: none;
+    border-radius: 8px;
+    background: var(--straw);
+    color: var(--bark);
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    letter-spacing: 0.03em;
+  }
+  .btn-save:hover { background: #c49060; }
+  .btn-save:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  /* Status */
+  .status-box {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    display: none;
+    margin-top: 0.75rem;
+  }
+  .status-box.show { display: block; }
+  .status-box.success { background: #edf7ee; color: #2d6a31; border: 1px solid #b7dfb9; }
+  .status-box.error   { background: #fdf0f0; color: #a33;    border: 1px solid #f5c6c6; }
+  .status-box.loading { background: var(--sprout); color: var(--bark); border: 1px solid rgba(140,106,93,0.2); }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1.5rem;
+    color: rgba(67,52,48,0.4);
+    font-size: 0.9rem;
+  }
 pageScript: |
   <script>
   (function () {
-    const REPO = 'dontpkme993/streamspsy';
-    const WORKFLOW = 'notion-deploy.yml';
-    const LS_KEY = 'admin_gh_token';
+    const REPO      = 'dontpkme993/streamspsy';
+    const FILE_PATH = 'src/_data/ui.json';
+    const LS_TOKEN  = 'admin_gh_token';
+    const API_BASE  = 'https://api.github.com';
 
-    const tokenInput = document.getElementById('gh-token');
-    const deployBtn  = document.getElementById('btn-deploy');
-    const statusBox  = document.getElementById('status-box');
+    let currentSha   = null;
+    let originalData = {};
+    let isDirty      = false;
 
-    // 載入已存 token
-    const saved = localStorage.getItem(LS_KEY);
-    if (saved) tokenInput.value = saved;
+    // ── Field schema ──────────────────────────────────────
+    const GROUPS = [
+      {
+        id: 'site', label: '全域設定',
+        fields: [
+          { key: 'site_name',        label: '網站名稱' },
+          { key: 'site_tagline',     label: '英文標語' },
+          { key: 'site_description', label: '網站簡介', long: true },
+        ]
+      },
+      {
+        id: 'nav', label: '導覽列',
+        fields: [
+          { key: 'nav_about',          label: '關於（桌機短標）' },
+          { key: 'nav_booking',        label: '預約（桌機短標）' },
+          { key: 'nav_articles',       label: '專欄（桌機短標）' },
+          { key: 'nav_media',          label: '聲音（桌機短標）' },
+          { key: 'nav_events',         label: '講座（桌機短標）' },
+          { key: 'nav_cards',          label: '抽卡（桌機短標）' },
+          { key: 'nav_mobile_about',   label: '關於我們（手機）' },
+          { key: 'nav_mobile_booking', label: '諮商預約（手機）' },
+          { key: 'nav_mobile_articles',label: '專欄文章（手機）' },
+          { key: 'nav_mobile_media',   label: '聲音與著作（手機）' },
+          { key: 'nav_mobile_events',  label: '諮商講座（手機）' },
+          { key: 'nav_mobile_cards',   label: '為自己抽張卡（手機）' },
+        ]
+      },
+      {
+        id: 'footer', label: '頁尾',
+        fields: [
+          { key: 'footer_quote',       label: '頁尾名言' },
+          { key: 'footer_brand_desc',  label: '品牌說明', long: true },
+          { key: 'footer_nav_title',   label: '網站地圖標題' },
+          { key: 'footer_social_title',label: '社群媒體標題' },
+          { key: 'footer_copyright',   label: '版權聲明' },
+          { key: 'footer_tagline',     label: '頁尾小標語' },
+        ]
+      },
+      {
+        id: 'home', label: '首頁',
+        fields: [
+          { key: 'home_hero_label',      label: 'Banner 英文標籤' },
+          { key: 'home_hero_title_1',    label: 'Banner 標題 第一行' },
+          { key: 'home_hero_title_2',    label: 'Banner 標題 第二行' },
+          { key: 'home_hero_subtitle',   label: 'Banner 副標題' },
+          { key: 'home_hero_btn1',       label: 'Banner 左按鈕' },
+          { key: 'home_hero_btn2',       label: 'Banner 右按鈕' },
+          { key: 'home_services_label',  label: '三入口 英文標籤' },
+          { key: 'home_services_title',  label: '三入口 標題' },
+          { key: 'home_services_subtitle', label: '三入口 副標題', full: true },
+          { key: 'home_s1_title',        label: '入口一 標題' },
+          { key: 'home_s1_btn',          label: '入口一 按鈕' },
+          { key: 'home_s1_desc',         label: '入口一 說明', long: true, full: true },
+          { key: 'home_s2_title',        label: '入口二 標題' },
+          { key: 'home_s2_btn',          label: '入口二 按鈕' },
+          { key: 'home_s2_desc',         label: '入口二 說明', long: true, full: true },
+          { key: 'home_s3_title',        label: '入口三 標題' },
+          { key: 'home_s3_btn',          label: '入口三 按鈕' },
+          { key: 'home_s3_desc',         label: '入口三 說明', long: true, full: true },
+          { key: 'home_latest_label',    label: '最新專欄 英文標籤' },
+          { key: 'home_latest_title',    label: '最新專欄 標題' },
+          { key: 'home_latest_readmore', label: '閱讀全文按鈕' },
+          { key: 'home_latest_all',      label: '查看所有文章按鈕' },
+          { key: 'home_event_label',     label: '近期活動 英文標籤' },
+          { key: 'home_event_title',     label: '近期活動 標題' },
+          { key: 'home_event_signup',    label: '活動按鈕' },
+          { key: 'home_event_more',      label: '查看更多場次' },
+          { key: 'home_quote_line1',     label: '品牌語錄 第一行' },
+          { key: 'home_quote_line2',     label: '品牌語錄 第二行' },
+          { key: 'home_quote_line3',     label: '品牌語錄 第三行' },
+          { key: 'home_quote_author',    label: '品牌語錄 署名' },
+        ]
+      },
+      {
+        id: 'booking', label: '諮商預約頁',
+        fields: [
+          { key: 'booking_hero_label',    label: '英文標籤' },
+          { key: 'booking_hero_title',    label: '頁面標題' },
+          { key: 'booking_hero_subtitle', label: '頁面副標題', full: true },
+        ]
+      },
+      {
+        id: 'events', label: '諮商講座頁',
+        fields: [
+          { key: 'events_hero_label',      label: '英文標籤' },
+          { key: 'events_hero_title',      label: '頁面標題' },
+          { key: 'events_hero_subtitle',   label: '頁面副標題', full: true },
+          { key: 'events_upcoming_label',  label: '即將到來 英文標籤' },
+          { key: 'events_upcoming_title',  label: '即將到來 標題' },
+          { key: 'events_upcoming_btn',    label: '活動按鈕' },
+          { key: 'events_past_label',      label: '精彩回顧 英文標籤' },
+          { key: 'events_past_title',      label: '精彩回顧 標題' },
+          { key: 'events_collab_label',    label: '合作洽談 英文標籤' },
+          { key: 'events_collab_title',    label: '合作洽談 標題' },
+          { key: 'events_collab_btn1',     label: '合作按鈕一' },
+          { key: 'events_collab_btn2',     label: '合作按鈕二' },
+        ]
+      },
+      {
+        id: 'about', label: '關於我們頁',
+        fields: [
+          { key: 'about_hero_label',      label: '英文標籤' },
+          { key: 'about_hero_title',      label: '頁面標題' },
+          { key: 'about_hero_subtitle',   label: '頁面副標題', full: true },
+          { key: 'about_founder_label',   label: '創辦人 英文標籤' },
+          { key: 'about_founder_title',   label: '創辦人 標題' },
+          { key: 'about_values_label',    label: '核心價值 英文標籤' },
+          { key: 'about_values_title',    label: '核心價值 標題' },
+          { key: 'about_values_subtitle', label: '核心價值 副標題', full: true },
+          { key: 'about_v1_title',        label: '價值一 標題' },
+          { key: 'about_v2_title',        label: '價值二 標題' },
+          { key: 'about_v3_title',        label: '價值三 標題' },
+          { key: 'about_cert_label',      label: '資歷 英文標籤' },
+          { key: 'about_cert_title',      label: '資歷 標題' },
+          { key: 'about_cta_title',       label: 'CTA 標題' },
+          { key: 'about_cta_desc',        label: 'CTA 說明', long: true, full: true },
+          { key: 'about_cta_btn',         label: 'CTA 按鈕' },
+        ]
+      },
+      {
+        id: 'media', label: '聲音與著作頁',
+        fields: [
+          { key: 'media_hero_label',           label: '英文標籤' },
+          { key: 'media_hero_title',           label: '頁面標題' },
+          { key: 'media_hero_subtitle',        label: '頁面副標題', full: true },
+          { key: 'media_podcast_label',        label: 'Podcast 英文標籤' },
+          { key: 'media_podcast_title',        label: 'Podcast 標題' },
+          { key: 'media_podcast_subtitle',     label: 'Podcast 副標題', full: true },
+          { key: 'media_podcast_listen',       label: '完整收聽連結文字' },
+          { key: 'media_podcast_listen_short', label: '收聽（短版）' },
+          { key: 'media_podcast_load_more',    label: '載入更多集數' },
+          { key: 'media_books_label',          label: '著作 英文標籤' },
+          { key: 'media_books_title',          label: '著作 標題' },
+          { key: 'media_books_subtitle',       label: '著作 副標題', full: true },
+        ]
+      },
+      {
+        id: 'articles', label: '專欄文章頁',
+        fields: [
+          { key: 'articles_hero_label',    label: '英文標籤' },
+          { key: 'articles_hero_title',    label: '頁面標題' },
+          { key: 'articles_hero_subtitle', label: '頁面副標題', full: true },
+          { key: 'articles_filter_label',  label: '標籤過濾文字' },
+          { key: 'articles_all_btn',       label: '全部按鈕' },
+          { key: 'articles_sidebar_rec',   label: '側欄 推薦閱讀' },
+          { key: 'articles_sidebar_tags',  label: '側欄 熱門標籤' },
+          { key: 'articles_sidebar_cta',   label: '側欄 CTA 文字', full: true },
+          { key: 'articles_sidebar_btn',   label: '側欄 CTA 按鈕' },
+          { key: 'articles_load_more',     label: '載入更多按鈕' },
+        ]
+      },
+      {
+        id: 'cards', label: '牌卡頁',
+        fields: [
+          { key: 'cards_label',        label: '英文標籤' },
+          { key: 'cards_title',        label: '頁面標題' },
+          { key: 'cards_subtitle_1',   label: '副標題 第一行' },
+          { key: 'cards_subtitle_2',   label: '副標題 第二行', full: true },
+          { key: 'cards_howto_title',  label: '使用說明標題' },
+          { key: 'cards_step1',        label: '步驟一' },
+          { key: 'cards_step2',        label: '步驟二' },
+          { key: 'cards_step3',        label: '步驟三' },
+          { key: 'cards_btn_redraw',   label: '重新抽卡按鈕' },
+          { key: 'cards_btn_share',    label: '分享按鈕' },
+          { key: 'cards_btn_share2',   label: '分享這張卡按鈕' },
+          { key: 'cards_btn_articles', label: '閱讀相關文章按鈕' },
+        ]
+      },
+    ];
 
-    document.getElementById('btn-save-token').addEventListener('click', () => {
-      const t = tokenInput.value.trim();
-      if (!t) return alert('請先輸入 Token');
-      localStorage.setItem(LS_KEY, t);
-      flash('success', 'Token 已儲存到瀏覽器。');
-    });
+    // ── Helpers ───────────────────────────────────────────
+    function toB64(str) {
+      return btoa(unescape(encodeURIComponent(str)));
+    }
+    function fromB64(b64) {
+      return decodeURIComponent(escape(atob(b64.replace(/\n/g, ''))));
+    }
+    function getToken() {
+      return document.getElementById('gh-token').value.trim();
+    }
+    function setStatus(id, type, msg) {
+      const el = document.getElementById(id);
+      el.className = 'status-box show ' + type;
+      el.textContent = msg;
+    }
+    function clearStatus(id) {
+      const el = document.getElementById(id);
+      el.className = 'status-box';
+      el.textContent = '';
+    }
 
-    document.getElementById('btn-clear-token').addEventListener('click', () => {
-      localStorage.removeItem(LS_KEY);
-      tokenInput.value = '';
-      flash('success', 'Token 已清除。');
-    });
+    // ── Render form groups ────────────────────────────────
+    function renderGroups() {
+      const container = document.getElementById('field-groups');
+      container.innerHTML = GROUPS.map(group => {
+        const fields = group.fields.map(f => {
+          const isLong = f.long;
+          const isFull = f.full || isLong;
+          const el = isLong
+            ? `<textarea id="field-${f.key}" rows="2" placeholder="${f.label}…"></textarea>`
+            : `<input type="text" id="field-${f.key}" placeholder="${f.label}…" />`;
+          return `<div class="field-item${isFull ? ' field-full' : ''}">
+            <label for="field-${f.key}">${f.label}</label>
+            ${el}
+          </div>`;
+        }).join('');
 
-    deployBtn.addEventListener('click', async () => {
-      const token = tokenInput.value.trim();
-      if (!token) {
-        flash('error', '請先輸入並儲存 GitHub Token。');
-        return;
-      }
+        return `<details class="field-group" id="group-${group.id}">
+          <summary class="group-summary">
+            <span class="group-title">${group.label}</span>
+            <span class="group-meta">${group.fields.length} 個欄位</span>
+            <span class="group-chevron">▼</span>
+          </summary>
+          <div class="group-fields">${fields}</div>
+        </details>`;
+      }).join('');
 
-      deployBtn.disabled = true;
-      flash('loading', '正在觸發 build，請稍候...');
+      // Track changes
+      container.querySelectorAll('input, textarea').forEach(el => {
+        el.addEventListener('input', () => {
+          el.classList.add('changed');
+          markDirty();
+        });
+      });
+    }
+
+    function markDirty() {
+      isDirty = true;
+      const info = document.getElementById('save-info');
+      if (info) { info.textContent = '有未儲存的變更'; info.className = 'save-info dirty'; }
+    }
+    function markClean() {
+      isDirty = false;
+      const info = document.getElementById('save-info');
+      if (info) { info.textContent = '已是最新版本'; info.className = 'save-info'; }
+    }
+
+    // ── Populate fields from data ─────────────────────────
+    function populateFields(data) {
+      GROUPS.forEach(group => {
+        group.fields.forEach(f => {
+          const el = document.getElementById('field-' + f.key);
+          if (el && data[f.key] !== undefined) {
+            el.value = data[f.key];
+            el.classList.remove('changed');
+          }
+        });
+      });
+      // Open first group by default
+      const first = document.querySelector('.field-group');
+      if (first) first.open = true;
+    }
+
+    // ── Collect fields to data object ─────────────────────
+    function collectFields() {
+      const data = {};
+      GROUPS.forEach(group => {
+        group.fields.forEach(f => {
+          const el = document.getElementById('field-' + f.key);
+          if (el) data[f.key] = el.value;
+        });
+      });
+      return data;
+    }
+
+    // ── GitHub API ────────────────────────────────────────
+    async function loadFile() {
+      const token = getToken();
+      if (!token) { setStatus('load-status', 'error', '請先輸入 Token'); return; }
+
+      document.getElementById('btn-load').disabled = true;
+      setStatus('load-status', 'loading', '載入中…');
 
       try {
         const res = await fetch(
-          `https://api.github.com/repos/${REPO}/actions/workflows/${WORKFLOW}/dispatches`,
+          `${API_BASE}/repos/${REPO}/contents/${FILE_PATH}`,
+          { headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' } }
+        );
+        if (res.status === 401) throw new Error('Token 無效或已過期');
+        if (res.status === 403) throw new Error('Token 權限不足，需要 Contents: Read and write');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+        const json = await res.json();
+        currentSha   = json.sha;
+        originalData = JSON.parse(fromB64(json.content));
+        populateFields(originalData);
+        localStorage.setItem(LS_TOKEN, token);
+        markClean();
+        setStatus('load-status', 'success', '✓ 載入成功，請直接修改下方欄位');
+      } catch (e) {
+        setStatus('load-status', 'error', '載入失敗：' + e.message);
+      } finally {
+        document.getElementById('btn-load').disabled = false;
+      }
+    }
+
+    async function saveFile() {
+      const token = getToken();
+      if (!token)     { setStatus('save-status', 'error', '請先載入資料');    return; }
+      if (!currentSha){ setStatus('save-status', 'error', '請先按「載入目前設定」'); return; }
+
+      document.getElementById('btn-save').disabled = true;
+      setStatus('save-status', 'loading', '儲存中，請稍候…');
+
+      try {
+        const newData    = collectFields();
+        const newContent = toB64(JSON.stringify(newData, null, '\t'));
+
+        const res = await fetch(
+          `${API_BASE}/repos/${REPO}/contents/${FILE_PATH}`,
           {
-            method: 'POST',
+            method: 'PUT',
             headers: {
               'Authorization': `Bearer ${token}`,
-              'Accept': 'application/vnd.github+json',
-              'Content-Type': 'application/json',
+              'Accept':        'application/vnd.github+json',
+              'Content-Type':  'application/json',
             },
-            body: JSON.stringify({ ref: 'main' }),
+            body: JSON.stringify({
+              message: 'Update UI text via admin panel',
+              content: newContent,
+              sha:     currentSha,
+            })
           }
         );
 
-        if (res.status === 204) {
-          flash('success', '已成功觸發！GitHub Actions 正在 build 中，約 1～3 分鐘後上線。');
-        } else if (res.status === 401) {
-          flash('error', 'Token 無效或已過期，請重新設定。');
-        } else if (res.status === 403) {
-          flash('error', 'Token 權限不足，需要 Actions: write 權限。');
-        } else {
-          const body = await res.json().catch(() => ({}));
-          flash('error', `失敗（HTTP ${res.status}）：${body.message || '未知錯誤'}`);
-        }
+        if (res.status === 401) throw new Error('Token 無效或已過期');
+        if (res.status === 403) throw new Error('Token 權限不足');
+        if (res.status === 409) throw new Error('檔案已被其他人修改，請重新載入後再存');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+        const result  = await res.json();
+        currentSha    = result.content.sha;
+        originalData  = newData;
+
+        // Clear changed indicators
+        document.querySelectorAll('input.changed, textarea.changed')
+          .forEach(el => el.classList.remove('changed'));
+        markClean();
+        setStatus('save-status', 'success', '✓ 儲存成功！GitHub Actions 正在重新 build 網站，約 1～3 分鐘後上線。');
       } catch (e) {
-        flash('error', `網路錯誤：${e.message}`);
+        setStatus('save-status', 'error', '儲存失敗：' + e.message);
       } finally {
-        deployBtn.disabled = false;
+        document.getElementById('btn-save').disabled = false;
       }
+    }
+
+    // ── Init ──────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      renderGroups();
+
+      // Restore token
+      const saved = localStorage.getItem(LS_TOKEN);
+      if (saved) document.getElementById('gh-token').value = saved;
+
+      // Bind buttons
+      document.getElementById('btn-load').addEventListener('click', loadFile);
+      document.getElementById('btn-save').addEventListener('click', saveFile);
+      document.getElementById('btn-save-token').addEventListener('click', () => {
+        const t = getToken();
+        if (!t) return alert('請先輸入 Token');
+        localStorage.setItem(LS_TOKEN, t);
+        setStatus('load-status', 'success', 'Token 已儲存');
+      });
+      document.getElementById('btn-clear-token').addEventListener('click', () => {
+        localStorage.removeItem(LS_TOKEN);
+        document.getElementById('gh-token').value = '';
+        setStatus('load-status', 'success', 'Token 已清除');
+      });
+
+      // Warn before leaving with unsaved changes
+      window.addEventListener('beforeunload', e => {
+        if (isDirty) { e.preventDefault(); e.returnValue = ''; }
+      });
     });
 
-    function flash(type, msg) {
-      statusBox.className = 'status-box ' + type;
-      statusBox.textContent = msg;
-    }
   })();
   </script>
 ---
 
 <div class="admin-wrap">
-  <div class="admin-card">
-    <h1>手動觸發網站更新</h1>
-    <p class="subtitle">發布新文章後，按下按鈕立即重新 build 網站</p>
 
-    <div class="field">
-      <label for="gh-token">GitHub Personal Access Token</label>
-      <input type="password" id="gh-token" placeholder="github_pat_…" autocomplete="off" />
-      <div class="hint">
-        需要 Fine-grained token，權限：<strong>Actions → Read and write</strong><br>
-        Token 只存在你的瀏覽器，不會上傳。
-      </div>
-      <div class="token-actions">
-        <button class="btn-sm" id="btn-save-token">儲存 Token</button>
-        <button class="btn-sm" id="btn-clear-token">清除 Token</button>
-      </div>
-    </div>
-
-    <hr class="divider">
-
-    <button class="btn-deploy" id="btn-deploy">立即更新網站</button>
-
-    <div class="status-box" id="status-box"></div>
+  <div class="admin-header">
+    <h1>網站文字管理</h1>
+    <p>載入後直接修改欄位，按「儲存」後網站將自動重新 build。</p>
   </div>
+
+  <!-- Token -->
+  <div class="token-card">
+    <h2>GitHub Token</h2>
+    <div class="token-row">
+      <input type="password" id="gh-token" class="token-input" placeholder="github_pat_…" autocomplete="off" />
+      <button class="btn-load" id="btn-load">載入目前設定</button>
+    </div>
+    <p class="token-hint">需要 Fine-grained token，權限：<strong>Contents → Read and write</strong>。Token 僅存於瀏覽器，不會上傳。</p>
+    <div class="token-actions">
+      <button class="btn-sm" id="btn-save-token">儲存 Token</button>
+      <button class="btn-sm" id="btn-clear-token">清除 Token</button>
+    </div>
+    <div class="status-box" id="load-status"></div>
+  </div>
+
+  <!-- Field groups (rendered by JS) -->
+  <div class="field-groups" id="field-groups">
+    <div class="empty-state">按「載入目前設定」後即可編輯欄位</div>
+  </div>
+
+  <!-- Save bar -->
+  <div class="save-bar">
+    <span class="save-info" id="save-info">尚未載入</span>
+    <button class="btn-save" id="btn-save">儲存並更新網站</button>
+  </div>
+  <div class="status-box" id="save-status"></div>
+
 </div>
