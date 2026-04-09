@@ -119,19 +119,23 @@ pageStyle: |
 
   /* ── 預約按鈕 ── */
   .tc-book-btn {
-    display: flex;
+    display: block;
     align-items: center;
     justify-content: space-between;
     margin: 0.75rem 1.25rem 0;
     padding: 0.65rem 1rem;
     background: var(--straw);
-    color: var(--bark);
-    border-radius: 0.6rem;
+    color: white;
+    border-radius: 100px;
     font-size: 0.85rem;
     font-weight: 700;
     text-decoration: none;
     transition: background 0.2s, color 0.2s, transform 0.2s;
     letter-spacing: 0.02em;
+    width: 40%;
+    left: 30%;
+    margin-left: 25%;
+    text-align: center;
   }
   .tc-book-btn:hover { background: var(--oak); color: var(--rice); transform: translateY(-1px); }
   .tc-book-btn .arrow { font-size: 0.78rem; opacity: 0.75; }
@@ -174,7 +178,6 @@ pageStyle: |
     grid-template-columns: 1fr 8fr;
     grid-template-rows: 1fr 1fr;
     gap: 0.5rem;
-    height: 5rem;
   }
 
   .split-left {
@@ -238,7 +241,6 @@ pageStyle: |
           </div>
           <a href="https://forms.gle/PCJ7TUomGzicMcVr6" class="tc-book-btn" target="_blank" rel="noopener">
             <span>預約點我</span>
-            <span class="arrow">諮商預約直通 →</span>
           </a>
           <div class="tc-footer">
             <a href="{{ '/articles/' | url }}#江玲承">
@@ -272,7 +274,6 @@ pageStyle: |
           </div>
           <a href="https://reurl.cc/K2jp3y" class="tc-book-btn" target="_blank" rel="noopener">
             <span>預約點我</span>
-            <span class="arrow">諮商預約直通 →</span>
           </a>
           <div class="tc-footer">
             <a href="{{ '/articles/' | url }}#張皓涵">
@@ -304,7 +305,6 @@ pageStyle: |
           </div>
           <a href="https://www.holduandme.com" class="tc-book-btn" target="_blank" rel="noopener">
             <span>預約點我</span>
-            <span class="arrow">諮商預約直通 →</span>
           </a>
           <div class="tc-footer">
             <a href="{{ '/articles/' | url }}#蘇怡因">
