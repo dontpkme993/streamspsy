@@ -794,6 +794,14 @@ pageScript: |
 
           if (newContent === state.content) return; // no change
 
+          // 儲存前重新 GET 最新 SHA，避免 409
+          const freshRes = await fetch(
+            `${API_BASE}/repos/${REPO}/contents/${page.path}`,
+            { headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' } }
+          );
+          if (!freshRes.ok) throw new Error(`${page.label} 讀取失敗 HTTP ${freshRes.status}`);
+          const freshJson = await freshRes.json();
+
           const encoded = btoa(unescape(encodeURIComponent(newContent)));
           const res = await fetch(
             `${API_BASE}/repos/${REPO}/contents/${page.path}`,
@@ -807,7 +815,7 @@ pageScript: |
               body: JSON.stringify({
                 message: `Update SEO meta for ${page.label}`,
                 content: encoded,
-                sha: state.sha,
+                sha: freshJson.sha,
               })
             }
           );
