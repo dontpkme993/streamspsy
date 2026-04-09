@@ -781,9 +781,10 @@ pageScript: |
       setSeoStatus('loading', '儲存中…');
 
       try {
-        await Promise.all(SEO_PAGES.map(async page => {
+        // 循序儲存，避免並行 PUT 產生 409
+        for (const page of SEO_PAGES) {
           const state = pageState[page.path];
-          if (!state) return;
+          if (!state) continue;
 
           const key = page.path.replace(/[/.]/g, '_');
           const newTitle = document.getElementById('seo_title_' + key)?.value || '';
@@ -792,9 +793,9 @@ pageScript: |
           let newContent = replaceFrontmatter(state.content, 'title', newTitle);
           newContent     = replaceFrontmatter(newContent,    'description', newDesc);
 
-          if (newContent === state.content) return; // no change
+          if (newContent === state.content) continue; // no change
 
-          // 儲存前重新 GET 最新 SHA，避免 409
+          // 儲存前重新 GET 最新 SHA
           const freshRes = await fetch(
             `${API_BASE}/repos/${REPO}/contents/${page.path}`,
             { headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' } }
@@ -823,7 +824,7 @@ pageScript: |
           const result = await res.json();
           state.sha     = result.content.sha;
           state.content = newContent;
-        }));
+        }
 
         setSeoStatus('success', '✓ 儲存成功！網站將自動重新 build。');
       } catch (e) {
