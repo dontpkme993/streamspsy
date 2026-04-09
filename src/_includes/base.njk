@@ -34,5 +34,34 @@
 
   {% if pageScript %}{{ pageScript | safe }}{% endif %}
 
+  <script>
+    // ── Content protection ──
+    // Disable right-click (except on /admin/)
+    if (!location.pathname.startsWith('/admin')) {
+      document.addEventListener('contextmenu', e => e.preventDefault());
+
+      // Disable text selection via CSS
+      document.documentElement.style.setProperty('-webkit-user-select', 'none');
+      document.documentElement.style.setProperty('user-select', 'none');
+
+      // Re-enable selection on input/textarea so forms still work
+      document.addEventListener('focusin', e => {
+        if (['INPUT','TEXTAREA'].includes(e.target.tagName)) {
+          e.target.style.setProperty('user-select', 'text');
+          e.target.style.setProperty('-webkit-user-select', 'text');
+        }
+      });
+
+      // Copy with source attribution
+      document.addEventListener('copy', e => {
+        const selected = window.getSelection()?.toString() || '';
+        if (!selected.trim()) return;
+        const source = '\n\n本文出自：溪水邊 Streamspsy\n' + location.href;
+        e.clipboardData.setData('text/plain', selected + source);
+        e.preventDefault();
+      });
+    }
+  </script>
+
 </body>
 </html>
