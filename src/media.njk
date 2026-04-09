@@ -184,53 +184,24 @@ activeNav: media
 
     <div class="book-grid">
 
-      <!-- Book 1 -->
-      <article class="book-item">
-        <a href="#" rel="noopener" aria-label="書籍一詳細介紹">
-          <div class="book-cover">
-            <span style="text-align:center;padding:0.5rem;font-size:0.68rem;">書封<br>Book Cover<br>Placeholder</span>
-          </div>
-        </a>
-        <h3 class="book-title"><span class="placeholder-text">書名一 Book Title 1</span></h3>
-        <p class="book-desc"><span class="placeholder-text">一語介紹 One-line description placeholder.</span></p>
-        <a href="#" rel="noopener" style="display:inline-block;margin-top:0.5rem;font-size:0.75rem;color:var(--straw);font-weight:600;">購買 →</a>
-      </article>
-
-      <!-- Book 2 -->
-      <article class="book-item">
-        <a href="#" rel="noopener" aria-label="書籍二詳細介紹">
-          <div class="book-cover" style="background:linear-gradient(160deg,var(--sprout) 0%,var(--oak) 100%);">
-            <span style="text-align:center;padding:0.5rem;font-size:0.68rem;">書封<br>Book Cover<br>Placeholder</span>
-          </div>
-        </a>
-        <h3 class="book-title"><span class="placeholder-text">書名二 Book Title 2</span></h3>
-        <p class="book-desc"><span class="placeholder-text">一語介紹 One-line description placeholder.</span></p>
-        <a href="#" rel="noopener" style="display:inline-block;margin-top:0.5rem;font-size:0.75rem;color:var(--straw);font-weight:600;">購買 →</a>
-      </article>
-
-      <!-- Book 3 -->
-      <article class="book-item">
-        <a href="#" rel="noopener" aria-label="書籍三詳細介紹">
-          <div class="book-cover" style="background:linear-gradient(160deg,#c9b7a8 0%,var(--bark) 100%);">
-            <span style="text-align:center;padding:0.5rem;font-size:0.68rem;">書封<br>Book Cover<br>Placeholder</span>
-          </div>
-        </a>
-        <h3 class="book-title"><span class="placeholder-text">書名三 Book Title 3</span></h3>
-        <p class="book-desc"><span class="placeholder-text">一語介紹 One-line description placeholder.</span></p>
-        <a href="#" rel="noopener" style="display:inline-block;margin-top:0.5rem;font-size:0.75rem;color:var(--straw);font-weight:600;">購買 →</a>
-      </article>
-
-      <!-- Book 4 -->
-      <article class="book-item">
-        <a href="#" rel="noopener" aria-label="書籍四詳細介紹">
-          <div class="book-cover" style="background:linear-gradient(160deg,var(--straw) 0%,#a0785a 100%);">
-            <span style="text-align:center;padding:0.5rem;font-size:0.68rem;">書封<br>Book Cover<br>Placeholder</span>
-          </div>
-        </a>
-        <h3 class="book-title"><span class="placeholder-text">書名四 Book Title 4</span></h3>
-        <p class="book-desc"><span class="placeholder-text">一語介紹 One-line description placeholder.</span></p>
-        <a href="#" rel="noopener" style="display:inline-block;margin-top:0.5rem;font-size:0.75rem;color:var(--straw);font-weight:600;">購買 →</a>
-      </article>
+      {% set bookColors = ['', 'background:linear-gradient(160deg,var(--sprout) 0%,var(--oak) 100%);', 'background:linear-gradient(160deg,#c9b7a8 0%,var(--bark) 100%);', 'background:linear-gradient(160deg,var(--straw) 0%,#a0785a 100%);'] %}
+      {% for i in [1,2,3,4] %}
+        {% set t = 'book' + i + '_title' %}
+        {% set d = 'book' + i + '_desc' %}
+        {% set l = 'book' + i + '_link' %}
+        {% if ui[t] %}
+        <article class="book-item">
+          <a href="{{ ui[l] or '#' }}" target="_blank" rel="noopener" aria-label="{{ ui[t] }}">
+            <div class="book-cover" style="{{ bookColors[i - 1] }}">
+              <span style="text-align:center;padding:0.5rem;font-size:0.68rem;">書封</span>
+            </div>
+          </a>
+          <h3 class="book-title">{{ ui[t] }}</h3>
+          {% if ui[d] %}<p class="book-desc">{{ ui[d] }}</p>{% endif %}
+          {% if ui[l] %}<a href="{{ ui[l] }}" target="_blank" rel="noopener" style="display:inline-block;margin-top:0.5rem;font-size:0.75rem;color:var(--straw);font-weight:600;">購買 →</a>{% endif %}
+        </article>
+        {% endif %}
+      {% endfor %}
 
     </div>
   </div>
