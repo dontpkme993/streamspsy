@@ -18,6 +18,7 @@ module.exports = async () => {
       const p = page.properties;
       const name = p['姓名']?.title?.[0]?.plain_text || '';
       const encodedName = encodeURIComponent(name);
+      const idSlug = page.id.replace(/-/g, '');
 
       // 下載照片到本地，避免 Notion URL 過期
       const rawPhoto = p['照片']?.files?.[0]?.file?.url || p['照片']?.files?.[0]?.external?.url || '';
@@ -25,8 +26,7 @@ module.exports = async () => {
       if (rawPhoto) {
         try {
           const ext = rawPhoto.split('?')[0].split('.').pop().replace(/[^a-z0-9]/gi, '') || 'jpg';
-          const slug = name.replace(/\s/g, '-');
-          photo = await downloadImage(rawPhoto, `therapist-${slug}.${ext}`);
+          photo = await downloadImage(rawPhoto, `therapist-${idSlug}.${ext}`);
         } catch (e) {
           console.warn(`therapist photo download failed (${name}):`, e.message);
         }
