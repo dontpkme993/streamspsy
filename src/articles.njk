@@ -74,7 +74,7 @@ pageScript: |
     });
 
     // Tag button clicks
-    document.querySelectorAll('.tag-btn').forEach(btn => {
+    document.querySelectorAll('.tag-btn:not(.author-btn)').forEach(btn => {
       btn.addEventListener('click', () => {
         const tag = btn.dataset.tag;
         location.hash = tag === 'all' ? '' : 'tag=' + encodeURIComponent(tag);
