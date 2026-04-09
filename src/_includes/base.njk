@@ -37,7 +37,7 @@
   <script>
     // ── Content protection ──
     // Disable right-click (except on /admin/)
-    if (!location.pathname.startsWith('/admin')) {
+    if (!location.pathname.includes('/admin')) {
       document.addEventListener('contextmenu', e => e.preventDefault());
 
       // Disable text selection via CSS
