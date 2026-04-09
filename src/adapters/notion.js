@@ -93,11 +93,14 @@ async function getPageBlocks(pageId) {
 }
 
 // 下載單張圖片到本地，避免 Notion URL 過期問題
+// 同時寫入 src/assets/images 與 _site/assets/images，
+// 確保 11ty passthrough copy 掃描時序問題不影響部署結果
 async function downloadImage(url, filename) {
-  const dir = path.join(__dirname, '../../src/assets/images');
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+  const srcDir = path.join(__dirname, '../../src/assets/images');
+  const siteDir = path.join(__dirname, '../../_site/assets/images');
+  if (!fs.existsSync(srcDir)) fs.mkdirSync(srcDir, { recursive: true });
 
-  const dest = path.join(dir, filename);
+  const dest = path.join(srcDir, filename);
 
   return new Promise((resolve, reject) => {
     const client = url.startsWith('https') ? https : http;
@@ -109,7 +112,15 @@ async function downloadImage(url, filename) {
         return downloadImage(res.headers.location, filename).then(resolve).catch(reject);
       }
       res.pipe(file);
-      file.on('finish', () => { file.close(); resolve(`/assets/images/${filename}`); });
+      file.on('finish', () => {
+        file.close();
+        // 同步複製到 _site（若目錄已存在）
+        try {
+          if (!fs.existsSync(siteDir)) fs.mkdirSync(siteDir, { recursive: true });
+          fs.copyFileSync(dest, path.join(siteDir, filename));
+        } catch(e) { /* _site 不存在時忽略 */ }
+        resolve(`/assets/images/${filename}`);
+      });
     }).on('error', err => {
       if (fs.existsSync(dest)) fs.unlinkSync(dest);
       reject(err);
