@@ -245,6 +245,54 @@ pageStyle: |
     color: rgba(67,52,48,0.4);
     font-size: 0.9rem;
   }
+
+  /* Tabs */
+  .tab-bar {
+    display: flex;
+    gap: 0.25rem;
+    background: #fff;
+    border: 1px solid rgba(140,106,93,0.15);
+    border-radius: 12px;
+    padding: 0.35rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 10px rgba(67,52,48,0.05);
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 0.55rem 1rem;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: rgba(67,52,48,0.5);
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .tab-btn.active {
+    background: var(--oak);
+    color: #fff;
+  }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* SEO fields */
+  .seo-page-card {
+    background: #fff;
+    border: 1px solid rgba(140,106,93,0.15);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 10px rgba(67,52,48,0.05);
+  }
+  .seo-page-label {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--bark);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(140,106,93,0.1);
+  }
 pageScript: |
   <script>
   (function () {
@@ -635,8 +683,153 @@ pageScript: |
       window.addEventListener('beforeunload', e => {
         if (isDirty) { e.preventDefault(); e.returnValue = ''; }
       });
+
+      // Tab switching
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+          btn.classList.add('active');
+          document.getElementById(btn.dataset.tab).classList.add('active');
+        });
+      });
     });
 
+  })();
+  </script>
+
+  <script>
+  // ── SEO Tab ──────────────────────────────────────────
+  (function () {
+    const REPO     = 'dontpkme993/streamspsy';
+    const API_BASE = 'https://api.github.com';
+    const LS_TOKEN = 'admin_gh_token';
+
+    const SEO_PAGES = [
+      { label: '首頁',      path: 'src/index.njk' },
+      { label: '諮商預約',  path: 'src/booking.njk' },
+      { label: '專欄文章',  path: 'src/articles.njk' },
+      { label: '聲音與著作', path: 'src/media.njk' },
+      { label: '諮商講座',  path: 'src/events.njk' },
+      { label: '關於我們',  path: 'src/about.njk' },
+      { label: '牌卡',      path: 'src/cards.njk' },
+    ];
+
+    // sha and original content per page
+    const pageState = {};
+
+    function getToken() {
+      return document.getElementById('gh-token').value.trim();
+    }
+
+    function extractFrontmatter(content, key) {
+      const m = content.match(new RegExp('^' + key + ':\\s*(.+)$', 'm'));
+      return m ? m[1].trim() : '';
+    }
+
+    function replaceFrontmatter(content, key, value) {
+      return content.replace(
+        new RegExp('^(' + key + ':\\s*)(.+)$', 'm'),
+        '$1' + value
+      );
+    }
+
+    async function loadSeoFiles() {
+      const token = getToken();
+      if (!token) { setSeoStatus('error', '請先輸入 Token'); return; }
+
+      document.getElementById('btn-seo-load').disabled = true;
+      setSeoStatus('loading', '載入中…');
+
+      try {
+        await Promise.all(SEO_PAGES.map(async page => {
+          const res = await fetch(
+            `${API_BASE}/repos/${REPO}/contents/${page.path}`,
+            { headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' } }
+          );
+          if (!res.ok) throw new Error(`${page.label} HTTP ${res.status}`);
+          const json = await res.json();
+          const content = decodeURIComponent(escape(atob(json.content.replace(/\n/g, ''))));
+          pageState[page.path] = { sha: json.sha, content };
+
+          const key = page.path.replace(/[/.]/g, '_');
+          const titleEl = document.getElementById('seo_title_' + key);
+          const descEl  = document.getElementById('seo_desc_'  + key);
+          if (titleEl) titleEl.value = extractFrontmatter(content, 'title');
+          if (descEl)  descEl.value  = extractFrontmatter(content, 'description');
+        }));
+
+        setSeoStatus('success', '✓ 載入成功');
+        document.getElementById('btn-seo-save').disabled = false;
+      } catch (e) {
+        setSeoStatus('error', '載入失敗：' + e.message);
+      } finally {
+        document.getElementById('btn-seo-load').disabled = false;
+      }
+    }
+
+    async function saveSeoFiles() {
+      const token = getToken();
+      if (!token) { setSeoStatus('error', '請先輸入 Token'); return; }
+
+      document.getElementById('btn-seo-save').disabled = true;
+      setSeoStatus('loading', '儲存中…');
+
+      try {
+        await Promise.all(SEO_PAGES.map(async page => {
+          const state = pageState[page.path];
+          if (!state) return;
+
+          const key = page.path.replace(/[/.]/g, '_');
+          const newTitle = document.getElementById('seo_title_' + key)?.value || '';
+          const newDesc  = document.getElementById('seo_desc_'  + key)?.value || '';
+
+          let newContent = replaceFrontmatter(state.content, 'title', newTitle);
+          newContent     = replaceFrontmatter(newContent,    'description', newDesc);
+
+          if (newContent === state.content) return; // no change
+
+          const encoded = btoa(unescape(encodeURIComponent(newContent)));
+          const res = await fetch(
+            `${API_BASE}/repos/${REPO}/contents/${page.path}`,
+            {
+              method: 'PUT',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/vnd.github+json',
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                message: `Update SEO meta for ${page.label}`,
+                content: encoded,
+                sha: state.sha,
+              })
+            }
+          );
+          if (!res.ok) throw new Error(`${page.label} 儲存失敗 HTTP ${res.status}`);
+          const result = await res.json();
+          state.sha     = result.content.sha;
+          state.content = newContent;
+        }));
+
+        setSeoStatus('success', '✓ 儲存成功！網站將自動重新 build。');
+      } catch (e) {
+        setSeoStatus('error', '儲存失敗：' + e.message);
+      } finally {
+        document.getElementById('btn-seo-save').disabled = false;
+      }
+    }
+
+    function setSeoStatus(type, msg) {
+      const el = document.getElementById('seo-status');
+      el.className = 'status-box show ' + type;
+      el.textContent = msg;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('btn-seo-load').addEventListener('click', loadSeoFiles);
+      document.getElementById('btn-seo-save').addEventListener('click', saveSeoFiles);
+    });
   })();
   </script>
 ---
@@ -663,16 +856,57 @@ pageScript: |
     <div class="status-box" id="load-status"></div>
   </div>
 
-  <!-- Field groups (rendered by JS) -->
-  <div class="field-groups" id="field-groups">
-    <div class="empty-state">按「載入目前設定」後即可編輯欄位</div>
+  <!-- Tab bar -->
+  <div class="tab-bar">
+    <button class="tab-btn active" data-tab="tab-text">文字設定</button>
+    <button class="tab-btn" data-tab="tab-seo">SEO 設定</button>
   </div>
 
-  <!-- Save bar -->
-  <div class="save-bar">
-    <span class="save-info" id="save-info">尚未載入</span>
-    <button class="btn-save" id="btn-save">儲存並更新網站</button>
+  <!-- Tab 1: 文字設定 -->
+  <div class="tab-panel active" id="tab-text">
+    <div class="field-groups" id="field-groups">
+      <div class="empty-state">按「載入目前設定」後即可編輯欄位</div>
+    </div>
+    <div class="save-bar">
+      <span class="save-info" id="save-info">尚未載入</span>
+      <button class="btn-save" id="btn-save">儲存並更新網站</button>
+    </div>
+    <div class="status-box" id="save-status"></div>
   </div>
-  <div class="status-box" id="save-status"></div>
+
+  <!-- Tab 2: SEO 設定 -->
+  <div class="tab-panel" id="tab-seo">
+    <div style="display:flex;gap:0.75rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;">
+      <button class="btn-load" id="btn-seo-load">載入 SEO 設定</button>
+      <button class="btn-save" id="btn-seo-save" disabled>儲存 SEO 設定</button>
+    </div>
+    <div class="status-box" id="seo-status"></div>
+
+    {% set seoPages = [
+      { label: '首頁',       path: 'src/index.njk' },
+      { label: '諮商預約',   path: 'src/booking.njk' },
+      { label: '專欄文章',   path: 'src/articles.njk' },
+      { label: '聲音與著作', path: 'src/media.njk' },
+      { label: '諮商講座',   path: 'src/events.njk' },
+      { label: '關於我們',   path: 'src/about.njk' },
+      { label: '牌卡',       path: 'src/cards.njk' }
+    ] %}
+    {% for page in seoPages %}
+      {% set key = page.path | replace('/', '_') | replace('.', '_') %}
+      <div class="seo-page-card">
+        <div class="seo-page-label">{{ page.label }}</div>
+        <div class="group-fields" style="padding:0;">
+          <div class="field-item field-full">
+            <label for="seo_title_{{ key }}">頁面標題</label>
+            <input type="text" id="seo_title_{{ key }}" placeholder="頁面標題…" />
+          </div>
+          <div class="field-item field-full">
+            <label for="seo_desc_{{ key }}">頁面描述</label>
+            <textarea id="seo_desc_{{ key }}" rows="2" placeholder="頁面描述…"></textarea>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
 
 </div>
