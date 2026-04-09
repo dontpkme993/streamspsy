@@ -126,7 +126,7 @@ pageStyle: |
     padding: 0.65rem 1rem;
     background: var(--straw);
     color: white;
-    border-radius: 100px;
+    border-radius: 999px;
     font-size: 0.85rem;
     font-weight: 700;
     text-decoration: none;
@@ -158,7 +158,8 @@ pageStyle: |
     text-align: center;
     padding: 0.65rem 0.5rem;
     font-size: 0.9rem;
-    color: rgba(67,52,48,0.55);
+    color: var(--oak);
+    font-weight: bold;
     text-decoration: none;
     transition: background 0.15s, color 0.15s;
     display: flex;
@@ -177,7 +178,7 @@ pageStyle: |
     display: grid;
     grid-template-columns: 1fr 8fr;
     grid-template-rows: 1fr 1fr;
-    gap: 0.5rem;
+    gap: 0.5rem 1rem;
   }
 
   .split-left {
@@ -260,16 +261,17 @@ pageStyle: |
           </div>
           <div class="tc-name">張皓涵 臨床心理師</div>
           <div class="tc-row">
-            <div class="tc-tags">
-              <span class="tc-tag-audience">成人</span>
-              <span class="tc-tag-audience">伴侶</span>
-            </div>
-          </div>
-          <div class="tc-row">
-            <div class="tc-tags">
-              <span class="tc-tag-focus">#成癮</span>
-              <span class="tc-tag-focus">#催眠</span>
-              <span class="tc-tag-focus">#存在主義</span>
+            <div class="split-layout">
+              <div class="split-left">服務對象</div>
+              <div class="split-right-top">
+                <span class="tc-tag-audience">成人</span>
+                <span class="tc-tag-audience">伴侶</span>
+              </div>
+              <div class="split-right-bottom">
+                <span class="tc-tag-focus">#成癮</span>
+                <span class="tc-tag-focus">#催眠</span>
+                <span class="tc-tag-focus">#存在主義</span>
+              </div>
             </div>
           </div>
           <a href="https://reurl.cc/K2jp3y" class="tc-book-btn" target="_blank" rel="noopener">
@@ -293,14 +295,15 @@ pageStyle: |
           </div>
           <div class="tc-name">蘇怡因 諮商心理師</div>
           <div class="tc-row">
-            <div class="tc-tags">
-              <span class="tc-tag-audience">成人</span>
-            </div>
-          </div>
-          <div class="tc-row">
-            <div class="tc-tags">
-              <span class="tc-tag-focus">#多元性別</span>
-              <span class="tc-tag-focus">#人際關係</span>
+            <div class="split-layout">
+              <div class="split-left">服務對象</div>
+              <div class="split-right-top">
+                <span class="tc-tag-audience">成人</span>
+              </div>
+              <div class="split-right-bottom">
+                <span class="tc-tag-focus">#多元性別</span>
+                <span class="tc-tag-focus">#人際關係</span>
+              </div>
             </div>
           </div>
           <a href="https://www.holduandme.com" class="tc-book-btn" target="_blank" rel="noopener">
@@ -324,16 +327,17 @@ pageStyle: |
           </div>
           <div class="tc-name">張凱琪 臨床心理師</div>
           <div class="tc-row">
-            <div class="tc-tags">
-              <span class="tc-tag-audience">成人</span>
+            <div class="split-layout">
+              <div class="split-left">服務對象</div>
+              <div class="split-right-top">
+                <span class="tc-tag-audience">成人</span>
+              </div>
+              <div class="split-right-bottom">
+                <span class="tc-tag-focus">#多元性別</span>
+                <span class="tc-tag-focus">#人際關係</span>
+              </div>
             </div>
-          </div>
-          <div class="tc-row">
-            <div class="tc-tags">
-              <span class="tc-tag-focus">#多元性別</span>
-              <span class="tc-tag-focus">#人際關係</span>
-            </div>
-          </div>
+          </div>        
           <span class="tc-book-btn tc-book-btn--disabled" aria-disabled="true">
             <span>預約即將開放</span>
             <span class="arrow">敬請期待</span>
@@ -355,14 +359,16 @@ pageStyle: |
           </div>
           <div class="tc-name">— 諮商心理師</div>
           <div class="tc-row">
-            <div class="tc-tags"></div>
-          </div>
-          <div class="tc-row">
-            <div class="tc-tags"></div>
+            <div class="split-layout">
+              <div class="split-left">服務對象</div>
+              <div class="split-right-top">
+              </div>
+              <div class="split-right-bottom">
+              </div>
+            </div>
           </div>
           <span class="tc-book-btn tc-book-btn--disabled" aria-disabled="true">
-            <span>資料更新中</span>
-            <span class="arrow">敬請期待</span>
+            <span>資料建置中</span>
           </span>
           <div class="tc-footer">
             <a href="{{ '/articles/' | url }}">
@@ -381,14 +387,16 @@ pageStyle: |
           </div>
           <div class="tc-name">— 諮商心理師</div>
           <div class="tc-row">
-            <div class="tc-tags"></div>
-          </div>
-          <div class="tc-row">
-            <div class="tc-tags"></div>
+            <div class="split-layout">
+              <div class="split-left">服務對象</div>
+              <div class="split-right-top">
+              </div>
+              <div class="split-right-bottom">
+              </div>
+            </div>
           </div>
           <span class="tc-book-btn tc-book-btn--disabled" aria-disabled="true">
-            <span>資料更新中</span>
-            <span class="arrow">敬請期待</span>
+            <span>資料建置中</span>
           </span>
           <div class="tc-footer">
             <a href="{{ '/articles/' | url }}">
