@@ -45,6 +45,7 @@ jobs:
           NOTION_ARTICLES_DB: ${{ secrets.NOTION_ARTICLES_DB }}
           NOTION_EVENTS_DB: ${{ secrets.NOTION_EVENTS_DB }}
           NOTION_PODCAST_DB: ${{ secrets.NOTION_PODCAST_DB }}
+          NOTION_THERAPISTS_DB: ${{ secrets.NOTION_THERAPISTS_DB }}
           PODCAST_RSS_URL: ${{ secrets.PODCAST_RSS_URL }}
           SITE_BASE_PATH: /streamspsy/
           SITE_URL: https://dontpkme993.github.io

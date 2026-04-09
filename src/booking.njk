@@ -216,196 +216,52 @@ pageStyle: |
       <!-- 心理師卡片格線 -->
       <div class="therapist-grid" aria-label="心理師列表">
 
-        <!-- 江玲承 諮商心理師 -->
+        {% for t in therapists %}
         <article class="therapist-card">
           <div class="tc-photo-wrap">
-            <div class="tc-photo" aria-hidden="true">👤</div>
-            <span class="tc-badge">35+</span>
+            {% if t.photo %}
+              <img src="{{ t.photo }}" alt="{{ t.name }}" class="tc-photo" style="object-fit:cover;">
+            {% else %}
+              <div class="tc-photo" aria-hidden="true">👤</div>
+            {% endif %}
+            {% if t.badge %}<span class="tc-badge">{{ t.badge }}</span>{% endif %}
           </div>
-          <div class="tc-name">江玲承 諮商心理師</div>
+          <div class="tc-name">{{ t.name }} {{ t.title }}</div>
           <div class="tc-row">
             <div class="split-layout">
               <div class="split-left">服務對象</div>
               <div class="split-right-top">
-                <span class="tc-tag-audience">成人</span>
-                <span class="tc-tag-audience">兒童</span>
-                <span class="tc-tag-audience">青少年</span>
+                {% for a in t.audiences %}<span class="tc-tag-audience">{{ a }}</span>{% endfor %}
               </div>
               <div class="split-right-bottom">
-                <span class="tc-tag-focus">#陪伴者支持</span>
-                <span class="tc-tag-focus">#創傷修復</span>
-                <span class="tc-tag-focus">#職場壓力調適</span>
-                <span class="tc-tag-focus">#敘事治療</span>
+                {% for f in t.focuses %}<span class="tc-tag-focus">#{{ f }}</span>{% endfor %}
               </div>
             </div>
           </div>
-          <a href="https://forms.gle/PCJ7TUomGzicMcVr6" class="tc-book-btn" target="_blank" rel="noopener">
-            <span>預約點我</span>
-          </a>
+          {% if t.status === '開放預約' and t.bookingLink %}
+            <a href="{{ t.bookingLink }}" class="tc-book-btn" target="_blank" rel="noopener">
+              <span>預約點我</span>
+            </a>
+          {% elif t.status === '即將開放' %}
+            <span class="tc-book-btn tc-book-btn--disabled" aria-disabled="true">
+              <span>預約即將開放</span>
+              <span class="arrow">敬請期待</span>
+            </span>
+          {% else %}
+            <span class="tc-book-btn tc-book-btn--disabled" aria-disabled="true">
+              <span>資料建置中</span>
+            </span>
+          {% endif %}
           <div class="tc-footer">
-            <a href="{{ '/articles/' | url }}#author=%E6%B1%9F%E7%8E%B2%E6%89%BF">
+            <a href="{{ t.articlesUrl | url }}">
               <span>📖</span> 專業文章
             </a>
-            <a href="{{ '/media/' | url }}">
+            <a href="{{ t.mediaUrl | url }}">
               <span>🎙</span> 系列作品
             </a>
           </div>
         </article>
-
-        <!-- 張皓涵 臨床心理師 -->
-        <article class="therapist-card">
-          <div class="tc-photo-wrap">
-            <div class="tc-photo" aria-hidden="true">👤</div>
-            <span class="tc-badge">35+</span>
-          </div>
-          <div class="tc-name">張皓涵 臨床心理師</div>
-          <div class="tc-row">
-            <div class="split-layout">
-              <div class="split-left">服務對象</div>
-              <div class="split-right-top">
-                <span class="tc-tag-audience">成人</span>
-                <span class="tc-tag-audience">伴侶</span>
-              </div>
-              <div class="split-right-bottom">
-                <span class="tc-tag-focus">#成癮</span>
-                <span class="tc-tag-focus">#催眠</span>
-                <span class="tc-tag-focus">#存在主義</span>
-              </div>
-            </div>
-          </div>
-          <a href="https://reurl.cc/K2jp3y" class="tc-book-btn" target="_blank" rel="noopener">
-            <span>預約點我</span>
-          </a>
-          <div class="tc-footer">
-            <a href="{{ '/articles/' | url }}#author=%E5%BC%B5%E7%9A%93%E6%B6%B5">
-              <span>📖</span> 專業文章
-            </a>
-            <a href="{{ '/media/' | url }}">
-              <span>🎙</span> 系列作品
-            </a>
-          </div>
-        </article>
-
-        <!-- 蘇怡因 諮商心理師 -->
-        <article class="therapist-card">
-          <div class="tc-photo-wrap">
-            <div class="tc-photo" aria-hidden="true">👤</div>
-            <span class="tc-badge">30+</span>
-          </div>
-          <div class="tc-name">蘇怡因 諮商心理師</div>
-          <div class="tc-row">
-            <div class="split-layout">
-              <div class="split-left">服務對象</div>
-              <div class="split-right-top">
-                <span class="tc-tag-audience">成人</span>
-              </div>
-              <div class="split-right-bottom">
-                <span class="tc-tag-focus">#多元性別</span>
-                <span class="tc-tag-focus">#人際關係</span>
-              </div>
-            </div>
-          </div>
-          <a href="https://www.holduandme.com" class="tc-book-btn" target="_blank" rel="noopener">
-            <span>預約點我</span>
-          </a>
-          <div class="tc-footer">
-            <a href="{{ '/articles/' | url }}#author=%E8%98%87%E6%80%A1%E5%9B%A0">
-              <span>📖</span> 專業文章
-            </a>
-            <a href="{{ '/media/' | url }}">
-              <span>🎙</span> 系列作品
-            </a>
-          </div>
-        </article>
-
-        <!-- 張凱琪 臨床心理師（預約暫無） -->
-        <article class="therapist-card">
-          <div class="tc-photo-wrap">
-            <div class="tc-photo" aria-hidden="true">👤</div>
-            <span class="tc-badge">30+</span>
-          </div>
-          <div class="tc-name">張凱琪 臨床心理師</div>
-          <div class="tc-row">
-            <div class="split-layout">
-              <div class="split-left">服務對象</div>
-              <div class="split-right-top">
-                <span class="tc-tag-audience">成人</span>
-              </div>
-              <div class="split-right-bottom">
-                <span class="tc-tag-focus">#多元性別</span>
-                <span class="tc-tag-focus">#人際關係</span>
-              </div>
-            </div>
-          </div>        
-          <span class="tc-book-btn tc-book-btn--disabled" aria-disabled="true">
-            <span>預約即將開放</span>
-            <span class="arrow">敬請期待</span>
-          </span>
-          <div class="tc-footer">
-            <a href="{{ '/articles/' | url }}#author=%E5%BC%B5%E5%87%B1%E7%90%AA">
-              <span>📖</span> 專業文章
-            </a>
-            <a href="{{ '/media/' | url }}">
-              <span>🎙</span> 系列作品
-            </a>
-          </div>
-        </article>
-
-        <!-- 心理師 5（待補） -->
-        <article class="therapist-card">
-          <div class="tc-photo-wrap">
-            <div class="tc-photo" aria-hidden="true">👤</div>
-          </div>
-          <div class="tc-name">— 諮商心理師</div>
-          <div class="tc-row">
-            <div class="split-layout">
-              <div class="split-left">服務對象</div>
-              <div class="split-right-top">
-              </div>
-              <div class="split-right-bottom">
-              </div>
-            </div>
-          </div>
-          <span class="tc-book-btn tc-book-btn--disabled" aria-disabled="true">
-            <span>資料建置中</span>
-          </span>
-          <div class="tc-footer">
-            <a href="{{ '/articles/' | url }}">
-              <span>📖</span> 專業文章
-            </a>
-            <a href="{{ '/media/' | url }}">
-              <span>🎙</span> 系列作品
-            </a>
-          </div>
-        </article>
-
-        <!-- 心理師 6（待補） -->
-        <article class="therapist-card">
-          <div class="tc-photo-wrap">
-            <div class="tc-photo" aria-hidden="true">👤</div>
-          </div>
-          <div class="tc-name">— 諮商心理師</div>
-          <div class="tc-row">
-            <div class="split-layout">
-              <div class="split-left">服務對象</div>
-              <div class="split-right-top">
-              </div>
-              <div class="split-right-bottom">
-              </div>
-            </div>
-          </div>
-          <span class="tc-book-btn tc-book-btn--disabled" aria-disabled="true">
-            <span>資料建置中</span>
-          </span>
-          <div class="tc-footer">
-            <a href="{{ '/articles/' | url }}">
-              <span>📖</span> 專業文章
-            </a>
-            <a href="{{ '/media/' | url }}">
-              <span>🎙</span> 系列作品
-            </a>
-          </div>
-        </article>
+        {% endfor %}
 
       </div><!-- /.therapist-grid -->
   </div>
