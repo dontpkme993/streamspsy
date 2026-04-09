@@ -34,7 +34,7 @@ module.exports = async () => {
 
       return {
         name,
-        title: p['職稱']?.select?.name || '',
+        title: p['職稱']?.rich_text?.[0]?.plain_text || '',
         badge: p['資歷']?.rich_text?.[0]?.plain_text || '',
         photo,
         audiences: p['服務對象']?.multi_select?.map(t => t.name) || [],

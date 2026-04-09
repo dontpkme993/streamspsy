@@ -227,7 +227,7 @@ pageStyle: |
             {% endif %}
             {% if t.badge %}<span class="tc-badge">{{ t.badge }}</span>{% endif %}
           </div>
-          <div class="tc-name">{{ t.name }} {{ t.title }}</div>
+          <div class="tc-name">{{ t.name }}{% if t.title %}─{{ t.title }}{% endif %}</div>
           <div class="tc-row">
             <div class="split-layout">
               <div class="split-left">服務對象</div>
