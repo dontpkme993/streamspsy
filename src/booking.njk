@@ -124,16 +124,16 @@ pageStyle: |
     justify-content: space-between;
     margin: 0.75rem 1.25rem 0;
     padding: 0.65rem 1rem;
-    background: var(--rice);
+    background: var(--straw);
     color: var(--bark);
     border-radius: 0.6rem;
     font-size: 0.85rem;
     font-weight: 700;
     text-decoration: none;
-    transition: background 0.2s;
+    transition: background 0.2s, color 0.2s, transform 0.2s;
     letter-spacing: 0.02em;
   }
-  .tc-book-btn:hover { background: var(--sprout); color: var(--bark); }
+  .tc-book-btn:hover { background: var(--oak); color: var(--rice); transform: translateY(-1px); }
   .tc-book-btn .arrow { font-size: 0.78rem; opacity: 0.75; }
   .tc-book-btn--disabled {
     background: rgba(67,52,48,0.06);
