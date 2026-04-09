@@ -191,6 +191,7 @@ async function getArticles() {
       date: page.properties['發布日期']?.date?.start || '',
       summary: page.properties['3秒摘要']?.rich_text?.[0]?.plain_text || '',
       tags: page.properties['標籤']?.multi_select?.map(t => t.name) || [],
+      authors: page.properties['作者']?.multi_select?.map(t => t.name) || [],
       recommended: page.properties['推薦閱讀']?.checkbox ?? false,
       image,
       body,

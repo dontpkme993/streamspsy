@@ -19,36 +19,70 @@ pageStyle: |
   .sidebar-sticky { position: sticky; top: 88px; }
 pageScript: |
   <script>
-    // Tag filter — driven by URL hash (e.g. /articles/#心理)
-    function applyFilter(tag) {
+    // Filter driven by URL hash
+    // Formats: '' (all), '#tag=心理', '#author=江玲承'
+
+    function parseHash() {
+      const h = decodeURIComponent(location.hash.slice(1));
+      if (!h) return { type: 'all', value: '' };
+      if (h.startsWith('tag=')) return { type: 'tag', value: h.slice(4) };
+      if (h.startsWith('author=')) return { type: 'author', value: h.slice(7) };
+      return { type: 'tag', value: h }; // legacy bare tag
+    }
+
+    function applyFilter(filter) {
+      const { type, value } = filter;
+
+      // Update heading
+      const heading = document.getElementById('article-list-heading');
+      if (heading) {
+        if (type === 'all') heading.textContent = '顯示所有文章';
+        else if (type === 'tag') heading.textContent = '標籤：#' + value;
+        else heading.textContent = '作者：' + value;
+      }
+
+      // Update author buttons
+      document.querySelectorAll('.author-btn').forEach(b => {
+        b.classList.toggle('active', type === 'author' && b.dataset.author === value);
+      });
+
+      // Update tag buttons
       document.querySelectorAll('.tag-btn').forEach(b => {
-        b.classList.toggle('active', b.dataset.tag === tag);
+        const isAll = b.dataset.tag === 'all';
+        b.classList.toggle('active', isAll ? type === 'all' : (type === 'tag' && b.dataset.tag === value));
       });
-      document.querySelectorAll('.article-card').forEach(a => {
-        if (tag === 'all') {
-          a.style.display = '';
+
+      // Filter articles
+      document.querySelectorAll('.article-card').forEach(card => {
+        let show;
+        if (type === 'all') {
+          show = true;
+        } else if (type === 'tag') {
+          show = (card.dataset.tags || '').includes(value);
         } else {
-          a.style.display = (a.dataset.tags || '').includes(tag) ? '' : 'none';
+          show = (card.dataset.authors || '').split('|||').includes(value);
         }
+        card.style.display = show ? '' : 'none';
       });
     }
 
-    function getTagFromHash() {
-      return decodeURIComponent(location.hash.slice(1)) || 'all';
-    }
-
-    // Click sets hash; hash change drives filter
-    document.querySelectorAll('.tag-btn').forEach(btn => {
+    // Author button clicks
+    document.querySelectorAll('.author-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        const tag = btn.dataset.tag;
-        location.hash = tag === 'all' ? '' : encodeURIComponent(tag);
+        location.hash = 'author=' + encodeURIComponent(btn.dataset.author);
       });
     });
 
-    window.addEventListener('hashchange', () => applyFilter(getTagFromHash()));
+    // Tag button clicks
+    document.querySelectorAll('.tag-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tag = btn.dataset.tag;
+        location.hash = tag === 'all' ? '' : 'tag=' + encodeURIComponent(tag);
+      });
+    });
 
-    // Initial load
-    applyFilter(getTagFromHash());
+    window.addEventListener('hashchange', () => applyFilter(parseHash()));
+    applyFilter(parseHash());
 
     // Show sidebar on desktop
     function updateSidebar() {
@@ -67,9 +101,17 @@ pageScript: |
   <p>{{ ui.articles_hero_subtitle }}</p>
 </div>
 
-<!-- ══════════════ TAG FILTER ══════════════ -->
-<div style="max-width:1100px;margin:0 auto;padding:0 1.5rem 2.5rem;" role="search" aria-label="文章標籤過濾">
-  <p style="font-size:0.8rem;color:rgba(67,52,48,0.5);margin-bottom:1rem;letter-spacing:0.05em;">{{ ui.articles_filter_label }}</p>
+<!-- ══════════════ FILTER ══════════════ -->
+<div style="max-width:1100px;margin:0 auto;padding:0 1.5rem 2.5rem;" role="search" aria-label="文章篩選">
+  {% if articleAuthors.length %}
+  <p style="font-size:0.8rem;color:rgba(67,52,48,0.5);margin-bottom:0.75rem;letter-spacing:0.05em;">{{ ui.articles_author_filter_label }}</p>
+  <div style="display:flex;flex-wrap:wrap;gap:0.6rem;margin-bottom:1.5rem;" id="author-filter">
+    {% for name in articleAuthors %}
+      <button class="tag-btn author-btn" data-author="{{ name }}">{{ name }}</button>
+    {% endfor %}
+  </div>
+  {% endif %}
+  <p style="font-size:0.8rem;color:rgba(67,52,48,0.5);margin-bottom:0.75rem;letter-spacing:0.05em;">{{ ui.articles_filter_label }}</p>
   <div style="display:flex;flex-wrap:wrap;gap:0.6rem;" id="tag-filter">
     <button class="tag-btn active" data-tag="all">{{ ui.articles_all_btn }}</button>
     {% for item in articleTags %}
@@ -87,7 +129,7 @@ pageScript: |
 
     {% if articles.length %}
       {% for article in articles %}
-        <article class="article-card" data-tags="{{ article.tags | join(' ') }}">
+        <article class="article-card" data-tags="{{ article.tags | join(' ') }}" data-authors="{{ article.authors | join('|||') }}">
           <a href="{{ ('/articles/' + article.slug + '/') | url }}" class="article-thumb" style="display:block;text-decoration:none;">
             {% if article.image %}
               <img src="{{ article.image | url }}" alt="{{ article.title }}" style="width:100%;height:100%;object-fit:cover;">
