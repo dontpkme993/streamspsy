@@ -174,19 +174,20 @@ pageStyle: |
     grid-template-columns: 1fr 8fr;
     grid-template-rows: 1fr 1fr;
     gap: 0.5rem;
-    height: 4rem;
+    height: 5rem;
   }
 
   .split-left {
     writing-mode: vertical-rl;
     text-orientation: mixed;
     grid-row: 1 / 3; /* 跨兩列 */
-    border-radius: 0.75rem;
+    border-radius: 0.75rem 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--rice);
+    background: var(--oak);
     color: white;
+    padding: 1rem;
   }
 
   .split-right-top {
