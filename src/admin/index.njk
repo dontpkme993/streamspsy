@@ -598,6 +598,10 @@ pageScript: |
         populateFields(originalData);
         localStorage.setItem(LS_TOKEN, token);
         markClean();
+
+        // 同時載入 SEO 設定
+        if (typeof loadSeoFiles === 'function') loadSeoFiles(token);
+
         setStatus('load-status', 'success', '✓ 載入成功，請直接修改下方欄位');
       } catch (e) {
         setStatus('load-status', 'error', '載入失敗：' + e.message);
@@ -722,6 +726,11 @@ pageScript: |
       return document.getElementById('gh-token').value.trim();
     }
 
+    // 公開供主 script 呼叫
+    window.loadSeoFiles = async function(token) {
+      return _loadSeoFiles(token || getToken());
+    };
+
     function extractFrontmatter(content, key) {
       const m = content.match(new RegExp('^' + key + ':\\s*(.+)$', 'm'));
       return m ? m[1].trim() : '';
@@ -734,12 +743,10 @@ pageScript: |
       );
     }
 
-    async function loadSeoFiles() {
-      const token = getToken();
+    async function _loadSeoFiles(token) {
       if (!token) { setSeoStatus('error', '請先輸入 Token'); return; }
 
-      document.getElementById('btn-seo-load').disabled = true;
-      setSeoStatus('loading', '載入中…');
+      setSeoStatus('loading', 'SEO 載入中…');
 
       try {
         await Promise.all(SEO_PAGES.map(async page => {
@@ -759,12 +766,10 @@ pageScript: |
           if (descEl)  descEl.value  = extractFrontmatter(content, 'description');
         }));
 
-        setSeoStatus('success', '✓ 載入成功');
+        setSeoStatus('success', '✓ SEO 載入成功');
         document.getElementById('btn-seo-save').disabled = false;
       } catch (e) {
-        setSeoStatus('error', '載入失敗：' + e.message);
-      } finally {
-        document.getElementById('btn-seo-load').disabled = false;
+        setSeoStatus('error', 'SEO 載入失敗：' + e.message);
       }
     }
 
@@ -827,7 +832,6 @@ pageScript: |
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('btn-seo-load').addEventListener('click', loadSeoFiles);
       document.getElementById('btn-seo-save').addEventListener('click', saveSeoFiles);
     });
   })();
@@ -877,7 +881,6 @@ pageScript: |
   <!-- Tab 2: SEO 設定 -->
   <div class="tab-panel" id="tab-seo">
     <div style="display:flex;gap:0.75rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;">
-      <button class="btn-load" id="btn-seo-load">載入 SEO 設定</button>
       <button class="btn-save" id="btn-seo-save" disabled>儲存 SEO 設定</button>
     </div>
     <div class="status-box" id="seo-status"></div>
