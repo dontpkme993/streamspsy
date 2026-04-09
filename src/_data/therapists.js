@@ -10,6 +10,7 @@ module.exports = async () => {
     const db = await notion.databases.query({
       database_id: process.env.NOTION_THERAPISTS_DB,
       filter: { property: '顯示', checkbox: { equals: true } },
+      sorts: [{ property: '排序', direction: 'ascending' }],
     });
 
     return db.results.map(page => {
@@ -25,6 +26,7 @@ module.exports = async () => {
         audiences: p['服務對象']?.multi_select?.map(t => t.name) || [],
         focuses: p['專長標籤']?.multi_select?.map(t => t.name) || [],
         bookingLink: p['預約連結']?.url || '',
+        order: p['排序']?.number ?? 999,
         status: p['預約狀態']?.select?.name || '開放預約',
         articlesUrl: `/articles/#author=${encodedName}`,
         mediaUrl: `/media/#author=${encodedName}`,
