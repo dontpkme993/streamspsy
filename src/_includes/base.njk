@@ -35,6 +35,34 @@
   {% if pageScript %}{{ pageScript | safe }}{% endif %}
 
   <script>
+    // ── Scroll Reveal ──
+    (function () {
+      var selectors = [
+        '.card', '.article-card', '.podcast-item', '.book-item',
+        '.cta-block', '.tc-card', '.event-upcoming', '.zigzag-block', '.reveal'
+      ];
+      var els = document.querySelectorAll(selectors.join(','));
+      if (!els.length) return;
+      if (!('IntersectionObserver' in window)) {
+        els.forEach(function (el) { el.classList.add('reveal', 'visible'); });
+        return;
+      }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      els.forEach(function (el) {
+        el.classList.add('reveal');
+        io.observe(el);
+      });
+    })();
+  </script>
+
+  <script>
     // ── Content protection ──
     // Disable right-click (except on /admin/)
     if (!location.pathname.includes('/admin')) {
