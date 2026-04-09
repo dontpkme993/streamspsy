@@ -245,4 +245,4 @@ async function getPodcastEpisodes() {
   }));
 }
 
-module.exports = { getArticles, getEvents, getPodcastEpisodes };
+module.exports = { getArticles, getEvents, getPodcastEpisodes, downloadImage };
