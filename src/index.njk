@@ -128,7 +128,7 @@ jsonLd: |
 
         {% set latestArticle = articles[0] %}
         {% if latestArticle %}
-        <article style="display:grid;grid-template-columns:1fr;gap:1.5rem;background:white;border-radius:1rem;overflow:hidden;box-shadow:0 2px 16px rgba(140,106,93,0.08);">
+        <article class="reveal" style="display:grid;grid-template-columns:1fr;gap:1.5rem;background:white;border-radius:1rem;overflow:hidden;box-shadow:0 2px 16px rgba(140,106,93,0.08);">
           {% if latestArticle.image %}
             <img src="{{ latestArticle.image | url }}" alt="{{ latestArticle.title }}" style="width:100%;height:200px;object-fit:cover;display:block;">
           {% else %}
@@ -147,7 +147,7 @@ jsonLd: |
           </div>
         </article>
         {% else %}
-        <article style="display:grid;grid-template-columns:1fr;gap:1.5rem;background:white;border-radius:1rem;overflow:hidden;box-shadow:0 2px 16px rgba(140,106,93,0.08);">
+        <article class="reveal" style="display:grid;grid-template-columns:1fr;gap:1.5rem;background:white;border-radius:1rem;overflow:hidden;box-shadow:0 2px 16px rgba(140,106,93,0.08);">
           <div class="img-placeholder" style="height:200px;border-radius:0;"><span>文章封面圖片佔位符</span></div>
           <div style="padding:1.5rem 2rem 2rem;">
             <h3 style="font-size:1.2rem;color:var(--oak);margin-bottom:0.5rem;"><span class="placeholder-text">文章標題 Placeholder</span></h3>
