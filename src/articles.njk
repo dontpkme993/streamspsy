@@ -113,7 +113,7 @@ pageScript: |
 <!-- ══════════════ FILTER ══════════════ -->
 <div style="max-width:1100px;margin:0 auto;padding:0 1.5rem 2.5rem;" role="search" aria-label="文章篩選">
   {% if articleAuthors.length %}
-  <p style="font-size:0.8rem;color:rgba(67,52,48,0.5);margin-bottom:0.75rem;letter-spacing:0.05em;">{{ ui.articles_author_filter_label }}</p>
+  <p style="font-size:0.8rem;color:rgba(67,52,48,0.5);margin-bottom:0.75rem;letter-spacing:0.05em;">依作者瀏覽：</p>
   <div style="display:flex;flex-wrap:wrap;gap:0.6rem;margin-bottom:1.5rem;" id="author-filter">
     {% for name in articleAuthors %}
       <button class="tag-btn author-btn" data-author="{{ name }}">{{ name }}</button>
