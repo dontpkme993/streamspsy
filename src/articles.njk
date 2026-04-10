@@ -46,17 +46,6 @@ pageScript: |
         b.classList.toggle('active', type === 'author' && b.dataset.author === value);
       });
 
-      // Collect tags from filtered articles when filtering by author
-      let activeTags = new Set();
-      if (type === 'author') {
-        document.querySelectorAll('.article-card').forEach(card => {
-          if ((card.dataset.authors || '').split('|||').includes(value)) {
-            const cardTags = (card.dataset.tags || '').split(/\s+/).filter(t => t);
-            cardTags.forEach(tag => activeTags.add(tag));
-          }
-        });
-      }
-
       // Update tag buttons (exclude author buttons)
       document.querySelectorAll('.tag-btn:not(.author-btn)').forEach(b => {
         const isAll = b.dataset.tag === 'all';
@@ -66,8 +55,8 @@ pageScript: |
         } else if (type === 'tag') {
           shouldBeActive = isAll ? false : (b.dataset.tag === value);
         } else {
-          // type === 'author': show tags that this author has written
-          shouldBeActive = activeTags.has(b.dataset.tag);
+          // type === 'author': no tags should be active
+          shouldBeActive = false;
         }
         b.classList.toggle('active', shouldBeActive);
       });
