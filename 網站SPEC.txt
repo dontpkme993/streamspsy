@@ -1,0 +1,193 @@
+溪水邊（Stream Side）品牌網頁技術規格書 v3.0
+核心理念： 透過專業諮商、兒童閱讀與租書店的一手觀察，找回生活最溫暖的樣子。
+
+一、 視覺與品牌識別系統
+主題風格： 暖陽田園 (Warm Pastoral) —— 溫暖、親和、具手作溫度的寧靜感。
+
+字體規範： 全站採用 黑體 (Sans-serif)（如思源黑體）。標題適度增加字距，內文行高設定為 1.8 確保閱讀舒適。
+
+標準配色 (暖陽田園)：
+
+主色 (Primary): #8C6A5D (橡木棕) - 用於導航文字、標題、核心按鈕。
+
+副色 (Secondary): #D4A373 (麥稈金) - 用於行動呼籲 (CTA)、重點標籤。
+
+底色 (Background): #FAF3E0 (米殼色) - 全站底色，模擬高品質再生紙質感。
+
+點綴色 (Accent): #E9EDC9 (嫩芽綠) - 用於文章標籤、小裝飾元素。
+
+內文字色: #433430 (深啡褐)。
+
+視覺質感： 背景需包含極細微的紙張噪點濾鏡 (Grain Texture)，容器元件統一使用 rounded-2xl 大圓角。
+
+二、 全站架構與組件規格
+1. 導航選單 (Navigation Header) —— 全站統一
+呈現邏輯： 放置於頁面最上方，所有頁面（含首頁與內容頁）格式統一。
+
+RWD 行為：
+
+桌機端： 左側 Logo，右側水平選單（關於、專欄、聲音、講座、抽卡）。
+
+手機端： 左側 Logo，右側漢堡選單 (Hamburger Menu)，點擊後由上而下展開。
+
+視覺： 採用 sticky 固定於頂部，具備 80% 透明度與毛玻璃效果 (Backdrop Blur)。
+
+2. 頁尾資訊 (Global Footer) —— 全站統一
+內容：
+
+聯絡資訊： [Email Placeholder]、[Social Media Links Placeholder]、[Location Placeholder]。
+
+版權聲明： © 2026 溪水邊 Stream Side. All Rights Reserved.
+
+品牌語錄： 一句簡單溫暖的結尾語。
+
+視覺： 背景使用橡木棕 (#8C6A5D)，文字使用米殼色 (#FAF3E0)。
+
+
+
+三、 分頁詳細規格
+
+1. 門戶首頁 (Portal Home)
+Header 配置： Nav 選單 + 主視覺 Banner。
+
+主視覺 Banner：
+
+放置可代換的主視覺圖placeholder（如：溪邊麥稈、草地）日後放置正式圖。
+
+置中疊加品牌標語與副標語。
+
+頁面主體：
+
+快速入口： 三個圓角卡片（專業諮商、兒童閱讀、互動體驗）導流。
+
+最新動態摘要： 顯示最新一則專欄文章的 [Title & Excerpt Placeholder]。
+
+活動預告： 顯示近期一場講座的 [Event Info Placeholder]。
+
+
+
+2. 五大內容分頁 (Content Pages)
+包含： 關於我們、專欄文章、聲音與著作、諮商講座、為自己抽張卡。
+
+Header 配置： 僅 Nav 選單（不含主視覺 Banner），頁面直接進入標題與內容區。
+
+
+各頁主體內容規格：
+
+2-1. 關於我們： [Personal Bio & Philosophy Placeholder]，側重專業背景。
+
+版面架構： 交錯式單欄佈局 (Zig-zag Layout)。
+
+區塊設計：
+
+標題區： 巨大的 H1 [Brand Philosophy Title Placeholder]，下方銜接一段感性引言。
+
+人物/品牌故事： 左側為專業形象圖 [Image Placeholder]，右側為 [Bio Text Placeholder]。
+
+核心價值： 三個並排的小區塊，標註「專業諮商、兒童閱讀、空間經營」的一手初衷。
+
+專業認證： 底部條列式清單 [Certification/Experience Placeholder]。
+
+
+
+
+2-2. 專欄文章： 文章列表或內文區。文章頂部需有 [3-sec Summary Placeholder] 以利 AEO。
+
+版面架構： 側邊欄 + 列表佈局 (Sidebar + List)。
+
+區塊設計：
+
+頂部： 標籤過濾器 (Tag Filter)，如：#心理、#繪本、#租書店觀察。
+
+主列表區： 垂直排列的長形卡片。
+
+左側：文章縮圖。
+
+右側：標題、日期、[3-sec Summary Placeholder]（重點摘要，AEO 關鍵）。
+
+側邊欄 (Desktop)： 顯示「推薦閱讀」或「熱門標籤」。
+
+
+
+2-3. 聲音與著作： [Media Player Embed Placeholder] 與 [Book Cover Grid Placeholder]。
+
+版面架構： 方格陣列 (Grid Layout)。
+
+區塊設計：
+
+Podcast 區： 垂直列表，每項包含 [Iframe Player Placeholder] 與 [Topic Outline Placeholder]。
+
+著作展示區： 3 或 4 欄的圖片矩陣。
+
+上方：書封 [Book Cover Placeholder]。
+
+下方：書名與一語介紹，點擊跳轉至購買連結或詳細介紹頁。
+
+
+
+
+2-4. 諮商講座： [Event List Placeholder]，過往紀錄與未來場次。
+
+版面架構： 簡約時間軸 (Minimalist Timeline)。
+
+區塊設計：
+
+未來場次 (Upcoming)： 醒目的水平卡片，標註日期、主題、[Registration Link Placeholder]。
+
+過往紀錄 (Past Events)： 灰階處理的列表，縮小文字大小，標註 [Archive/Photo Placeholder]。
+
+合作洽談： 頁底醒目的 [Collaboration CTA Placeholder] 區塊。
+
+
+
+2-5. 為自己抽張卡： [Interactive Card Component Placeholder]，獨立的抽卡互動區。
+
+版面架構： 沈浸式劇院佈局 (Stage Layout)。
+
+區塊設計：
+
+互動區： 頁面中心留白，僅放置一張巨大的卡片背面 [Card Flip Component Placeholder]。
+
+操作區： 下方放置「洗牌」、「重新抽卡」與「分享」按鈕。
+
+解析區： 抽卡後下方緩緩浮現 [Interpretation Text Placeholder]，採用優雅的字體排列。
+
+
+
+四、 技術與效能規範 (Technical Spec)
+架構模式： SSG (Static Site Generation)。
+
+RWD 策略： 行動優先 (Mobile-First)，斷點設定於 640px (Mobile) 與 1024px (Desktop)。
+
+搜尋引擎優化 (SEO & AEO)：
+
+結構化資料： 根據頁面類型嵌入 Person、Article、Event 的 JSON-LD。
+
+語義化 HTML： 嚴格使用 <header>, <nav>, <main>, <article>, <footer>。
+
+機器讀取： 根目錄需提供 /llms.txt。
+
+效能優化：
+
+圖片強制 WebP/AVIF 格式，關鍵圖片 (LCP) 優先載入，其餘 Lazy Load。
+
+全站 CSS 體積控制在 50KB 以內（推薦使用 Tailwind CSS）。
+
+Header 切換： 內容頁面載入時，Nav 選單直接以 oak-brown 文字色顯示在 rice-husk 底色上，不進行透明度切換，以確保資訊直接。
+
+內容寬度： 所有內文區塊限制在 800px - 1000px 之間，避免在大螢幕上單行文字過長導致閱讀疲勞。
+
+留白原則： 區塊與區塊間距 (Margin) 統一使用 py-16 到 py-24，維持「寧靜、開闊」的自然感。
+
+
+
+五、 實作檢查清單 (Implementation Checklist)
+[ ] 所有 Placeholder 區塊是否已明確標註，方便填入一手資料？
+
+[ ] 首頁 Banner 是否具備足夠的視覺衝擊力？
+
+[ ] 五大內容頁的 Header 是否已移除 Banner 以確保使用者直接觸達資訊？
+
+[ ] 手機版的漢堡選單在不同解析度下是否能正常運作？
+
+[ ] 所有的外部連結是否已設定 rel="noopener"？
