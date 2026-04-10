@@ -1,235 +1,31 @@
 ---
 layout: base.njk
-title: 溪水邊 Streamspsy｜找回生活最溫暖的樣子
-description: 溪水邊 Streamspsy — 透過專業諮商、兒童閱讀與租書店的一手觀察，找回生活最溫暖的樣子。
-activeNav: home
-jsonLd: |
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "WebSite",
-        "name": "溪水邊 Stream Side",
-        "description": "透過專業諮商、兒童閱讀與租書店的一手觀察，找回生活最溫暖的樣子。",
-        "url": "https://streamspsy.com"
-      },
-      {
-        "@type": "Organization",
-        "name": "溪水邊 Stream Side",
-        "url": "https://streamspsy.com",
-        "description": "由諮商心理師創辦，結合專業諮商、兒童閱讀推廣與空間經營的溫暖品牌。",
-        "founder": {
-          "@type": "Person",
-          "jobTitle": "諮商心理師"
-        },
-        "sameAs": []
-      },
-      {
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "溪水邊提供哪些服務？",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "溪水邊提供三項核心服務：個別心理諮商、兒童閱讀陪伴（繪本導讀）與互動式牌卡體驗，由持照諮商心理師主持。"
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "如何預約心理諮商或工作坊？",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "請至「諮商講座」頁面查看最新場次與報名連結，或透過 Email 與溪水邊聯繫洽詢。"
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "溪水邊的服務適合哪些人？",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "適合希望透過專業對話重新認識自己的成人，以及想為孩子建立閱讀習慣、陪伴情緒發展的家長。"
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "什麼是溪水邊的牌卡體驗？",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "「為自己抽張卡」是一個線上互動體驗，翻開一張牌卡，獲得當日的引導訊息，讓直覺帶你看見當下最需要的提醒。"
-            }
-          }
-        ]
-      }
-    ]
-  }
+title: 溪水邊 Streamspsy｜準備中
+description: 溪水邊 Streamspsy 正在建設中，敬請期待。
+permalink: /
 ---
 
-<!-- ══════════════ HERO BANNER ══════════════ -->
-<section class="hero-banner" aria-label="主視覺橫幅">
-  <div class="hero-image-placeholder" aria-hidden="true"></div>
-  <div class="hero-text">
-    <p style="font-size:0.82rem;letter-spacing:0.2em;color:rgba(250,243,224,0.65);margin-bottom:1rem;text-transform:uppercase;">{{ ui.home_hero_label }}</p>
-    <h1>{{ ui.home_hero_title_1 }}<br>{{ ui.home_hero_title_2 }}</h1>
-    <p style="margin-top:0.75rem;">{{ ui.home_hero_subtitle }}</p>
-    <div style="margin-top:2.5rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
-      <a href="{{ '/booking/' | url }}" class="btn-primary">{{ ui.home_hero_btn1 }}</a>
-      <a href="{{ '/cards/' | url }}" class="btn-outline" style="color:var(--rice);border-color:rgba(250,243,224,0.6);">{{ ui.home_hero_btn2 }}</a>
-    </div>
-  </div>
-</section>
+<!-- ══════════════ COMING SOON ══════════════ -->
+<section style="min-height:calc(100vh - 120px);display:flex;align-items:center;justify-content:center;padding:2rem 1.5rem;">
+  <div style="text-align:center;max-width:640px;">
+    <div style="font-size:4rem;margin-bottom:1rem;">🌿</div>
 
-<!-- ══════════════ QUICK ENTRY CARDS ══════════════ -->
-<section class="py-section" aria-labelledby="services-heading">
-  <div class="content-max">
-    <p style="text-align:center;font-size:0.8rem;letter-spacing:0.18em;color:var(--straw);margin-bottom:0.5rem;text-transform:uppercase;">{{ ui.home_services_label }}</p>
-    <h2 class="section-title" id="services-heading" style="text-align:center;">{{ ui.home_services_title }}</h2>
-    <p class="section-subtitle" style="text-align:center;">{{ ui.home_services_subtitle }}</p>
+    <h1 style="font-size:clamp(1.8rem,4vw,2.8rem);color:var(--oak);margin-bottom:1rem;font-weight:700;">
+      準備中
+    </h1>
 
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;">
-
-      <article class="card" style="padding:2.5rem 2rem;">
-        <div style="width:52px;height:52px;background:var(--sprout);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1.25rem;">🌿</div>
-        <h3 style="font-size:1.15rem;margin-bottom:0.75rem;">{{ ui.home_s1_title }}</h3>
-        <p style="font-size:0.88rem;color:rgba(67,52,48,0.72);margin-bottom:1.5rem;">{{ ui.home_s1_desc }}</p>
-        <a href="{{ '/booking/' | url }}" class="btn-outline" style="font-size:0.82rem;padding:0.5rem 1.4rem;">{{ ui.home_s1_btn }}</a>
-      </article>
-
-      <article class="card" style="padding:2.5rem 2rem;">
-        <div style="width:52px;height:52px;background:var(--sprout);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1.25rem;">📚</div>
-        <h3 style="font-size:1.15rem;margin-bottom:0.75rem;">{{ ui.home_s2_title }}</h3>
-        <p style="font-size:0.88rem;color:rgba(67,52,48,0.72);margin-bottom:1.5rem;">{{ ui.home_s2_desc }}</p>
-        <a href="{{ '/articles/' | url }}" class="btn-outline" style="font-size:0.82rem;padding:0.5rem 1.4rem;">{{ ui.home_s2_btn }}</a>
-      </article>
-
-      <article class="card" style="padding:2.5rem 2rem;">
-        <div style="width:52px;height:52px;background:var(--sprout);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1.25rem;">🃏</div>
-        <h3 style="font-size:1.15rem;margin-bottom:0.75rem;">{{ ui.home_s3_title }}</h3>
-        <p style="font-size:0.88rem;color:rgba(67,52,48,0.72);margin-bottom:1.5rem;">{{ ui.home_s3_desc }}</p>
-        <a href="{{ '/media/' | url }}" class="btn-outline" style="font-size:0.82rem;padding:0.5rem 1.4rem;">{{ ui.home_s3_btn }}</a>
-      </article>
-
-    </div>
-  </div>
-</section>
-
-<div class="divider" style="margin:0 1.5rem;"></div>
-
-<!-- ══════════════ LATEST ARTICLE ══════════════ -->
-<section class="py-section" aria-labelledby="latest-heading">
-  <div class="content-max">
-    <div style="display:grid;grid-template-columns:1fr;gap:3rem;align-items:center;">
-      <div style="display:grid;grid-template-columns:1fr;gap:2rem;">
-
-        <div>
-          <p style="font-size:0.8rem;letter-spacing:0.18em;color:var(--straw);margin-bottom:0.5rem;text-transform:uppercase;">{{ ui.home_latest_label }}</p>
-          <h2 class="section-title" id="latest-heading">{{ ui.home_latest_title }}</h2>
-        </div>
-
-        {% set latestArticle = articles[0] %}
-        {% if latestArticle %}
-        <article class="article-card reveal">
-          <a href="{{ ('/articles/' + latestArticle.slug + '/') | url }}" class="article-thumb" style="display:block;text-decoration:none;">
-            {% if latestArticle.image %}
-              <img src="{{ latestArticle.image | url }}" alt="{{ latestArticle.title }}" style="width:100%;height:100%;object-fit:cover;">
-            {% else %}
-              <span>封面圖<br>Placeholder</span>
-            {% endif %}
-          </a>
-          <div class="article-body">
-            <p class="date">{{ latestArticle.date | dateDisplay }}</p>
-            <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.5rem;">
-              {% for tag in latestArticle.tags %}<span class="tag">#{{ tag }}</span>{% endfor %}
-            </div>
-            <h3><a href="{{ ('/articles/' + latestArticle.slug + '/') | url }}" style="color:inherit;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--straw)'" onmouseout="this.style.color='inherit'">{{ latestArticle.title }}</a></h3>
-            <p class="summary-label">3 秒摘要</p>
-            <p class="summary">{{ latestArticle.summary }}</p>
-            <a href="{{ ('/articles/' + latestArticle.slug + '/') | url }}" style="display:inline-block;margin-top:0.75rem;font-size:0.82rem;color:var(--straw);font-weight:600;">{{ ui.home_latest_readmore }}</a>
-          </div>
-        </article>
-        {% else %}
-        <article class="article-card reveal">
-          <div class="article-thumb"><span>封面圖<br>Placeholder</span></div>
-          <div class="article-body">
-            <h3><span class="placeholder-text">文章標題 Placeholder</span></h3>
-            <p class="summary-label">3 秒摘要</p>
-            <p class="summary"><span class="placeholder-text">3秒摘要佔位符</span></p>
-            <a href="{{ '/articles/' | url }}" style="display:inline-block;margin-top:0.75rem;font-size:0.82rem;color:var(--straw);font-weight:600;">{{ ui.home_latest_readmore }}</a>
-          </div>
-        </article>
-        {% endif %}
-
-        <a href="{{ '/articles/' | url }}" class="btn-outline" style="text-align:center;display:block;">{{ ui.home_latest_all }}</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="divider" style="margin:0 1.5rem;"></div>
-
-<!-- ══════════════ EVENT PREVIEW ══════════════ -->
-<section class="py-section" aria-labelledby="event-heading">
-  <div class="content-max">
-    <p style="font-size:0.8rem;letter-spacing:0.18em;color:var(--straw);margin-bottom:0.5rem;text-transform:uppercase;">{{ ui.home_event_label }}</p>
-    <h2 class="section-title" id="event-heading" style="margin-bottom:2.5rem;">{{ ui.home_event_title }}</h2>
-
-    {% set latestEvent = events[0] %}
-    {% if latestEvent %}
-      <article class="event-upcoming">
-        <div class="event-date-badge" aria-label="活動日期">
-          <div class="month">{{ latestEvent.date | dateDisplay }}</div>
-          <div class="day">{{ latestEvent.date.slice(8, 10) }}</div>
-        </div>
-        <div>
-          <div style="display:flex;gap:0.5rem;margin-bottom:0.5rem;flex-wrap:wrap;">
-            {% for tag in latestEvent.tags %}
-              <span class="tag">#{{ tag }}</span>
-            {% endfor %}
-          </div>
-          <h3 style="font-size:1.1rem;color:var(--oak);margin-bottom:0.4rem;line-height:1.5;">{{ latestEvent.name }}</h3>
-          <p style="font-size:0.85rem;color:rgba(67,52,48,0.65);line-height:1.7;">{{ latestEvent.description }}</p>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:0.75rem;min-width:fit-content;">
-          {% if latestEvent.link %}
-            <a href="{{ latestEvent.link }}" class="btn-primary" style="text-align:center;" rel="noopener">{{ ui.home_event_signup }}</a>
-          {% endif %}
-          <a href="{{ '/events/' | url }}" style="text-align:center;font-size:0.82rem;color:rgba(67,52,48,0.55);">{{ ui.home_event_more }}</a>
-        </div>
-      </article>
-    {% else %}
-      <article class="event-upcoming">
-        <div class="event-date-badge">
-          <div class="month">APR</div>
-          <div class="day">12</div>
-        </div>
-        <div>
-          <div style="display:flex;gap:0.5rem;margin-bottom:0.5rem;flex-wrap:wrap;">
-            <span class="tag">#工作坊</span>
-            <span class="tag">#親子</span>
-          </div>
-          <h3 style="font-size:1.1rem;margin-bottom:0.4rem;">
-            <span class="placeholder-text">活動名稱 Event Title Placeholder</span>
-          </h3>
-          <p style="font-size:0.85rem;color:rgba(67,52,48,0.65);">
-            <span class="placeholder-text">活動地點、時間、簡介 Event Info Placeholder — 場地、人數限制、報名資訊</span>
-          </p>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:0.75rem;min-width:fit-content;">
-          <a href="{{ '/events/' | url }}" class="btn-primary" style="text-align:center;">{{ ui.home_event_signup }}</a>
-          <a href="{{ '/events/' | url }}" style="text-align:center;font-size:0.82rem;color:rgba(67,52,48,0.55);">{{ ui.home_event_more }}</a>
-        </div>
-      </article>
-    {% endif %}
-
-  </div>
-</section>
-
-<!-- ══════════════ BRAND QUOTE ══════════════ -->
-<section style="padding:5rem 1.5rem;text-align:center;background:linear-gradient(135deg,rgba(233,237,201,0.4) 0%,rgba(212,163,115,0.2) 100%);" aria-label="品牌語錄">
-  <div style="max-width:640px;margin:0 auto;">
-    <p style="font-size:clamp(1.1rem,2.5vw,1.5rem);color:var(--oak);font-weight:500;line-height:2;letter-spacing:0.08em;">
-      「{{ ui.home_quote_line1 }}<br>{{ ui.home_quote_line2 }}<br>{{ ui.home_quote_line3 }}」
+    <p style="font-size:1.05rem;color:rgba(67,52,48,0.72);line-height:1.8;margin-bottom:2rem;">
+      溪水邊正在用心打造更好的體驗。<br>
+      感謝你的耐心等待。
     </p>
-    <p style="margin-top:1.5rem;font-size:0.82rem;color:rgba(67,52,48,0.45);letter-spacing:0.12em;">{{ ui.home_quote_author }}</p>
+
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <a href="{{ '/articles/' | url }}" class="btn-primary" style="text-align:center;">瀏覽文章</a>
+      <a href="{{ '/cards/' | url }}" class="btn-outline" style="text-align:center;">牌卡體驗</a>
+    </div>
+
+    <p style="margin-top:3rem;font-size:0.88rem;color:rgba(67,52,48,0.45);">
+      或返回 <a href="{{ '/index2/' | url }}" style="color:var(--straw);text-decoration:underline;">完整首頁</a>
+    </p>
   </div>
 </section>
