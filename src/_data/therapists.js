@@ -10,7 +10,7 @@ module.exports = async () => {
   try {
     const db = await notion.databases.query({
       database_id: process.env.NOTION_THERAPISTS_DB,
-      filter: { property: '顯示', checkbox: { equals: true } },
+      filter: { property: '發佈', checkbox: { equals: true } },
       sorts: [{ property: '排序', direction: 'ascending' }],
     });
 
