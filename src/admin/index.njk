@@ -886,6 +886,7 @@ pageScript: |
   <div class="tab-bar">
     <button class="tab-btn active" data-tab="tab-text">文字設定</button>
     <button class="tab-btn" data-tab="tab-seo">SEO 設定</button>
+    <button class="tab-btn" data-tab="tab-podcast">快速上架 Podcast</button>
   </div>
 
   <!-- Tab 1: 文字設定 -->
@@ -933,5 +934,137 @@ pageScript: |
       </div>
     {% endfor %}
   </div>
+
+  <!-- Tab 3: 快速上架 Podcast -->
+  <div class="tab-panel" id="tab-podcast">
+    <div class="token-card">
+      <h2>新增手動 Podcast 單集</h2>
+      <p style="font-size:0.8rem;color:rgba(67,52,48,0.55);margin-bottom:1.5rem;">使用上方已載入的 GitHub Token 觸發 GitHub Actions，由後端新增至 Notion，來源自動標記為「手動」。</p>
+
+      <div class="group-fields">
+        <div class="field-item field-full">
+          <label for="ep-title">標題 *</label>
+          <input type="text" id="ep-title" placeholder="單集標題…" />
+        </div>
+        <div class="field-item">
+          <label for="ep-date">發布日期</label>
+          <input type="date" id="ep-date" />
+        </div>
+        <div class="field-item">
+          <label for="ep-duration">時長</label>
+          <input type="text" id="ep-duration" placeholder="例：42:30" />
+        </div>
+        <div class="field-item field-full">
+          <label for="ep-url">播放連結 *</label>
+          <input type="url" id="ep-url" placeholder="https://…" />
+        </div>
+        <div class="field-item">
+          <label for="ep-platform">平台</label>
+          <input type="text" id="ep-platform" placeholder="自動偵測" />
+        </div>
+        <div class="field-item">
+          <label for="ep-channel">頻道</label>
+          <input type="text" id="ep-channel" value="用耳朵聽的文學" />
+        </div>
+        <div class="field-item field-full">
+          <label for="ep-author">作者（多位以逗號分隔）</label>
+          <input type="text" id="ep-author" value="江玲承" />
+        </div>
+        <div class="field-item field-full">
+          <label for="ep-summary">摘要</label>
+          <textarea id="ep-summary" rows="4" placeholder="單集摘要…"></textarea>
+        </div>
+      </div>
+
+      <div style="margin-top:1.5rem;">
+        <button class="btn-save" id="btn-add-ep">新增到 Notion</button>
+      </div>
+      <div class="status-box" id="podcast-status"></div>
+    </div>
+  </div>
+
+  <script>
+    // ── 快速上架 Podcast ──────────────────────────────────────
+    const PODCAST_WORKFLOW = 'add-podcast-manual.yml';
+    const PODCAST_REPO     = 'dontpkme993/streamspsy';
+    const PODCAST_API_BASE = 'https://api.github.com';
+
+    function detectPlatform(url) {
+      if (!url) return '';
+      if (url.includes('soundon.fm'))  return 'SoundOn';
+      if (url.includes('spotify.com')) return 'Spotify';
+      if (url.includes('apple.com'))   return 'Apple Podcast';
+      return '';
+    }
+
+    document.getElementById('ep-url').addEventListener('input', function () {
+      const detected = detectPlatform(this.value);
+      if (detected) document.getElementById('ep-platform').value = detected;
+    });
+
+    document.getElementById('btn-add-ep').addEventListener('click', async function () {
+      const token = getToken();
+      if (!token) { setStatus('podcast-status', 'error', '請先在上方載入 GitHub Token'); return; }
+
+      const title    = document.getElementById('ep-title').value.trim();
+      const date     = document.getElementById('ep-date').value;
+      const embedUrl = document.getElementById('ep-url').value.trim();
+      const platform = document.getElementById('ep-platform').value.trim();
+      const channel  = document.getElementById('ep-channel').value.trim();
+      const author   = document.getElementById('ep-author').value.trim();
+      const duration = document.getElementById('ep-duration').value.trim();
+      const summary  = document.getElementById('ep-summary').value.trim();
+
+      if (!title)    { setStatus('podcast-status', 'error', '標題為必填'); return; }
+      if (!embedUrl) { setStatus('podcast-status', 'error', '播放連結為必填'); return; }
+
+      this.disabled = true;
+      setStatus('podcast-status', 'loading', '提交中…');
+
+      try {
+        const res = await fetch(
+          `${PODCAST_API_BASE}/repos/${PODCAST_REPO}/actions/workflows/${PODCAST_WORKFLOW}/dispatches`,
+          {
+            method: 'POST',
+            headers: {
+              'Authorization':       `Bearer ${token}`,
+              'Accept':              'application/vnd.github+json',
+              'X-GitHub-Api-Version': '2022-11-28',
+              'Content-Type':        'application/json',
+            },
+            body: JSON.stringify({
+              ref: 'main',
+              inputs: { title, date, embed_url: embedUrl, platform, channel, author, duration, summary },
+            }),
+          }
+        );
+
+        if (res.status === 204) {
+          setStatus('podcast-status', 'success', '✓ 已提交！約 30 秒後新增至 Notion，重新 build 後上線。');
+          document.getElementById('ep-title').value    = '';
+          document.getElementById('ep-url').value      = '';
+          document.getElementById('ep-platform').value = '';
+          document.getElementById('ep-duration').value = '';
+          document.getElementById('ep-summary').value  = '';
+          document.getElementById('ep-date').value     = new Date().toISOString().split('T')[0];
+        } else if (res.status === 401) {
+          throw new Error('Token 無效或已過期');
+        } else if (res.status === 403) {
+          throw new Error('Token 權限不足，需要 Actions: Write 權限');
+        } else if (res.status === 422) {
+          throw new Error('Workflow 不存在或尚未推送至 main');
+        } else {
+          throw new Error(`HTTP ${res.status}`);
+        }
+      } catch (e) {
+        setStatus('podcast-status', 'error', '失敗：' + e.message);
+      } finally {
+        this.disabled = false;
+      }
+    });
+
+    // 預設今天日期
+    document.getElementById('ep-date').value = new Date().toISOString().split('T')[0];
+  </script>
 
 </div>

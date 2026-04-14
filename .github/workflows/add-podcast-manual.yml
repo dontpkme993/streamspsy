@@ -1,0 +1,56 @@
+name: Add Manual Podcast Episode
+
+on:
+  workflow_dispatch:
+    inputs:
+      title:
+        description: '標題'
+        required: true
+      date:
+        description: '發布日期 (YYYY-MM-DD)'
+        required: false
+      embed_url:
+        description: '播放連結'
+        required: true
+      platform:
+        description: '平台'
+        required: false
+        default: 'SoundOn'
+      channel:
+        description: '頻道'
+        required: false
+        default: '用耳朵聽的文學'
+      author:
+        description: '作者（多位以逗號分隔）'
+        required: false
+        default: '江玲承'
+      duration:
+        description: '時長'
+        required: false
+      summary:
+        description: '摘要'
+        required: false
+
+jobs:
+  add-episode:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+      - name: Add episode to Notion
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_PODCAST_DB: ${{ secrets.NOTION_PODCAST_DB }}
+          EP_TITLE: ${{ inputs.title }}
+          EP_DATE: ${{ inputs.date }}
+          EP_EMBED_URL: ${{ inputs.embed_url }}
+          EP_PLATFORM: ${{ inputs.platform }}
+          EP_CHANNEL: ${{ inputs.channel }}
+          EP_AUTHOR: ${{ inputs.author }}
+          EP_DURATION: ${{ inputs.duration }}
+          EP_SUMMARY: ${{ inputs.summary }}
+        run: node .github/scripts/add-podcast-manual.js
