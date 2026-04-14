@@ -31,10 +31,22 @@ function detectPlatform(url) {
   return '';
 }
 
-// 從 URL 拆出 episode UUID（適用 SoundOn、Spotify 等格式）
+// 從 URL 拆出 episode UUID
 function extractEpisodeId(url) {
   const match = url.match(/\/episodes?\/([a-f0-9-]{36})/i);
   return match ? match[1] : null;
+}
+
+// SoundOn player URL → RSS feed URL
+function soundOnRssFromUrl(url) {
+  const match = url.match(/soundon\.fm\/p\/([a-f0-9-]{36})/i);
+  return match ? `https://feeds.soundon.fm/podcasts/${match[1]}.xml` : null;
+}
+
+// 決定要用哪個 RSS URL 來比對
+function resolveRssUrl(url, fallbackRss) {
+  const derived = soundOnRssFromUrl(url);
+  return derived || fallbackRss;
 }
 
 async function findInRSS(url, rssUrl) {
@@ -45,7 +57,6 @@ async function findInRSS(url, rssUrl) {
   for (const item of feed.items) {
     const guid = item.guid || '';
     const link = item.link || '';
-    // 用 episode ID 或完整 URL 比對
     if (episodeId && (guid.includes(episodeId) || link.includes(episodeId))) {
       return { item, channelName };
     }
@@ -80,11 +91,12 @@ async function main() {
   if (!RSS_URL) { console.error('PODCAST_RSS_URL 未設定'); process.exit(1); }
 
   const platform = detectPlatform(EP_URL);
+  const rssUrl   = resolveRssUrl(EP_URL, RSS_URL);
   console.log(`連結：${EP_URL}`);
   console.log(`平台：${platform || '未知'}`);
-  console.log(`比對 RSS：${RSS_URL}`);
+  console.log(`比對 RSS：${rssUrl}`);
 
-  const found = await findInRSS(EP_URL, RSS_URL);
+  const found = await findInRSS(EP_URL, rssUrl);
   if (!found) {
     console.error(`RSS 中找不到對應集數，請確認連結是否屬於此頻道。`);
     process.exit(1);
