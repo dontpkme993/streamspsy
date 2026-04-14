@@ -939,7 +939,8 @@ pageScript: |
   <div class="tab-panel" id="tab-podcast">
     <div class="token-card">
       <h2>新增手動 Podcast 單集</h2>
-      <p style="font-size:0.8rem;color:rgba(67,52,48,0.55);margin-bottom:1.5rem;">貼上單集連結，系統自動從 RSS 抓取標題、日期、摘要等資料並新增至 Notion。來源自動標記為「手動」。</p>
+      <p style="font-size:0.8rem;color:rgba(67,52,48,0.55);margin-bottom:0.5rem;">貼上單集連結，系統自動從 RSS 抓取標題、日期、摘要等資料並新增至 Notion。來源自動標記為「手動」。</p>
+      <p style="font-size:0.78rem;color:rgba(67,52,48,0.4);margin-bottom:1.5rem;">請使用 SoundOn 單集頁面網址，格式為：<code style="font-size:0.75rem;background:rgba(67,52,48,0.07);padding:0.1rem 0.35rem;border-radius:4px;">https://player.soundon.fm/p/…/episodes/…</code></p>
 
       <div class="group-fields">
         <div class="field-item field-full">
@@ -973,6 +974,11 @@ pageScript: |
 
       const url = document.getElementById('ep-url').value.trim();
       if (!url) { setPodcastStatus('error', '請輸入單集連結'); return; }
+      const validSoundOn = /^https:\/\/player\.soundon\.fm\/p\/[a-f0-9-]{36}\/episodes\/[a-f0-9-]{36}/i;
+      if (!validSoundOn.test(url)) {
+        setPodcastStatus('error', '網址格式不正確，請使用 SoundOn 單集頁面網址（https://player.soundon.fm/p/…/episodes/…）');
+        return;
+      }
 
       this.disabled = true;
       setPodcastStatus('loading', '提交中，請稍候…');
