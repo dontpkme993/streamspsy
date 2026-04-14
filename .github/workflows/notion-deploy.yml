@@ -36,7 +36,7 @@ jobs:
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTION_PODCAST_DB: ${{ secrets.NOTION_PODCAST_DB }}
-          PODCAST_RSS_URL: ${{ secrets.PODCAST_RSS_URL }}
+          PODCAST_RSS_URL: ${{ vars.PODCAST_RSS_URL }}
         run: node .github/scripts/sync-podcast.js
 
       - name: Decide if deploy needed
