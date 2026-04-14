@@ -757,9 +757,15 @@ a { color: inherit; text-decoration: none; }
 .book-item {
   cursor: pointer;
   transition: transform 0.25s;
+  display: flex;
+  flex-direction: column;
 }
 
 .book-item:hover { transform: translateY(-4px); }
+
+.book-item > a:last-of-type {
+  margin-top: auto;
+}
 
 .book-cover {
   aspect-ratio: 2/3;
@@ -787,6 +793,10 @@ a { color: inherit; text-decoration: none; }
   font-size: 0.78rem;
   color: rgba(67,52,48,0.6);
   line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* ── Event cards ── */
