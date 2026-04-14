@@ -7,6 +7,11 @@ on:
         description: 'Podcast 單集連結'
         required: true
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   add-episode:
     runs-on: ubuntu-latest
@@ -24,3 +29,8 @@ jobs:
           PODCAST_RSS_URL: ${{ vars.PODCAST_RSS_URL }}
           EP_URL: ${{ inputs.url }}
         run: node .github/scripts/add-podcast-manual.js
+
+  deploy:
+    needs: add-episode
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
