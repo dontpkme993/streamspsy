@@ -247,7 +247,7 @@ async function getPodcastEpisodes() {
     title: page.properties['標題']?.title?.[0]?.plain_text || '',
     guid: page.properties['GUID']?.rich_text?.[0]?.plain_text || '',
     channel: page.properties['頻道']?.select?.name || '',
-    platform: page.properties['平台']?.rich_text?.[0]?.plain_text || '',
+    platform: page.properties['平台']?.select?.name || '',
     date: page.properties['發布日期']?.date?.start || '',
     duration: page.properties['時長']?.rich_text?.[0]?.plain_text || '',
     summary: page.properties['摘要']?.rich_text?.[0]?.plain_text || '',

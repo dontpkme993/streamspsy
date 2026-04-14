@@ -110,7 +110,7 @@ async function createEpisode(ep, channelName, platform, retries = 3) {
     '標題': { title: [{ text: { content: ep.title.slice(0, 2000) } }] },
     'GUID': { rich_text: [{ text: { content: ep.guid.slice(0, 2000) } }] },
     '頻道': { select: { name: channelName.slice(0, 100) } },
-    '平台': { rich_text: [{ text: { content: platform.slice(0, 2000) } }] },
+    '平台': { select: { name: platform.slice(0, 100) } },
     '時長': { rich_text: [{ text: { content: ep.duration.slice(0, 2000) } }] },
     '摘要': { rich_text: [{ text: { content: ep.summary.slice(0, 2000) } }] },
     '作者': { multi_select: [{ name: '江玲承' }] },
