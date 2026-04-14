@@ -961,15 +961,21 @@ pageScript: |
     const PODCAST_REPO     = 'dontpkme993/streamspsy';
     const PODCAST_API_BASE = 'https://api.github.com';
 
+    function setPodcastStatus(type, msg) {
+      const el = document.getElementById('podcast-status');
+      el.className = 'status-box show ' + type;
+      el.textContent = msg;
+    }
+
     document.getElementById('btn-add-ep').addEventListener('click', async function () {
-      const token  = getToken();
-      if (!token) { setStatus('podcast-status', 'error', '請先在上方載入 GitHub Token'); return; }
+      const token  = document.getElementById('gh-token').value.trim();
+      if (!token) { setPodcastStatus('error', '請先在上方載入 GitHub Token'); return; }
 
       const url = document.getElementById('ep-url').value.trim();
-      if (!url) { setStatus('podcast-status', 'error', '請輸入單集連結'); return; }
+      if (!url) { setPodcastStatus('error', '請輸入單集連結'); return; }
 
       this.disabled = true;
-      setStatus('podcast-status', 'loading', '提交中，請稍候…');
+      setPodcastStatus('loading', '提交中，請稍候…');
 
       try {
         const res = await fetch(
@@ -987,7 +993,7 @@ pageScript: |
         );
 
         if (res.status === 204) {
-          setStatus('podcast-status', 'success', '✓ 已提交！約 30 秒後從 RSS 比對並新增至 Notion。');
+          setPodcastStatus('success', '✓ 已提交！約 30 秒後從 RSS 比對並新增至 Notion。');
           document.getElementById('ep-url').value = '';
         } else if (res.status === 401) {
           throw new Error('Token 無效或已過期');
@@ -999,7 +1005,7 @@ pageScript: |
           throw new Error(`HTTP ${res.status}`);
         }
       } catch (e) {
-        setStatus('podcast-status', 'error', '失敗：' + e.message);
+        setPodcastStatus('error', '失敗：' + e.message);
       } finally {
         this.disabled = false;
       }
