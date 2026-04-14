@@ -19,6 +19,18 @@ activeNav: media
     <h2 class="section-title" id="podcast-heading" style="margin-bottom:0.5rem;">{{ ui.media_podcast_title }}</h2>
     <p style="color:rgba(67,52,48,0.6);font-size:0.9rem;margin-bottom:3rem;">{{ ui.media_podcast_subtitle }}</p>
 
+    {% if podcastAuthors.length %}
+    <div style="margin-bottom:2rem;" id="podcast-author-filter">
+      <p style="font-size:0.8rem;color:rgba(67,52,48,0.5);margin-bottom:0.75rem;letter-spacing:0.05em;">依作者瀏覽：</p>
+      <div style="display:flex;flex-wrap:wrap;gap:0.6rem;">
+        <button class="tag-btn podcast-author-btn active" data-author="all">全部</button>
+        {% for name in podcastAuthors %}
+          <button class="tag-btn podcast-author-btn" data-author="{{ name }}">{{ name }}</button>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
     {% if podcast.episodes.length %}
 
       <!-- ── 最新集數 NEW ── -->
@@ -29,7 +41,7 @@ activeNav: media
         </div>
         <div style="display:flex;flex-direction:column;gap:0;">
           {% for ep in podcast.episodes %}{% if loop.index <= 3 %}
-            <article class="podcast-item">
+            <article class="podcast-item" data-authors="{{ ep.authors | join('|||') }}">
               <div style="display:flex;gap:1rem;align-items:flex-start;margin-bottom:1.25rem;">
                 {% if ep.image %}
                   <img src="{{ ep.image }}" alt="{{ ep.title }}" style="width:56px;height:56px;border-radius:0.5rem;object-fit:cover;flex-shrink:0;">
@@ -69,7 +81,7 @@ activeNav: media
           </div>
           <div style="display:flex;flex-direction:column;gap:0;">
             {% for ep in featuredList %}{% if loop.index <= 3 %}
-              <article class="podcast-item">
+              <article class="podcast-item" data-authors="{{ ep.authors | join('|||') }}">
                 <div style="display:flex;gap:1rem;align-items:flex-start;margin-bottom:1.25rem;">
                   {% if ep.image %}
                     <img src="{{ ep.image }}" alt="{{ ep.title }}" style="width:56px;height:56px;border-radius:0.5rem;object-fit:cover;flex-shrink:0;">
@@ -105,7 +117,7 @@ activeNav: media
         <h3 style="font-size:0.9rem;color:var(--oak);font-weight:700;letter-spacing:0.08em;margin-bottom:1.5rem;">全部集數</h3>
         <div id="podcast-list" style="display:flex;flex-direction:column;gap:0;">
           {% for ep in podcast.episodes %}
-            <article class="podcast-item" {% if loop.index > 4 %}style="display:none;"{% endif %}>
+            <article class="podcast-item" data-authors="{{ ep.authors | join('|||') }}" {% if loop.index > 4 %}data-hidden="true" style="display:none;"{% endif %}>
               <div style="display:flex;gap:1rem;align-items:flex-start;margin-bottom:1.25rem;">
                 {% if ep.image %}
                   <img src="{{ ep.image }}" alt="{{ ep.title }}" style="width:56px;height:56px;border-radius:0.5rem;object-fit:cover;flex-shrink:0;">
@@ -140,19 +152,116 @@ activeNav: media
           var podcastShown = 4;
           var podcastTotal = {{ podcast.episodes.length }};
           var podcastStep = 4;
-          function loadMoreEpisodes() {
-            var next = podcastShown + podcastStep;
-            var items = document.querySelectorAll('#podcast-list .podcast-item');
-            for (var i = podcastShown; i < next && i < items.length; i++) {
-              items[i].style.display = '';
-            }
-            podcastShown = Math.min(next, podcastTotal);
-            document.getElementById('podcast-count').textContent = '顯示 ' + podcastShown + ' / ' + podcastTotal + ' 集';
-            if (podcastShown >= podcastTotal) {
-              document.getElementById('podcast-load-more').style.display = 'none';
-              document.getElementById('podcast-count').textContent = '已顯示全部 ' + podcastTotal + ' 集';
+          var currentAuthorFilter = 'all';
+
+          function getPodcastListItems() {
+            return document.querySelectorAll('#podcast-list .podcast-item');
+          }
+
+          function matchesAuthor(item, author) {
+            if (author === 'all') return true;
+            return (item.dataset.authors || '').split('|||').includes(author);
+          }
+
+          function updateLoadMore() {
+            var items = getPodcastListItems();
+            var matched = Array.from(items).filter(function(i) { return matchesAuthor(i, currentAuthorFilter); });
+            var shown = matched.filter(function(i) { return i.style.display !== 'none'; }).length;
+            var total = matched.length;
+            var countEl = document.getElementById('podcast-count');
+            var btnEl = document.getElementById('podcast-load-more');
+            if (!countEl || !btnEl) return;
+            if (shown >= total) {
+              btnEl.style.display = 'none';
+              countEl.textContent = '已顯示全部 ' + total + ' 集';
+            } else {
+              btnEl.style.display = '';
+              countEl.textContent = '顯示 ' + shown + ' / ' + total + ' 集';
             }
           }
+
+          function applyPodcastAuthorFilter(author) {
+            currentAuthorFilter = author;
+            var items = getPodcastListItems();
+            var shown = 0;
+            items.forEach(function(item) {
+              var matches = matchesAuthor(item, author);
+              if (matches && (shown < podcastStep || author !== 'all')) {
+                item.style.display = '';
+                shown++;
+              } else if (matches && shown >= podcastStep) {
+                item.style.display = 'none';
+              } else {
+                item.style.display = 'none';
+              }
+            });
+            // When filtering, show all matched items at once
+            if (author !== 'all') {
+              items.forEach(function(item) {
+                if (matchesAuthor(item, author)) item.style.display = '';
+              });
+            } else {
+              // Restore default: show first podcastStep
+              podcastShown = 0;
+              items.forEach(function(item) {
+                if (podcastShown < podcastStep) {
+                  item.style.display = '';
+                  podcastShown++;
+                } else {
+                  item.style.display = 'none';
+                }
+              });
+            }
+            updateLoadMore();
+
+            // Also filter 最新/精選 sections
+            document.querySelectorAll('.podcast-item[data-authors]').forEach(function(item) {
+              if (!item.closest('#podcast-list')) {
+                item.style.display = matchesAuthor(item, author) ? '' : 'none';
+              }
+            });
+          }
+
+          function loadMoreEpisodes() {
+            var items = getPodcastListItems();
+            var revealed = 0;
+            items.forEach(function(item) {
+              if (matchesAuthor(item, currentAuthorFilter) && item.style.display === 'none' && revealed < podcastStep) {
+                item.style.display = '';
+                revealed++;
+                podcastShown++;
+              }
+            });
+            updateLoadMore();
+          }
+
+          // Author filter buttons
+          document.querySelectorAll('.podcast-author-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+              document.querySelectorAll('.podcast-author-btn').forEach(function(b) { b.classList.remove('active'); });
+              btn.classList.add('active');
+              var author = btn.dataset.author;
+              if (author === 'all') {
+                location.hash = '';
+              } else {
+                location.hash = 'author=' + encodeURIComponent(author);
+              }
+            });
+          });
+
+          // Hash-based init
+          function initPodcastFromHash() {
+            var h = decodeURIComponent(location.hash.slice(1));
+            var author = 'all';
+            if (h.startsWith('author=')) author = h.slice(7);
+            document.querySelectorAll('.podcast-author-btn').forEach(function(b) {
+              b.classList.toggle('active', b.dataset.author === author);
+            });
+            applyPodcastAuthorFilter(author);
+          }
+
+          window.addEventListener('hashchange', initPodcastFromHash);
+          initPodcastFromHash();
         </script>
       </div>
 

@@ -238,6 +238,7 @@ async function getPodcastEpisodes() {
 
   const db = await notion.databases.query({
     database_id: process.env.NOTION_PODCAST_DB,
+    filter: { property: '發佈', checkbox: { equals: true } },
     sorts: [{ property: '發布日期', direction: 'descending' }],
   });
 
@@ -245,7 +246,7 @@ async function getPodcastEpisodes() {
     id: page.id,
     title: page.properties['標題']?.title?.[0]?.plain_text || '',
     guid: page.properties['GUID']?.rich_text?.[0]?.plain_text || '',
-    channel: page.properties['頻道']?.rich_text?.[0]?.plain_text || '',
+    channel: page.properties['頻道']?.select?.name || '',
     platform: page.properties['平台']?.rich_text?.[0]?.plain_text || '',
     date: page.properties['發布日期']?.date?.start || '',
     duration: page.properties['時長']?.rich_text?.[0]?.plain_text || '',
@@ -253,6 +254,8 @@ async function getPodcastEpisodes() {
     image: page.properties['封面圖']?.url || '',
     embedUrl: page.properties['播放連結']?.url || '',
     featured: page.properties['精選']?.checkbox ?? false,
+    source: page.properties['來源']?.select?.name || '',
+    authors: page.properties['作者']?.multi_select?.map(t => t.name) || [],
   }));
 }
 

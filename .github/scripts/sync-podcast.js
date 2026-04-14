@@ -68,7 +68,6 @@ function parseGeneric(item) {
 
 const CHANNELS = [
   {
-    name: process.env.PODCAST_CHANNEL_1_NAME || '溪水邊 Podcast',
     platform: 'SoundOn',
     rssUrl: process.env.PODCAST_RSS_URL,
     parse: parseSoundOn,
@@ -110,11 +109,14 @@ async function createEpisode(ep, channelName, platform, retries = 3) {
   const properties = {
     '標題': { title: [{ text: { content: ep.title.slice(0, 2000) } }] },
     'GUID': { rich_text: [{ text: { content: ep.guid.slice(0, 2000) } }] },
-    '頻道': { rich_text: [{ text: { content: channelName.slice(0, 2000) } }] },
+    '頻道': { select: { name: channelName.slice(0, 100) } },
     '平台': { rich_text: [{ text: { content: platform.slice(0, 2000) } }] },
     '時長': { rich_text: [{ text: { content: ep.duration.slice(0, 2000) } }] },
     '摘要': { rich_text: [{ text: { content: ep.summary.slice(0, 2000) } }] },
+    '作者': { multi_select: [{ name: '江玲承' }] },
     '精選': { checkbox: false },
+    '發佈': { checkbox: true },
+    '來源': { select: { name: 'RSS' } },
   };
   if (ep.date) properties['發布日期'] = { date: { start: ep.date } };
   if (ep.image) properties['封面圖'] = { url: ep.image };
@@ -145,21 +147,23 @@ async function main() {
 
   for (const channel of CHANNELS) {
     if (!channel.rssUrl) {
-      console.warn(`${channel.name} 無 RSS URL，略過`);
+      console.warn(`${channel.platform} 無 RSS URL，略過`);
       continue;
     }
     try {
       const feed = await parser.parseURL(channel.rssUrl);
+      const channelName = feed.title?.trim() || channel.platform;
+      console.log(`頻道名稱：${channelName}`);
       for (const item of feed.items) {
         const ep = channel.parse(item);
         if (!ep.guid || existingGuids.has(ep.guid)) continue;
-        await createEpisode(ep, channel.name, channel.platform);
+        await createEpisode(ep, channelName, channel.platform);
         existingGuids.add(ep.guid);
         newCount++;
-        console.log(`新增: [${channel.name}] ${ep.title}`);
+        console.log(`新增: [${channelName}] ${ep.title}`);
       }
     } catch (e) {
-      console.warn(`RSS 抓取失敗 (${channel.name}):`, e.message);
+      console.warn(`RSS 抓取失敗 (${channel.platform}):`, e.message);
     }
   }
 

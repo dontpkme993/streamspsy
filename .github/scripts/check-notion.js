@@ -49,16 +49,24 @@ function githubRequest(method, path, body) {
 }
 
 async function checkDB(dbId) {
-  const res = await notion.databases.query({
-    database_id: dbId,
-    filter: {
-      timestamp: 'last_edited_time',
-      last_edited_time: { after: LAST_BUILD_TIME },
-    },
-  });
-  const count = res.results?.length || 0;
-  console.log(`DB ${dbId.slice(0, 8)}... 有 ${count} 筆更新`);
-  return count;
+  try {
+    const res = await notion.databases.query({
+      database_id: dbId,
+      filter: {
+        timestamp: 'last_edited_time',
+        last_edited_time: { after: LAST_BUILD_TIME },
+      },
+    });
+    const count = res.results?.length || 0;
+    console.log(`DB ${dbId.slice(0, 8)}... 有 ${count} 筆更新`);
+    return count;
+  } catch (e) {
+    if (e.code === 'validation_error' && e.message.includes('multiple data sources')) {
+      console.warn(`DB ${dbId.slice(0, 8)}... 不支援查詢（多資料來源），略過`);
+      return 0;
+    }
+    throw e;
+  }
 }
 
 async function updateLastBuildTime(time) {
