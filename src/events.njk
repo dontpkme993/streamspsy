@@ -236,7 +236,7 @@ jsonLd: |
     <p style="font-size:0.8rem;letter-spacing:0.18em;color:rgba(250,243,224,0.55);margin-bottom:0.75rem;text-transform:uppercase;">{{ ui.events_collab_label }}</p>
     <h2 style="font-size:1.8rem;color:var(--rice);margin-bottom:0.75rem;">{{ ui.events_collab_title }}</h2>
     <p style="color:rgba(250,243,224,0.75);max-width:480px;margin:0 auto 2rem;line-height:1.8;">
-      <span class="placeholder-text" style="color:rgba(250,243,224,0.45);">合作邀約說明佔位符：歡迎企業、學校、社區機構邀約演講、工作坊或其他形式的合作。Collaboration CTA Placeholder — open for speaking engagements, workshops, and institutional partnerships.</span>
+      {% if ui.events_collab_desc %}{{ ui.events_collab_desc }}{% else %}<span class="placeholder-text" style="color:rgba(250,243,224,0.45);">合作邀約說明佔位符</span>{% endif %}
     </p>
     <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
       <a href="#" class="btn-primary" rel="noopener">{{ ui.events_collab_btn1 }}</a>
