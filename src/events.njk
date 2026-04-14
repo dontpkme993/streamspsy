@@ -25,7 +25,7 @@ jsonLd: |
 
 <!-- ══════════════ PAGE HERO ══════════════ -->
 <div class="page-hero">
-  <p style="font-size:0.8rem;letter-spacing:0.18em;color:var(--straw);margin-bottom:0.5rem;text-transform:uppercase;">{{ ui.events_hero_label }}</p>
+  <p style="font-size:0.8rem;letter-spacing:0.18em;color:var(--straw-text);margin-bottom:0.5rem;text-transform:uppercase;">{{ ui.events_hero_label }}</p>
   <h1>{{ ui.events_hero_title }}</h1>
   <p>{{ ui.events_hero_subtitle }}</p>
 </div>
@@ -33,7 +33,7 @@ jsonLd: |
 <!-- ══════════════ UPCOMING EVENTS ══════════════ -->
 <section class="py-section" aria-labelledby="upcoming-heading">
   <div class="content-max">
-    <p style="font-size:0.8rem;letter-spacing:0.18em;color:var(--straw);margin-bottom:0.5rem;text-transform:uppercase;">{{ ui.events_upcoming_label }}</p>
+    <p style="font-size:0.8rem;letter-spacing:0.18em;color:var(--straw-text);margin-bottom:0.5rem;text-transform:uppercase;">{{ ui.events_upcoming_label }}</p>
     <h2 class="section-title" id="upcoming-heading" style="margin-bottom:2.5rem;">{{ ui.events_upcoming_title }}</h2>
 
     {% set upcomingEvents = [] %}
@@ -63,7 +63,7 @@ jsonLd: |
             {% if event.link %}
               <a href="{{ event.link }}" class="btn-primary" rel="noopener" style="white-space:nowrap;">{{ ui.events_upcoming_btn }}</a>
             {% endif %}
-            <span style="font-size:0.78rem;color:rgba(67,52,48,0.45);white-space:nowrap;">{{ event.status }}</span>
+            <span style="font-size:0.78rem;color:rgba(67,52,48,0.65);white-space:nowrap;">{{ event.status }}</span>
           </div>
         </article>
       {% endfor %}
@@ -88,7 +88,7 @@ jsonLd: |
         </div>
         <div style="display:flex;flex-direction:column;gap:0.75rem;align-items:flex-start;">
           <a href="#" class="btn-primary" rel="noopener" style="white-space:nowrap;">{{ ui.events_upcoming_btn }}</a>
-          <span style="font-size:0.78rem;color:rgba(67,52,48,0.45);white-space:nowrap;">剩餘名額：<span class="placeholder-text">X / XX</span></span>
+          <span style="font-size:0.78rem;color:rgba(67,52,48,0.65);white-space:nowrap;">剩餘名額：<span class="placeholder-text">X / XX</span></span>
         </div>
       </article>
 
@@ -111,7 +111,7 @@ jsonLd: |
         </div>
         <div style="display:flex;flex-direction:column;gap:0.75rem;align-items:flex-start;">
           <a href="#" class="btn-primary" rel="noopener" style="white-space:nowrap;">{{ ui.events_upcoming_btn }}</a>
-          <span style="font-size:0.78rem;color:rgba(67,52,48,0.45);white-space:nowrap;">剩餘名額：<span class="placeholder-text">X / XX</span></span>
+          <span style="font-size:0.78rem;color:rgba(67,52,48,0.65);white-space:nowrap;">剩餘名額：<span class="placeholder-text">X / XX</span></span>
         </div>
       </article>
 
@@ -134,7 +134,7 @@ jsonLd: |
         </div>
         <div style="display:flex;flex-direction:column;gap:0.75rem;align-items:flex-start;">
           <a href="#" class="btn-outline" rel="noopener" style="white-space:nowrap;font-size:0.85rem;">報名連結</a>
-          <span style="font-size:0.78rem;color:rgba(67,52,48,0.45);white-space:nowrap;">即將開放報名</span>
+          <span style="font-size:0.78rem;color:rgba(67,52,48,0.65);white-space:nowrap;">即將開放報名</span>
         </div>
       </article>
     {% endif %}
@@ -147,7 +147,7 @@ jsonLd: |
 <!-- ══════════════ PAST EVENTS ══════════════ -->
 <section class="py-section" aria-labelledby="past-heading">
   <div class="content-max">
-    <p style="font-size:0.8rem;letter-spacing:0.18em;color:var(--straw);margin-bottom:0.5rem;text-transform:uppercase;">{{ ui.events_past_label }}</p>
+    <p style="font-size:0.8rem;letter-spacing:0.18em;color:var(--straw-text);margin-bottom:0.5rem;text-transform:uppercase;">{{ ui.events_past_label }}</p>
     <h2 class="section-title" id="past-heading" style="margin-bottom:2.5rem;">{{ ui.events_past_title }}</h2>
 
     {% set pastEvents = [] %}
@@ -173,11 +173,11 @@ jsonLd: |
             <h3 style="font-size:1.1rem;color:var(--oak);margin-bottom:0.5rem;line-height:1.5;">{{ event.name }}</h3>
             <p style="font-size:0.85rem;color:rgba(67,52,48,0.65);line-height:1.7;">{{ event.description }}</p>
             {% if event.location %}
-              <p style="font-size:0.78rem;color:rgba(67,52,48,0.45);margin-top:0.4rem;">📍 {{ event.location }}</p>
+              <p style="font-size:0.78rem;color:rgba(67,52,48,0.65);margin-top:0.4rem;">📍 {{ event.location }}</p>
             {% endif %}
           </div>
           <div style="display:flex;flex-direction:column;gap:0.75rem;align-items:flex-start;">
-            <span style="font-size:0.78rem;color:rgba(67,52,48,0.45);white-space:nowrap;">{{ event.status }}</span>
+            <span style="font-size:0.78rem;color:rgba(67,52,48,0.65);white-space:nowrap;">{{ event.status }}</span>
           </div>
         </article>
       {% endfor %}
@@ -201,7 +201,7 @@ jsonLd: |
           </p>
         </div>
         <div style="display:flex;flex-direction:column;gap:0.75rem;align-items:flex-start;">
-          <span style="font-size:0.78rem;color:rgba(67,52,48,0.45);white-space:nowrap;">已結束</span>
+          <span style="font-size:0.78rem;color:rgba(67,52,48,0.65);white-space:nowrap;">已結束</span>
         </div>
       </article>
       <article class="event-upcoming" role="article">
@@ -222,7 +222,7 @@ jsonLd: |
           </p>
         </div>
         <div style="display:flex;flex-direction:column;gap:0.75rem;align-items:flex-start;">
-          <span style="font-size:0.78rem;color:rgba(67,52,48,0.45);white-space:nowrap;">已結束</span>
+          <span style="font-size:0.78rem;color:rgba(67,52,48,0.65);white-space:nowrap;">已結束</span>
         </div>
       </article>
     {% endif %}
