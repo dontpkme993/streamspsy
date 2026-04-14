@@ -122,6 +122,7 @@ async function createEpisode(ep, channelName, platform, retries = 3) {
   if (ep.image) properties['封面圖'] = { url: ep.image };
   if (ep.embedUrl) properties['播放連結'] = { url: ep.embedUrl };
 
+  console.log('createEpisode properties:', JSON.stringify(properties, null, 2));
   for (let i = 0; i < retries; i++) {
     try {
       // Notion v5：data_source 需用 data_source_id 作為 parent type
