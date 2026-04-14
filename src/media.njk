@@ -12,24 +12,25 @@ activeNav: media
   <p>{{ ui.media_hero_subtitle }}</p>
 </div>
 
+<!-- ══════════════ AUTHOR FILTER ══════════════ -->
+{% if podcastAuthors.length %}
+<div style="max-width:1100px;margin:0 auto;padding:0 1.5rem 2rem;" id="media-author-filter">
+  <p style="font-size:0.8rem;color:rgba(67,52,48,0.5);margin-bottom:0.75rem;letter-spacing:0.05em;">依作者瀏覽：</p>
+  <div style="display:flex;flex-wrap:wrap;gap:0.6rem;">
+    <button class="tag-btn podcast-author-btn active" data-author="all">全部</button>
+    {% for name in podcastAuthors %}
+      <button class="tag-btn podcast-author-btn" data-author="{{ name }}">{{ name }}</button>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
 <!-- ══════════════ PODCAST SECTION ══════════════ -->
 <section class="py-section" aria-labelledby="podcast-heading">
   <div class="content-max">
     <p style="font-size:0.8rem;letter-spacing:0.18em;color:var(--straw);margin-bottom:0.5rem;text-transform:uppercase;">{{ ui.media_podcast_label }}</p>
     <h2 class="section-title" id="podcast-heading" style="margin-bottom:0.5rem;">{{ ui.media_podcast_title }}</h2>
     <p style="color:rgba(67,52,48,0.6);font-size:0.9rem;margin-bottom:3rem;">{{ ui.media_podcast_subtitle }}</p>
-
-    {% if podcastAuthors.length %}
-    <div style="margin-bottom:2rem;" id="podcast-author-filter">
-      <p style="font-size:0.8rem;color:rgba(67,52,48,0.5);margin-bottom:0.75rem;letter-spacing:0.05em;">依作者瀏覽：</p>
-      <div style="display:flex;flex-wrap:wrap;gap:0.6rem;">
-        <button class="tag-btn podcast-author-btn active" data-author="all">全部</button>
-        {% for name in podcastAuthors %}
-          <button class="tag-btn podcast-author-btn" data-author="{{ name }}">{{ name }}</button>
-        {% endfor %}
-      </div>
-    </div>
-    {% endif %}
 
     {% if podcast.episodes.length %}
 
@@ -220,6 +221,13 @@ activeNav: media
                 item.style.display = matchesAuthor(item, author) ? '' : 'none';
               }
             });
+
+            // Filter book items
+            document.querySelectorAll('.book-item[data-authors]').forEach(function(item) {
+              var bookAuthors = item.dataset.authors || '';
+              var show = author === 'all' || bookAuthors === author || bookAuthors.split('|||').includes(author);
+              item.style.display = show ? '' : 'none';
+            });
           }
 
           function loadMoreEpisodes() {
@@ -293,23 +301,23 @@ activeNav: media
 
     <div class="book-grid">
 
-      {% set bookColors = ['', 'background:linear-gradient(160deg,var(--sprout) 0%,var(--oak) 100%);', 'background:linear-gradient(160deg,#c9b7a8 0%,var(--bark) 100%);', 'background:linear-gradient(160deg,var(--straw) 0%,#a0785a 100%);'] %}
-      {% for i in [1,2,3,4] %}
-        {% set t = 'book' + i + '_title' %}
-        {% set d = 'book' + i + '_desc' %}
-        {% set l = 'book' + i + '_link' %}
-        {% if ui[t] %}
-        <article class="book-item">
-          <a href="{{ ui[l] or '#' }}" target="_blank" rel="noopener" aria-label="{{ ui[t] }}">
-            <div class="book-cover" style="{{ bookColors[i - 1] }}">
-              <span style="text-align:center;padding:0.5rem;font-size:0.68rem;">書封</span>
-            </div>
+      {% for book in books %}
+        <article class="book-item" data-authors="{{ book.authors | join('|||') }}">
+          <a href="{{ book.link or '#' }}" target="_blank" rel="noopener" aria-label="{{ book.title }}">
+            {% if book.image %}
+              <img src="{{ book.image | url }}" alt="{{ book.title }}" class="book-cover" style="object-fit:cover;">
+            {% else %}
+              <div class="book-cover">
+                <span style="text-align:center;padding:0.5rem;font-size:0.68rem;">書封</span>
+              </div>
+            {% endif %}
           </a>
-          <h3 class="book-title">{{ ui[t] }}</h3>
-          {% if ui[d] %}<p class="book-desc">{{ ui[d] }}</p>{% endif %}
-          {% if ui[l] %}<a href="{{ ui[l] }}" target="_blank" rel="noopener" style="display:inline-block;margin-top:0.5rem;font-size:0.75rem;color:var(--straw);font-weight:600;">購買 →</a>{% endif %}
+          <h3 class="book-title">{{ book.title }}</h3>
+          {% if book.description %}<p class="book-desc">{{ book.description }}</p>{% endif %}
+          {% if book.link %}<a href="{{ book.link }}" target="_blank" rel="noopener" style="display:inline-block;margin-top:0.5rem;font-size:0.75rem;color:var(--straw);font-weight:600;">購買 →</a>{% endif %}
         </article>
-        {% endif %}
+      {% else %}
+        <p style="color:rgba(67,52,48,0.4);font-size:0.9rem;">尚無著作資料</p>
       {% endfor %}
 
     </div>

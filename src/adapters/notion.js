@@ -233,6 +233,42 @@ async function getEvents() {
   }));
 }
 
+async function getBooks() {
+  if (!process.env.NOTION_TOKEN || !process.env.NOTION_BOOKS_DB) return [];
+
+  const db = await notion.databases.query({
+    database_id: process.env.NOTION_BOOKS_DB,
+    filter: { property: '發佈', checkbox: { equals: true } },
+    sorts: [{ property: '排序', direction: 'ascending' }],
+  });
+
+  return Promise.all(db.results.map(async page => {
+    const id = page.id;
+    const idSlug = id.replace(/-/g, '');
+
+    let image = '';
+    const rawImage = page.properties['封面圖']?.files?.[0]?.file?.url
+      || page.properties['封面圖']?.files?.[0]?.external?.url
+      || '';
+    if (rawImage) {
+      try {
+        const ext = rawImage.split('?')[0].split('.').pop().replace(/[^a-z0-9]/gi, '') || 'jpg';
+        image = await downloadImage(rawImage, `book-${idSlug}.${ext}`);
+      } catch(e) { console.warn('書籍封面圖下載失敗:', e.message); }
+    }
+
+    return {
+      id,
+      title: page.properties['標題']?.title?.[0]?.plain_text || '',
+      authors: page.properties['作者']?.multi_select?.map(t => t.name) || [],
+      image,
+      description: page.properties['介紹']?.rich_text?.[0]?.plain_text || '',
+      link: page.properties['購買連結']?.url || '',
+      order: page.properties['排序']?.number ?? 0,
+    };
+  }));
+}
+
 async function getPodcastEpisodes() {
   if (!process.env.NOTION_TOKEN || !process.env.NOTION_PODCAST_DB) return [];
 
@@ -259,4 +295,4 @@ async function getPodcastEpisodes() {
   }));
 }
 
-module.exports = { getArticles, getEvents, getPodcastEpisodes, downloadImage };
+module.exports = { getArticles, getEvents, getPodcastEpisodes, getBooks, downloadImage };
