@@ -888,7 +888,7 @@ pageScript: |
   <div class="tab-bar">
     <button class="tab-btn active" data-tab="tab-text">文字設定</button>
     <button class="tab-btn" data-tab="tab-seo">SEO 設定</button>
-    <button class="tab-btn" data-tab="tab-podcast">快速上架 Podcast</button>
+    <button class="tab-btn" data-tab="tab-podcast">Podcast 設定</button>
   </div>
 
   <!-- Tab 1: 文字設定 -->
@@ -937,53 +937,124 @@ pageScript: |
     {% endfor %}
   </div>
 
-  <!-- Tab 3: 快速上架 Podcast -->
+  <!-- Tab 3: Podcast 設定 -->
   <div class="tab-panel" id="tab-podcast">
+
+    <!-- RSS 自動同步設定 -->
     <div class="token-card">
-      <h2>新增手動 Podcast 單集</h2>
+      <h2>自動同步 RSS 設定</h2>
+      <p style="font-size:0.8rem;color:rgba(67,52,48,0.55);margin-bottom:1.5rem;">設定自動排程同步的 RSS 來源連結，儲存後下次同步將使用新的網址。</p>
+      <div class="group-fields">
+        <div class="field-item field-full">
+          <label for="rss-url">RSS 網址</label>
+          <input type="url" id="rss-url" placeholder="載入中…" />
+        </div>
+      </div>
+      <div style="margin-top:1.5rem;">
+        <button class="btn-save" id="btn-save-rss">儲存 RSS 設定</button>
+      </div>
+      <div class="status-box" id="rss-status"></div>
+    </div>
+
+    <!-- 手動新增單集 -->
+    <div class="token-card">
+      <h2>手動新增單集</h2>
       <p style="font-size:0.8rem;color:rgba(67,52,48,0.55);margin-bottom:0.5rem;">貼上單集連結，系統自動從 RSS 抓取標題、日期、摘要等資料並新增至 Notion。來源自動標記為「手動」。</p>
       <p style="font-size:0.78rem;color:rgba(67,52,48,0.55);margin-bottom:1.5rem;">請使用 SoundOn 單集頁面網址，格式為：<code style="font-size:0.75rem;background:rgba(67,52,48,0.07);padding:0.1rem 0.35rem;border-radius:4px;">https://player.soundon.fm/p/…/episodes/…</code></p>
-
       <div class="group-fields">
         <div class="field-item field-full">
           <label for="ep-url">單集連結 *</label>
           <input type="url" id="ep-url" placeholder="https://player.soundon.fm/p/…/episodes/…" />
         </div>
       </div>
-
       <div style="margin-top:1.5rem;">
         <button class="btn-save" id="btn-add-ep">新增到 Notion</button>
       </div>
       <div class="status-box" id="podcast-status"></div>
     </div>
+
   </div>
 
   <script>
-    // ── 快速上架 Podcast ──────────────────────────────────────
+    // ── Podcast 設定 ──────────────────────────────────────────
     const PODCAST_WORKFLOW = 'add-podcast-manual.yml';
     const PODCAST_REPO     = 'dontpkme993/streamspsy';
     const PODCAST_API_BASE = 'https://api.github.com';
 
-    function setPodcastStatus(type, msg) {
-      const el = document.getElementById('podcast-status');
+    function setPodcastStatus(id, type, msg) {
+      const el = document.getElementById(id);
       el.className = 'status-box show ' + type;
       el.textContent = msg;
     }
 
+    // ── RSS 設定 ──────────────────────────────────────────────
+    async function loadRssUrl() {
+      const token = document.getElementById('gh-token').value.trim();
+      if (!token) return;
+      try {
+        const res = await fetch(
+          `${PODCAST_API_BASE}/repos/${PODCAST_REPO}/actions/variables/PODCAST_RSS_URL`,
+          { headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' } }
+        );
+        if (res.ok) {
+          const data = await res.json();
+          document.getElementById('rss-url').value = data.value || '';
+        }
+      } catch (e) { /* 靜默失敗，不阻斷頁面 */ }
+    }
+
+    document.querySelector('[data-tab="tab-podcast"]').addEventListener('click', loadRssUrl);
+
+    document.getElementById('btn-save-rss').addEventListener('click', async function () {
+      const token = document.getElementById('gh-token').value.trim();
+      if (!token) { setPodcastStatus('rss-status', 'error', '請先載入 GitHub Token'); return; }
+      const value = document.getElementById('rss-url').value.trim();
+      if (!value) { setPodcastStatus('rss-status', 'error', '請輸入 RSS 網址'); return; }
+
+      this.disabled = true;
+      setPodcastStatus('rss-status', 'loading', '儲存中…');
+      try {
+        const res = await fetch(
+          `${PODCAST_API_BASE}/repos/${PODCAST_REPO}/actions/variables/PODCAST_RSS_URL`,
+          {
+            method: 'PATCH',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Accept': 'application/vnd.github+json',
+              'X-GitHub-Api-Version': '2022-11-28',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name: 'PODCAST_RSS_URL', value }),
+          }
+        );
+        if (res.status === 204) {
+          setPodcastStatus('rss-status', 'success', '✓ RSS 網址已更新');
+        } else if (res.status === 403) {
+          throw new Error('Token 權限不足，需要 Variables: Read and write 權限');
+        } else {
+          throw new Error(`HTTP ${res.status}`);
+        }
+      } catch (e) {
+        setPodcastStatus('rss-status', 'error', '失敗：' + e.message);
+      } finally {
+        this.disabled = false;
+      }
+    });
+
     document.getElementById('btn-add-ep').addEventListener('click', async function () {
       const token  = document.getElementById('gh-token').value.trim();
-      if (!token) { setPodcastStatus('error', '請先在上方載入 GitHub Token'); return; }
+      if (!token) { setPodcastStatus('podcast-status', 'error', '請先在上方載入 GitHub Token'); return; }
 
       const url = document.getElementById('ep-url').value.trim();
-      if (!url) { setPodcastStatus('error', '請輸入單集連結'); return; }
+      if (!url) { setPodcastStatus('podcast-status', 'error', '請輸入單集連結'); return; }
       const validSoundOn = /^https:\/\/player\.soundon\.fm\/p\/[a-f0-9-]{36}\/episodes\/[a-f0-9-]{36}/i;
       if (!validSoundOn.test(url)) {
-        setPodcastStatus('error', '網址格式不正確，請使用 SoundOn 單集頁面網址（https://player.soundon.fm/p/…/episodes/…）');
+        setPodcastStatus('podcast-status', 'error', '網址格式不正確，請使用 SoundOn 單集頁面網址（https://player.soundon.fm/p/…/episodes/…）');
         return;
       }
 
       this.disabled = true;
-      setPodcastStatus('loading', '提交中，請稍候…');
+      setPodcastStatus('podcast-status', 'loading', '提交中，請稍候…');
 
       try {
         const res = await fetch(
@@ -1001,7 +1072,7 @@ pageScript: |
         );
 
         if (res.status === 204) {
-          setPodcastStatus('success', '✓ 已提交！約 30 秒後從 RSS 比對並新增至 Notion。');
+          setPodcastStatus('podcast-status', 'success', '✓ 已提交！約 30 秒後從 RSS 比對並新增至 Notion。');
           document.getElementById('ep-url').value = '';
         } else if (res.status === 401) {
           throw new Error('Token 無效或已過期');
@@ -1013,7 +1084,7 @@ pageScript: |
           throw new Error(`HTTP ${res.status}`);
         }
       } catch (e) {
-        setPodcastStatus('error', '失敗：' + e.message);
+        setPodcastStatus('podcast-status', 'error', '失敗：' + e.message);
       } finally {
         this.disabled = false;
       }
