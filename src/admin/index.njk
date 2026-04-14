@@ -616,6 +616,7 @@ pageScript: |
         if (typeof loadSeoFiles === 'function') loadSeoFiles(token);
 
         setStatus('load-status', 'success', '✓ 載入成功，請直接修改下方欄位');
+        document.getElementById('tabs-wrapper').style.display = 'block';
       } catch (e) {
         setStatus('load-status', 'error', '載入失敗：' + e.message);
       } finally {
@@ -864,7 +865,7 @@ pageScript: |
 
   <div class="admin-header">
     <h1>網站內容管理</h1>
-    <p>載入後直接修改欄位，按「儲存」後網站將自動重新 build。</p>
+    <p>載入網站資料後開始編輯更新</p>
   </div>
 
   <!-- Token -->
@@ -882,7 +883,8 @@ pageScript: |
     <div class="status-box" id="load-status"></div>
   </div>
 
-  <!-- Tab bar -->
+  <!-- Tabs (hidden until load succeeds) -->
+  <div id="tabs-wrapper" style="display:none;">
   <div class="tab-bar">
     <button class="tab-btn active" data-tab="tab-text">文字設定</button>
     <button class="tab-btn" data-tab="tab-seo">SEO 設定</button>
@@ -1018,4 +1020,5 @@ pageScript: |
     });
   </script>
 
+  </div>{# end tabs-wrapper #}
 </div>
