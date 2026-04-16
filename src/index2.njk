@@ -66,7 +66,7 @@ jsonLd: |
 ---
 
 <!-- ══════════════ HERO BANNER ══════════════ -->
-<section class="hero-banner{% if siteImages.HOME_BANNER %} hero-banner--image{% endif %}" aria-label="主視覺橫幅"{% if siteImages.HOME_BANNER %} style="background-image:linear-gradient(to bottom,rgba(67,52,48,0.3),rgba(67,52,48,0.55)),url('{{ siteImages.HOME_BANNER }}')"{% endif %}>
+<section class="hero-banner" aria-label="主視覺橫幅"{% if siteImages.HOME_BANNER %} style="background-image:linear-gradient(to bottom,rgba(67,52,48,0.3),rgba(67,52,48,0.55)),url('{{ siteImages.HOME_BANNER }}')"{% endif %}>
   {% if not siteImages.HOME_BANNER %}
     <div class="hero-image-placeholder" aria-hidden="true"></div>
   {% endif %}
