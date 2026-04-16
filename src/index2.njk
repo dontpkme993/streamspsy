@@ -67,7 +67,12 @@ jsonLd: |
 
 <!-- ══════════════ HERO BANNER ══════════════ -->
 <section class="hero-banner" aria-label="主視覺橫幅">
-  <div class="hero-image-placeholder" aria-hidden="true"></div>
+  {% if siteImages.HOME_BANNER %}
+    <img class="hero-image" src="{{ siteImages.HOME_BANNER }}" alt="主視覺橫幅">
+    <div class="hero-image-overlay" aria-hidden="true"></div>
+  {% else %}
+    <div class="hero-image-placeholder" aria-hidden="true"></div>
+  {% endif %}
   <div class="hero-text">
     <p style="font-size:0.82rem;letter-spacing:0.2em;color:rgba(250,243,224,0.65);margin-bottom:1rem;text-transform:uppercase;">{{ ui.home_hero_label }}</p>
     <h1>{{ ui.home_hero_title_1 }}<br>{{ ui.home_hero_title_2 }}</h1>

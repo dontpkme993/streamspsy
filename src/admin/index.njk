@@ -276,6 +276,21 @@ pageStyle: |
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
 
+  /* Image management */
+  .img-cards { display: flex; flex-direction: column; gap: 1.25rem; }
+  .img-card { background: #fff; border: 1px solid rgba(140,106,93,0.15); border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(67,52,48,0.05); }
+  .img-card-header { padding: 1rem 1.5rem 0.75rem; border-bottom: 1px solid rgba(140,106,93,0.1); }
+  .img-card-name { font-size: 0.78rem; font-family: monospace; background: rgba(140,106,93,0.08); color: var(--bark); padding: 0.2rem 0.5rem; border-radius: 4px; display: inline-block; margin-bottom: 0.25rem; }
+  .img-card-desc { font-size: 0.85rem; color: var(--oak); opacity: 0.75; margin-top: 0.2rem; }
+  .img-card-body { display: grid; grid-template-columns: 160px 1fr; gap: 1.25rem; padding: 1.25rem 1.5rem; align-items: start; }
+  @media (max-width: 600px) { .img-card-body { grid-template-columns: 1fr; } }
+  .img-preview { width: 160px; height: 90px; border-radius: 8px; object-fit: cover; border: 1px solid rgba(140,106,93,0.15); display: block; }
+  .img-preview-empty { width: 160px; height: 90px; border-radius: 8px; background: rgba(140,106,93,0.06); border: 1px dashed rgba(140,106,93,0.25); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: rgba(67,52,48,0.35); }
+  .img-url-section label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--oak); margin-bottom: 0.4rem; opacity: 0.85; }
+  .img-url-input { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid rgba(140,106,93,0.25); border-radius: 7px; font-size: 0.8rem; background: var(--rice); color: var(--bark); font-family: monospace; box-sizing: border-box; transition: border-color 0.2s; }
+  .img-url-input:focus { outline: none; border-color: var(--oak); background: #fff; }
+  .img-url-input.changed { border-color: #c8a96e; background: #fffdf5; }
+
   /* SEO fields */
   .seo-page-card {
     background: #fff;
@@ -890,6 +905,7 @@ pageScript: |
     <button class="tab-btn active" data-tab="tab-text">文字設定</button>
     <button class="tab-btn" data-tab="tab-seo">SEO 設定</button>
     <button class="tab-btn" data-tab="tab-podcast">Podcast 設定</button>
+    <button class="tab-btn" data-tab="tab-images">圖片管理</button>
   </div>
 
   <!-- Tab 1: 文字設定 -->
@@ -1090,6 +1106,247 @@ pageScript: |
         this.disabled = false;
       }
     });
+  </script>
+
+  <!-- Tab 4: 圖片管理 -->
+  <div class="tab-panel" id="tab-images">
+
+    <div class="token-card">
+      <h2>Notion Integration Token</h2>
+      <div class="token-row">
+        <input type="password" id="notion-token" class="token-input" placeholder="secret_…" autocomplete="off" />
+        <button class="btn-load" id="btn-load-images">載入圖片清單</button>
+      </div>
+      <p class="token-hint">需要 Notion Integration Token（secret_…），在 Notion → Settings → Connections 建立後貼上。</p>
+      <div class="token-actions">
+        <button class="btn-sm" id="btn-save-notion-token">儲存 Token</button>
+        <button class="btn-sm" id="btn-clear-notion-token">清除 Token</button>
+      </div>
+    </div>
+
+    <div class="status-box" id="images-load-status"></div>
+
+    <div class="img-cards" id="img-cards" style="display:none;"></div>
+
+    <div class="save-bar" id="images-save-bar" style="display:none;margin-top:1.5rem;">
+      <span class="save-info" id="images-save-info">載入後即可編輯</span>
+      <button class="btn-save" id="btn-save-images">儲存並重新發布</button>
+    </div>
+    <div class="status-box" id="images-save-status"></div>
+
+  </div>
+
+  <script>
+  // ── 圖片管理 Tab ─────────────────────────────────────────
+  (function () {
+    const NOTION_API     = 'https://api.notion.com/v1';
+    const NOTION_VERSION = '2022-06-28';
+    const DB_ID          = '3449a312-e7ff-80f7-81b2-febce5f0b61a';
+    const REPO           = 'dontpkme993/streamspsy';
+    const GH_API         = 'https://api.github.com';
+    const LS_TOKEN       = 'admin_notion_token';
+
+    let pages = [];
+
+    function getNotionToken() { return document.getElementById('notion-token').value.trim(); }
+    function getGhToken()     { return document.getElementById('gh-token').value.trim(); }
+
+    function setStatus(id, type, msg) {
+      const el = document.getElementById(id);
+      el.className = 'status-box show ' + type;
+      el.textContent = msg;
+    }
+
+    async function loadImages() {
+      const token = getNotionToken();
+      if (!token) { setStatus('images-load-status', 'error', '請先輸入 Notion Token'); return; }
+
+      document.getElementById('btn-load-images').disabled = true;
+      setStatus('images-load-status', 'loading', '載入中…');
+
+      try {
+        const res = await fetch(`${NOTION_API}/databases/${DB_ID}/query`, {
+          method: 'POST',
+          headers: {
+            'Authorization':  `Bearer ${token}`,
+            'Notion-Version': NOTION_VERSION,
+            'Content-Type':   'application/json',
+          },
+          body: JSON.stringify({}),
+        });
+        if (res.status === 401) throw new Error('Token 無效或已過期');
+        if (res.status === 403) throw new Error('Token 無此資料庫的存取權限');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+        const data = await res.json();
+        pages = data.results
+          .map(page => ({
+            id:          page.id,
+            name:        page.properties['Name']?.title?.[0]?.plain_text?.trim() || '',
+            description: page.properties['Description']?.rich_text?.[0]?.plain_text?.trim() || '',
+            url:         page.properties['URL']?.url || '',
+          }))
+          .filter(p => p.name);
+
+        localStorage.setItem(LS_TOKEN, token);
+        renderCards();
+        document.getElementById('img-cards').style.display = 'flex';
+        document.getElementById('images-save-bar').style.display = 'flex';
+        setStatus('images-load-status', 'success', `✓ 已載入 ${pages.length} 筆圖片設定`);
+      } catch (e) {
+        setStatus('images-load-status', 'error', '載入失敗：' + e.message);
+      } finally {
+        document.getElementById('btn-load-images').disabled = false;
+      }
+    }
+
+    function renderCards() {
+      const container = document.getElementById('img-cards');
+      container.innerHTML = pages.map((p, i) => `
+        <div class="img-card">
+          <div class="img-card-header">
+            <div class="img-card-name">${p.name}</div>
+            ${p.description ? `<div class="img-card-desc">${p.description}</div>` : ''}
+          </div>
+          <div class="img-card-body">
+            <div>
+              ${p.url
+                ? `<img class="img-preview" id="img-preview-${i}" src="${p.url}" alt="${p.name}"
+                     onerror="this.style.display='none';document.getElementById('img-empty-${i}').style.display='flex'">`
+                : ''}
+              <div class="img-preview-empty" id="img-empty-${i}" style="display:${p.url ? 'none' : 'flex'}">尚無圖片</div>
+            </div>
+            <div class="img-url-section">
+              <label for="img-url-${i}">圖片網址</label>
+              <input type="url" class="img-url-input" id="img-url-${i}"
+                value="${p.url}" placeholder="https://…" data-original="${p.url}" data-index="${i}" />
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      container.querySelectorAll('.img-url-input').forEach(input => {
+        input.addEventListener('input', () => {
+          const changed = input.value !== input.dataset.original;
+          input.classList.toggle('changed', changed);
+
+          const i       = input.dataset.index;
+          const preview = document.getElementById('img-preview-' + i);
+          const empty   = document.getElementById('img-empty-'   + i);
+
+          if (input.value) {
+            if (preview) { preview.src = input.value; preview.style.display = ''; }
+            else {
+              const img  = document.createElement('img');
+              img.className = 'img-preview';
+              img.id        = 'img-preview-' + i;
+              img.src       = input.value;
+              img.alt       = pages[i].name;
+              img.onerror   = () => { img.style.display = 'none'; empty.style.display = 'flex'; };
+              empty.parentNode.insertBefore(img, empty);
+            }
+            if (empty) empty.style.display = 'none';
+          } else {
+            if (preview) preview.style.display = 'none';
+            if (empty)   empty.style.display   = 'flex';
+          }
+        });
+      });
+    }
+
+    async function saveImages() {
+      const notionToken = getNotionToken();
+      const ghToken     = getGhToken();
+      if (!notionToken) { setStatus('images-save-status', 'error', '請先載入 Notion Token'); return; }
+      if (!ghToken)     { setStatus('images-save-status', 'error', '請先在上方輸入 GitHub Token 以觸發重新發布'); return; }
+
+      const changed = [...document.querySelectorAll('.img-url-input.changed')];
+      if (!changed.length) { setStatus('images-save-status', 'error', '沒有變更的項目'); return; }
+
+      document.getElementById('btn-save-images').disabled = true;
+      setStatus('images-save-status', 'loading', '儲存中…');
+
+      try {
+        for (const input of changed) {
+          const i    = parseInt(input.dataset.index);
+          const page = pages[i];
+
+          const res = await fetch(`${NOTION_API}/pages/${page.id}`, {
+            method: 'PATCH',
+            headers: {
+              'Authorization':  `Bearer ${notionToken}`,
+              'Notion-Version': NOTION_VERSION,
+              'Content-Type':   'application/json',
+            },
+            body: JSON.stringify({
+              properties: { 'URL': { url: input.value || null } }
+            }),
+          });
+          if (!res.ok) throw new Error(`更新 ${page.name} 失敗 HTTP ${res.status}`);
+
+          pages[i].url         = input.value;
+          input.dataset.original = input.value;
+          input.classList.remove('changed');
+        }
+
+        // 觸發 GitHub Actions rebuild
+        const rebuild = await fetch(
+          `${GH_API}/repos/${REPO}/actions/workflows/deploy.yml/dispatches`,
+          {
+            method: 'POST',
+            headers: {
+              'Authorization':        `Bearer ${ghToken}`,
+              'Accept':               'application/vnd.github+json',
+              'X-GitHub-Api-Version': '2022-11-28',
+              'Content-Type':         'application/json',
+            },
+            body: JSON.stringify({ ref: 'main' }),
+          }
+        );
+
+        if (rebuild.status === 204) {
+          setStatus('images-save-status', 'success', '✓ 儲存成功！網站正在重新 build，約 1 分鐘後上線。');
+        } else if (rebuild.status === 403) {
+          setStatus('images-save-status', 'success', '✓ Notion 已更新，但 GitHub Token 權限不足無法觸發 rebuild，請至 GitHub Actions 手動執行。');
+        } else {
+          throw new Error(`觸發 rebuild 失敗 HTTP ${rebuild.status}`);
+        }
+      } catch (e) {
+        setStatus('images-save-status', 'error', '失敗：' + e.message);
+      } finally {
+        document.getElementById('btn-save-images').disabled = false;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem(LS_TOKEN);
+      if (saved) document.getElementById('notion-token').value = saved;
+
+      document.getElementById('btn-load-images').addEventListener('click', loadImages);
+      document.getElementById('btn-save-images').addEventListener('click', saveImages);
+
+      document.getElementById('btn-save-notion-token').addEventListener('click', () => {
+        const t = getNotionToken();
+        if (!t) return alert('請先輸入 Notion Token');
+        localStorage.setItem(LS_TOKEN, t);
+        setStatus('images-load-status', 'success', 'Token 已儲存');
+      });
+      document.getElementById('btn-clear-notion-token').addEventListener('click', () => {
+        localStorage.removeItem(LS_TOKEN);
+        document.getElementById('notion-token').value = '';
+        setStatus('images-load-status', 'success', 'Token 已清除');
+      });
+
+      // 切換到此 tab 時自動載入（若已有 token）
+      document.querySelector('[data-tab="tab-images"]').addEventListener('click', () => {
+        const t = localStorage.getItem(LS_TOKEN);
+        if (t && !pages.length) {
+          document.getElementById('notion-token').value = t;
+          loadImages();
+        }
+      });
+    });
+  })();
   </script>
 
   </div>{# end tabs-wrapper #}
