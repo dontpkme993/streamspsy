@@ -38,6 +38,9 @@ jobs:
           key: notion-images-${{ github.run_id }}
           restore-keys: notion-images-
 
+      - name: Restore admin-committed images (override cache)
+        run: git checkout -- src/assets/images/site-* 2>/dev/null || true
+
       - name: Build with 11ty
         run: npm run build
         env:
