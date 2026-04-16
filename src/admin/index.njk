@@ -1139,7 +1139,7 @@ pageScript: |
 
     const LABELS = {
       HOME_BANNER: { label: '首頁 Banner', desc: 'index2.njk 主視覺橫幅' },
-      FOUNDER_PORTRAIT: { label: '創辦人形象照', desc: 'about.njk 個人簡介區塊' },
+      FOUNDER_PORTRAIT: { label: '創辦人形象照', desc: 'about.njk 個人簡介區塊', square: true },
     };
 
     let currentSha   = null;
@@ -1194,6 +1194,9 @@ pageScript: |
 
       container.innerHTML = entries.map(([key, url], i) => {
         const meta = LABELS[key] || { label: key, desc: '' };
+        const pw   = '160px';
+        const ph   = meta.square ? '160px' : '90px';
+        const pPos = meta.square ? 'top' : 'center';
         return `
           <div class="img-card">
             <div class="img-card-header">
@@ -1204,9 +1207,10 @@ pageScript: |
               <div>
                 ${url
                   ? `<img class="img-preview" id="img-preview-${i}" src="${url}" alt="${key}"
+                       style="width:${pw};height:${ph};object-position:${pPos}"
                        onerror="this.style.display='none';document.getElementById('img-empty-${i}').style.display='flex'">`
                   : ''}
-                <div class="img-preview-empty" id="img-empty-${i}" style="display:${url ? 'none' : 'flex'}">尚無圖片</div>
+                <div class="img-preview-empty" id="img-empty-${i}" style="display:${url ? 'none' : 'flex'};width:${pw};height:${ph}">尚無圖片</div>
               </div>
               <div class="img-url-section">
                 <label for="img-url-${i}">圖片網址</label>
@@ -1256,6 +1260,11 @@ pageScript: |
     }
 
     function updatePreview(i, src) {
+      const entries = Object.entries(currentData);
+      const key     = entries[i]?.[0] || '';
+      const meta    = LABELS[key] || {};
+      const ph      = meta.square ? '160px' : '90px';
+
       const preview = document.getElementById('img-preview-' + i);
       const empty   = document.getElementById('img-empty-'   + i);
       if (src) {
@@ -1265,6 +1274,7 @@ pageScript: |
           img.className = 'img-preview';
           img.id        = 'img-preview-' + i;
           img.src       = src;
+          img.style.cssText = `width:160px;height:${ph};object-position:${meta.square ? 'top' : 'center'}`;
           img.onerror   = () => { img.style.display = 'none'; if (empty) empty.style.display = 'flex'; };
           empty.parentNode.insertBefore(img, empty);
         }
