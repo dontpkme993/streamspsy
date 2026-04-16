@@ -47,7 +47,6 @@ jobs:
           NOTION_PODCAST_DB: ${{ secrets.NOTION_PODCAST_DB }}
           NOTION_THERAPISTS_DB: ${{ secrets.NOTION_THERAPISTS_DB }}
           NOTION_BOOKS_DB: ${{ secrets.NOTION_BOOKS_DB }}
-          NOTION_IMAGES_DB: ${{ secrets.NOTION_IMAGES_DB }}
           PODCAST_RSS_URL: ${{ vars.PODCAST_RSS_URL }}
           SITE_BASE_PATH: /
           SITE_URL: https://streamspsy.com
