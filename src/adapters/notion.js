@@ -295,4 +295,22 @@ async function getPodcastEpisodes() {
   }));
 }
 
-module.exports = { getArticles, getEvents, getPodcastEpisodes, getBooks, downloadImage };
+async function getSiteImages() {
+  if (!process.env.NOTION_TOKEN || !process.env.NOTION_IMAGES_DB) return {};
+
+  const db = await notion.databases.query({
+    database_id: process.env.NOTION_IMAGES_DB,
+  });
+
+  return Object.fromEntries(
+    db.results
+      .map(page => {
+        const name = page.properties['Name']?.title?.[0]?.plain_text?.trim() || '';
+        const url  = page.properties['URL']?.url || '';
+        return name && url ? [name, url] : null;
+      })
+      .filter(Boolean)
+  );
+}
+
+module.exports = { getArticles, getEvents, getPodcastEpisodes, getBooks, downloadImage, getSiteImages };
