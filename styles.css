@@ -187,18 +187,10 @@ a { color: inherit; text-decoration: none; }
   justify-content: center;
 }
 
-.hero-image {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-}
-.hero-image-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, rgba(67,52,48,0.3) 0%, rgba(67,52,48,0.55) 100%);
+.hero-banner--image {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .hero-image-placeholder::before {
