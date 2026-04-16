@@ -290,6 +290,10 @@ pageStyle: |
   .img-url-input { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid rgba(140,106,93,0.25); border-radius: 7px; font-size: 0.8rem; background: var(--rice); color: var(--bark); font-family: monospace; box-sizing: border-box; transition: border-color 0.2s; }
   .img-url-input:focus { outline: none; border-color: var(--oak); background: #fff; }
   .img-url-input.changed { border-color: #c8a96e; background: #fffdf5; }
+  .img-upload-btn { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.6rem; font-size: 0.78rem; padding: 0.35rem 0.75rem; border: 1px solid rgba(140,106,93,0.3); border-radius: 6px; background: transparent; color: var(--oak); cursor: pointer; transition: background 0.15s; }
+  .img-upload-btn:hover { background: var(--sprout); }
+  .img-upload-input { display: none; }
+  .img-upload-hint { font-size: 0.75rem; color: rgba(67,52,48,0.45); margin-top: 0.35rem; }
 
   /* SEO fields */
   .seo-page-card {
@@ -1138,8 +1142,9 @@ pageScript: |
       ABOUT_HERO:  { label: '關於我們 Hero', desc: 'about.njk 頂部圖片' },
     };
 
-    let currentSha  = null;
-    let currentData = {};
+    let currentSha   = null;
+    let currentData  = {};
+    let pendingFiles = {}; // key → { file, dataUrl, ext }
 
     function getToken() { return document.getElementById('gh-token').value.trim(); }
 
@@ -1206,8 +1211,12 @@ pageScript: |
               <div class="img-url-section">
                 <label for="img-url-${i}">圖片網址</label>
                 <input type="url" class="img-url-input" id="img-url-${i}"
-                  value="${url}" placeholder="https://…"
+                  value="${url}" placeholder="https://… 或選擇圖片自動填入"
                   data-key="${key}" data-original="${url}" data-index="${i}" />
+                <label class="img-upload-btn" for="img-file-${i}">選擇圖片檔案</label>
+                <input type="file" class="img-upload-input" id="img-file-${i}"
+                  accept="image/*" data-key="${key}" data-index="${i}" />
+                <div class="img-upload-hint" id="img-upload-hint-${i}"></div>
               </div>
             </div>
           </div>`;
@@ -1216,29 +1225,86 @@ pageScript: |
       container.querySelectorAll('.img-url-input').forEach(input => {
         input.addEventListener('input', () => {
           input.classList.toggle('changed', input.value !== input.dataset.original);
-
-          const i       = input.dataset.index;
-          const preview = document.getElementById('img-preview-' + i);
-          const empty   = document.getElementById('img-empty-'   + i);
-
-          if (input.value) {
-            if (preview) { preview.src = input.value; preview.style.display = ''; }
-            else {
-              const img     = document.createElement('img');
-              img.className = 'img-preview';
-              img.id        = 'img-preview-' + i;
-              img.src       = input.value;
-              img.alt       = input.dataset.key;
-              img.onerror   = () => { img.style.display = 'none'; empty.style.display = 'flex'; };
-              empty.parentNode.insertBefore(img, empty);
-            }
-            if (empty) empty.style.display = 'none';
-          } else {
-            if (preview) preview.style.display = 'none';
-            if (empty)   empty.style.display   = 'flex';
-          }
+          updatePreview(input.dataset.index, input.value);
         });
       });
+
+      container.querySelectorAll('.img-upload-input').forEach(fileInput => {
+        fileInput.addEventListener('change', () => {
+          const file = fileInput.files[0];
+          if (!file) return;
+          const key  = fileInput.dataset.key;
+          const i    = fileInput.dataset.index;
+          const ext  = file.name.split('.').pop().toLowerCase();
+          const hint = document.getElementById('img-upload-hint-' + i);
+
+          const reader = new FileReader();
+          reader.onload = e => {
+            const dataUrl = e.target.result;
+            pendingFiles[key] = { file, dataUrl: dataUrl.split(',')[1], ext };
+            updatePreview(i, dataUrl);
+
+            // 預填 URL 欄位（上傳後才是真實路徑，先標示待上傳）
+            const urlInput = document.getElementById('img-url-' + i);
+            urlInput.value = `/assets/images/site-${key.toLowerCase()}.${ext}`;
+            urlInput.classList.add('changed');
+            hint.textContent = `已選取：${file.name}（${(file.size / 1024).toFixed(0)} KB）`;
+          };
+          reader.readAsDataURL(file);
+        });
+      });
+    }
+
+    function updatePreview(i, src) {
+      const preview = document.getElementById('img-preview-' + i);
+      const empty   = document.getElementById('img-empty-'   + i);
+      if (src) {
+        if (preview) { preview.src = src; preview.style.display = ''; }
+        else {
+          const img     = document.createElement('img');
+          img.className = 'img-preview';
+          img.id        = 'img-preview-' + i;
+          img.src       = src;
+          img.onerror   = () => { img.style.display = 'none'; if (empty) empty.style.display = 'flex'; };
+          empty.parentNode.insertBefore(img, empty);
+        }
+        if (empty) empty.style.display = 'none';
+      } else {
+        if (preview) preview.style.display = 'none';
+        if (empty)   empty.style.display   = 'flex';
+      }
+    }
+
+    async function uploadImageFile(token, key, dataUrl, ext) {
+      const path = `src/assets/images/site-${key.toLowerCase()}.${ext}`;
+      // 先取現有 sha（若已存在）
+      let existingSha;
+      try {
+        const check = await fetch(
+          `${API_BASE}/repos/${REPO}/contents/${path}`,
+          { headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' } }
+        );
+        if (check.ok) { const j = await check.json(); existingSha = j.sha; }
+      } catch (_) {}
+
+      const res = await fetch(
+        `${API_BASE}/repos/${REPO}/contents/${path}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept':        'application/vnd.github+json',
+            'Content-Type':  'application/json',
+          },
+          body: JSON.stringify({
+            message: `Upload site image: ${key}`,
+            content: dataUrl,
+            ...(existingSha ? { sha: existingSha } : {}),
+          })
+        }
+      );
+      if (!res.ok) throw new Error(`圖片上傳失敗（${key}）HTTP ${res.status}`);
+      return `/assets/images/site-${key.toLowerCase()}.${ext}`;
     }
 
     async function saveImages() {
@@ -1250,11 +1316,20 @@ pageScript: |
       setStatus('images-save-status', 'loading', '儲存中，請稍候…');
 
       try {
+        // 1. 先上傳有待傳圖片的 key
+        for (const [key, { dataUrl, ext }] of Object.entries(pendingFiles)) {
+          setStatus('images-save-status', 'loading', `上傳圖片 ${key}…`);
+          await uploadImageFile(token, key, dataUrl, ext);
+        }
+        pendingFiles = {};
+
+        // 2. 收集所有 URL 更新 siteImages.json
         const newData = { ...currentData };
         document.querySelectorAll('.img-url-input').forEach(input => {
           newData[input.dataset.key] = input.value;
         });
 
+        setStatus('images-save-status', 'loading', '更新圖片設定…');
         const res = await fetch(
           `${API_BASE}/repos/${REPO}/contents/${FILE_PATH}`,
           {
@@ -1277,14 +1352,15 @@ pageScript: |
         if (res.status === 409) throw new Error('檔案已被修改，請重新載入後再存');
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-        const result  = await res.json();
-        currentSha    = result.content.sha;
-        currentData   = newData;
+        const result = await res.json();
+        currentSha   = result.content.sha;
+        currentData  = newData;
 
         document.querySelectorAll('.img-url-input').forEach(input => {
           input.dataset.original = input.value;
           input.classList.remove('changed');
         });
+        document.querySelectorAll('.img-upload-hint').forEach(el => el.textContent = '');
 
         setStatus('images-save-status', 'success', '✓ 儲存成功！GitHub Actions 正在重新 build，約 1 分鐘後上線。');
       } catch (e) {
