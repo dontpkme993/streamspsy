@@ -170,7 +170,6 @@ pageScript: |
       selectedCardIndex = cardIndex;
       const card = CARDS[cardIndex];
 
-      document.getElementById('cardNumber').textContent = card.number;
       const emojiEl = document.getElementById('cardEmoji');
       if (card.image) {
         emojiEl.textContent = '';
@@ -328,10 +327,12 @@ pageScript: |
 
       <!-- Front face -->
       <div class="card-face card-front-face" id="cardFront">
-        <p class="card-number" id="cardNumber">No. —</p>
-        <div class="card-image-area" id="cardEmoji" aria-hidden="true">✨</div>
-        <h3 id="cardTitle"></h3>
-        <p id="cardKeyword" style="font-size:0.78rem;color:var(--straw-text);font-weight:600;margin:0.2rem 0 0.4rem;"></p>
+        <div class="card-image-area" id="cardEmoji" aria-hidden="true">
+          <p class="card-keyword-overlay" id="cardKeyword"></p>
+        </div>
+        <div class="card-title-footer">
+          <h3 id="cardTitle"></h3>
+        </div>
       </div>
 
     </div>
