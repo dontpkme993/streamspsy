@@ -54,13 +54,6 @@
   </div>
 </header>
 
-<!-- ══════════════ COVER IMAGE ══════════════ -->
-{% if article.image %}
-  <div class="content-max" style="max-width:760px;margin-bottom:2.5rem;">
-    <img src="{{ article.image | url }}" alt="{{ article.title }}" style="width:100%;border-radius:1rem;box-shadow:0 4px 24px rgba(140,106,93,0.15);display:block;">
-  </div>
-{% endif %}
-
 <!-- ══════════════ ARTICLE BODY ══════════════ -->
 <div class="content-max" style="max-width:760px;padding-bottom:5rem;">
   {% if article.body %}
