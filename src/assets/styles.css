@@ -660,7 +660,8 @@ a { color: inherit; text-decoration: none; }
 /* ── Article card ── */
 .article-card {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 80px 1fr;
+  grid-template-rows: auto auto;
   gap: 0;
   background: white;
   border-radius: 1rem;
@@ -671,7 +672,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 @media (min-width: 640px) {
-  .article-card { grid-template-columns: 180px 1fr; }
+  .article-card { grid-template-columns: 180px 1fr; grid-template-rows: auto; }
 }
 
 .article-card:hover {
@@ -680,32 +681,66 @@ a { color: inherit; text-decoration: none; }
 }
 
 .article-thumb {
-  min-height: 140px;
+  grid-column: 1;
+  grid-row: 1;
+  min-height: 80px;
+  max-height: 80px;
   background: linear-gradient(135deg, var(--sprout) 0%, #c9b7a8 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   color: rgba(67,52,48,0.6);
   font-size: 0.75rem;
+  overflow: hidden;
 }
 
-.article-body { padding: 1.5rem; }
+@media (min-width: 640px) {
+  .article-thumb {
+    grid-row: 1 / span 2;
+    min-height: 200px;
+    max-height: none;
+  }
+}
 
-.article-body .date {
+.article-meta {
+  grid-column: 2;
+  grid-row: 1;
+  padding: 0.75rem 1rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+@media (min-width: 640px) {
+  .article-meta { padding: 1.5rem 1.5rem 0.4rem; }
+}
+
+.article-main {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  padding: 0.6rem 1rem 1rem;
+  border-top: 1px solid rgba(140,106,93,0.07);
+}
+
+@media (min-width: 640px) {
+  .article-main { grid-column: 2; padding: 0 1.5rem 1.5rem; border-top: none; }
+}
+
+.article-meta .date {
   font-size: 0.78rem;
   color: rgba(67,52,48,0.65);
-  margin-bottom: 0.4rem;
   letter-spacing: 0.05em;
 }
 
-.article-body h3 {
+.article-main h3 {
   font-size: 1.05rem;
   color: var(--oak);
   margin-bottom: 0.5rem;
   line-height: 1.5;
 }
 
-.article-body .summary-label {
+.article-main .summary-label {
   font-size: 0.72rem;
   color: var(--straw-text);
   font-weight: 700;
@@ -714,7 +749,7 @@ a { color: inherit; text-decoration: none; }
   text-transform: uppercase;
 }
 
-.article-body .summary {
+.article-main .summary {
   font-size: 0.85rem;
   color: rgba(67,52,48,0.75);
   line-height: 1.7;

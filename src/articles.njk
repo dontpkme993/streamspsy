@@ -146,13 +146,15 @@ pageScript: |
               <span>封面圖<br>Placeholder</span>
             {% endif %}
           </a>
-          <div class="article-body">
+          <div class="article-meta">
             <p class="date">{{ article.date | dateDisplay }}</p>
-            <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.5rem;">
+            <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
               {% for tag in article.tags %}
                 <span class="tag">#{{ tag }}</span>
               {% endfor %}
             </div>
+          </div>
+          <div class="article-main">
             <h3><a href="{{ ('/articles/' + article.slug + '/') | url }}" style="color:inherit;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--straw)'" onmouseout="this.style.color='inherit'">{{ article.title }}</a></h3>
             <p class="summary-label">3 秒摘要</p>
             <p class="summary">{{ article.summary }}</p>
@@ -163,81 +165,67 @@ pageScript: |
     {% else %}
       <!-- Placeholder articles shown when Notion is not connected -->
       <article class="article-card" data-tags="心理 自我探索">
-        <div class="article-thumb">
-          <span>封面圖<br>Placeholder</span>
-        </div>
-        <div class="article-body">
+        <div class="article-thumb"><span>封面圖<br>Placeholder</span></div>
+        <div class="article-meta">
           <p class="date">2026年3月28日</p>
-          <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.5rem;">
-            <span class="tag">#心理</span>
-            <span class="tag">#自我探索</span>
-          </div>
+          <div style="display:flex;gap:0.4rem;flex-wrap:wrap;"><span class="tag">#心理</span><span class="tag">#自我探索</span></div>
+        </div>
+        <div class="article-main">
           <h3><span class="placeholder-text">文章標題一 Article Title 1 Placeholder — 關於自我探索的深度文章</span></h3>
           <p class="summary-label">3 秒摘要</p>
-          <p class="summary"><span class="placeholder-text">文章重點摘要佔位符：讀者能在3秒內理解本文核心價值。3-second summary for AEO: the key takeaway a reader needs before deciding to read on. Article Excerpt Placeholder.</span></p>
+          <p class="summary"><span class="placeholder-text">文章重點摘要佔位符：讀者能在3秒內理解本文核心價值。3-second summary for AEO: the key takeaway a reader needs before deciding to read on.</span></p>
         </div>
       </article>
 
       <article class="article-card" data-tags="繪本 親子">
-        <div class="article-thumb">
-          <span>封面圖<br>Placeholder</span>
-        </div>
-        <div class="article-body">
+        <div class="article-thumb"><span>封面圖<br>Placeholder</span></div>
+        <div class="article-meta">
           <p class="date">2026年3月15日</p>
-          <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.5rem;">
-            <span class="tag">#繪本</span>
-            <span class="tag">#親子</span>
-          </div>
+          <div style="display:flex;gap:0.4rem;flex-wrap:wrap;"><span class="tag">#繪本</span><span class="tag">#親子</span></div>
+        </div>
+        <div class="article-main">
           <h3><span class="placeholder-text">文章標題二 Article Title 2 Placeholder — 關於繪本與親子陪伴的溫暖分享</span></h3>
           <p class="summary-label">3 秒摘要</p>
-          <p class="summary"><span class="placeholder-text">文章重點摘要佔位符：這篇文章分享了哪一本繪本以及它如何在親子關係中發揮作用。3-second summary Placeholder.</span></p>
+          <p class="summary"><span class="placeholder-text">文章重點摘要佔位符：這篇文章分享了哪一本繪本以及它如何在親子關係中發揮作用。</span></p>
         </div>
       </article>
 
       <article class="article-card" data-tags="租書店觀察">
-        <div class="article-thumb">
-          <span>封面圖<br>Placeholder</span>
-        </div>
-        <div class="article-body">
+        <div class="article-thumb"><span>封面圖<br>Placeholder</span></div>
+        <div class="article-meta">
           <p class="date">2026年2月28日</p>
-          <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.5rem;">
-            <span class="tag">#租書店觀察</span>
-          </div>
+          <div style="display:flex;gap:0.4rem;flex-wrap:wrap;"><span class="tag">#租書店觀察</span></div>
+        </div>
+        <div class="article-main">
           <h3><span class="placeholder-text">文章標題三 Article Title 3 Placeholder — 在租書店裡看見的人情溫度</span></h3>
           <p class="summary-label">3 秒摘要</p>
-          <p class="summary"><span class="placeholder-text">文章重點摘要佔位符：在書店的日常中，那些讓人動容的人與書的相遇瞬間。3-second summary Placeholder.</span></p>
+          <p class="summary"><span class="placeholder-text">文章重點摘要佔位符：在書店的日常中，那些讓人動容的人與書的相遇瞬間。</span></p>
         </div>
       </article>
 
       <article class="article-card" data-tags="心理 自我探索">
-        <div class="article-thumb">
-          <span>封面圖<br>Placeholder</span>
-        </div>
-        <div class="article-body">
+        <div class="article-thumb"><span>封面圖<br>Placeholder</span></div>
+        <div class="article-meta">
           <p class="date">2026年2月14日</p>
-          <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.5rem;">
-            <span class="tag">#心理</span>
-            <span class="tag">#自我探索</span>
-          </div>
+          <div style="display:flex;gap:0.4rem;flex-wrap:wrap;"><span class="tag">#心理</span><span class="tag">#自我探索</span></div>
+        </div>
+        <div class="article-main">
           <h3><span class="placeholder-text">文章標題四 Article Title 4 Placeholder — 心理諮商的日常觀察與思考</span></h3>
           <p class="summary-label">3 秒摘要</p>
-          <p class="summary"><span class="placeholder-text">文章重點摘要佔位符：從諮商現場出發，談一個關於接納與改變的核心概念。3-second summary Placeholder.</span></p>
+          <p class="summary"><span class="placeholder-text">文章重點摘要佔位符：從諮商現場出發，談一個關於接納與改變的核心概念。</span></p>
         </div>
       </article>
 
       <article class="article-card" data-tags="繪本 租書店觀察">
-        <div class="article-thumb">
-          <span>封面圖<br>Placeholder</span>
-        </div>
-        <div class="article-body">
+        <div class="article-thumb"><span>封面圖<br>Placeholder</span></div>
+        <div class="article-meta">
           <p class="date">2026年1月30日</p>
-          <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.5rem;">
-            <span class="tag">#繪本</span>
-            <span class="tag">#租書店觀察</span>
-          </div>
+          <div style="display:flex;gap:0.4rem;flex-wrap:wrap;"><span class="tag">#繪本</span><span class="tag">#租書店觀察</span></div>
+        </div>
+        <div class="article-main">
           <h3><span class="placeholder-text">文章標題五 Article Title 5 Placeholder — 那些陪孩子選書的午後時光</span></h3>
           <p class="summary-label">3 秒摘要</p>
-          <p class="summary"><span class="placeholder-text">文章重點摘要佔位符：選書不只是選故事，也是選一種看世界的方式。3-second summary Placeholder.</span></p>
+          <p class="summary"><span class="placeholder-text">文章重點摘要佔位符：選書不只是選故事，也是選一種看世界的方式。</span></p>
         </div>
       </article>
     {% endif %}
