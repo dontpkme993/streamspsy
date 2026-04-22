@@ -173,9 +173,13 @@ pageScript: |
       document.getElementById('cardNumber').textContent = card.number;
       const emojiEl = document.getElementById('cardEmoji');
       if (card.image) {
-        emojiEl.innerHTML = '<img src="' + card.image + '" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:0.5rem;" aria-hidden="true">';
+        emojiEl.textContent = '';
+        emojiEl.style.backgroundImage = 'url(' + card.image + ')';
+        emojiEl.style.backgroundSize = 'cover';
+        emojiEl.style.backgroundPosition = 'center';
       } else {
         emojiEl.textContent = '✨';
+        emojiEl.style.backgroundImage = '';
       }
       document.getElementById('cardTitle').textContent = card.title;
       document.getElementById('cardKeyword').textContent = card.keyword;
@@ -183,6 +187,9 @@ pageScript: |
       document.getElementById('interpretBody').textContent = card.interpretBody;
       document.getElementById('interpretMessage').textContent = '「' + card.interpretMessage + '」';
       document.getElementById('cardTags').innerHTML = (card.tags || []).map(function(t) { return '<span class="tag">#' + t + '</span>'; }).join('');
+      var tags = card.tags || [];
+      var randomTag = tags.length ? tags[Math.floor(Math.random() * tags.length)] : '';
+      document.getElementById('articlesBtn').href = '/articles/' + (randomTag ? '#tag=' + encodeURIComponent(randomTag) : '');
 
       // Update hash (without adding a history entry)
       history.replaceState(null, '', '#' + encodeURIComponent(card.interpretTitle));
@@ -349,7 +356,7 @@ pageScript: |
     <div id="cardTags" style="display:flex;gap:0.4rem;flex-wrap:wrap;justify-content:center;margin-top:1rem;min-height:1rem;"></div>
     <div style="margin-top:2rem;display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
       <button onclick="shareCard()" class="btn-outline" style="font-size:0.82rem;padding:0.5rem 1.4rem;">{{ ui.cards_btn_share2 }}</button>
-      <a href="{{ '/articles/' | url }}" class="btn-outline" style="font-size:0.82rem;padding:0.5rem 1.4rem;">{{ ui.cards_btn_articles }}</a>
+      <a id="articlesBtn" href="{{ '/articles/' | url }}" class="btn-outline" style="font-size:0.82rem;padding:0.5rem 1.4rem;">{{ ui.cards_btn_articles }}</a>
       <a href="{{ '/booking/' | url }}" class="btn-outline" style="font-size:0.82rem;padding:0.5rem 1.4rem;">找人聊聊</a>
     </div>
   </div>
