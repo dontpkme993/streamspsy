@@ -260,6 +260,11 @@ pageStyle: |
             <a href="{{ t.mediaUrl | url }}">
               <span>🎙</span> 系列作品
             </a>
+            {% if t.profileUrl %}
+            <a href="{{ t.profileUrl }}" target="_blank" rel="noopener">
+              <span>👤</span> 個人簡歷
+            </a>
+            {% endif %}
           </div>
         </article>
         {% endfor %}

@@ -44,6 +44,7 @@ module.exports = async () => {
         status: p['預約狀態']?.select?.name || '開放預約',
         articlesUrl: `/articles/#author=${encodedName}`,
         mediaUrl: `/media/#author=${encodedName}`,
+        profileUrl: p['個人簡歷頁面']?.url || '',
       };
     }));
   } catch (e) {
