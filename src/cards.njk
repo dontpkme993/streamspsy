@@ -99,57 +99,6 @@ pageStyle: |
 
 pageScript: |
   <script>
-    // ── Card data ──
-    const CARDS = [
-      {
-        number: 'No. 01', emoji: '🌊', title: '流動', keyword: '放手 · 信任 · 流動',
-        interpretTitle: '流動之卡',
-        interpretBody: '今天，也許有什麼事情讓你緊握著不放。這張卡輕輕地問你：如果你願意放手，生命會帶你流向哪裡？\n\n流動不是失去控制，而是相信自己有能力在任何水流中找到方向。讓那些抓太緊的地方，稍微鬆開一點。',
-        interpretMessage: '水往低處流，心往溫暖處去。'
-      },
-      {
-        number: 'No. 02', emoji: '🌱', title: '萌芽', keyword: '開始 · 潛力 · 耐心',
-        interpretTitle: '萌芽之卡',
-        interpretBody: '每一個開始都很小，就像種子破土之前，沒有人看得見它的力量。\n\n你現在正在做的事，或許還沒有成果，但種子已經在土裡了。給它時間，給它光，給它你的耐心。',
-        interpretMessage: '最深的根，長出最高的樹。'
-      },
-      {
-        number: 'No. 03', emoji: '☀️', title: '溫暖', keyword: '愛 · 接納 · 當下',
-        interpretTitle: '溫暖之卡',
-        interpretBody: '有時候，我們最需要的不是解答，而是一個溫暖的所在。\n\n今天，讓這張卡提醒你：你值得被溫柔對待，包括被你自己。把那一點點溫度，先給自己。',
-        interpretMessage: '你就是你最需要的那個家。'
-      },
-      {
-        number: 'No. 04', emoji: '🌙', title: '靜默', keyword: '休息 · 內省 · 夜晚',
-        interpretTitle: '靜默之卡',
-        interpretBody: '在這個總是要求產出的世界裡，靜默是一種勇敢。\n\n今天，也許你不需要解決什麼，也不需要說什麼。只是坐著，讓自己的內心說話，然後聽。',
-        interpretMessage: '靜下來，才能聽見自己。'
-      },
-      {
-        number: 'No. 05', emoji: '🦋', title: '轉化', keyword: '改變 · 蛻變 · 勇氣',
-        interpretTitle: '轉化之卡',
-        interpretBody: '蝴蝶在蛹裡的時候，並不知道自己會飛。它只是經歷著那段黑暗、混沌、看似沒有出口的過程。\n\n也許你正在某個蛹裡。請相信，那不是終點，而是轉化正在發生。',
-        interpretMessage: '改變的前一刻，總是最難熬的。'
-      },
-      {
-        number: 'No. 06', emoji: '🌸', title: '綻放', keyword: '展現 · 自信 · 美麗',
-        interpretTitle: '綻放之卡',
-        interpretBody: '你有些美好的東西，還藏在心裡沒有拿出來。\n\n這張卡問你：是什麼讓你不敢展現真實的自己？那些阻礙，是真實的牆，還是你為自己建造的？今天，試著讓那朵花開一點點。',
-        interpretMessage: '你的光，世界需要看見。'
-      },
-      {
-        number: 'No. 07', emoji: '🪨', title: '紮根', keyword: '穩定 · 基礎 · 歸屬',
-        interpretTitle: '紮根之卡',
-        interpretBody: '當一切都在晃動的時候，找到你的根。\n\n那可能是一個人、一個地方、一段回憶、一種信念。回到它，讓自己在那裡站穩。從穩定的地方，你才能往任何方向生長。',
-        interpretMessage: '根越深，風吹時越不怕。'
-      },
-      {
-        number: 'No. 08', emoji: '🕊️', title: '釋放', keyword: '原諒 · 放下 · 自由',
-        interpretTitle: '釋放之卡',
-        interpretBody: '你是否有什麼事情、什麼情緒，攜帶了很久，卻還沒找到地方放下？\n\n釋放不一定是原諒，也不一定是遺忘。它可以只是決定：「我不讓它繼續佔據我的心了。」今天，找一個小小的釋放。',
-        interpretMessage: '放下，是給自己的禮物。'
-      }
-    ];
 
     // Calculate fan angles dynamically so outermost card stays within viewport
     function calcFanAngles() {
@@ -222,12 +171,18 @@ pageScript: |
       const card = CARDS[cardIndex];
 
       document.getElementById('cardNumber').textContent = card.number;
-      document.getElementById('cardEmoji').textContent = card.emoji;
+      const emojiEl = document.getElementById('cardEmoji');
+      if (card.image) {
+        emojiEl.innerHTML = '<img src="' + card.image + '" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:0.5rem;" aria-hidden="true">';
+      } else {
+        emojiEl.textContent = '✨';
+      }
       document.getElementById('cardTitle').textContent = card.title;
       document.getElementById('cardKeyword').textContent = card.keyword;
       document.getElementById('interpretTitle').textContent = card.interpretTitle;
       document.getElementById('interpretBody').textContent = card.interpretBody;
       document.getElementById('interpretMessage').textContent = '「' + card.interpretMessage + '」';
+      document.getElementById('cardTags').innerHTML = (card.tags || []).map(function(t) { return '<span class="tag">#' + t + '</span>'; }).join('');
 
       // Update hash (without adding a history entry)
       history.replaceState(null, '', '#' + encodeURIComponent(card.interpretTitle));
@@ -297,7 +252,7 @@ pageScript: |
     function shareCard() {
       const card = selectedCardIndex >= 0 ? CARDS[selectedCardIndex] : null;
       const text = card
-        ? '我從溪水邊抽到了「' + card.title + '」' + card.emoji + '\n' + card.interpretMessage + '\n\n溪水邊 Stream Side · 為自己抽張卡'
+        ? '我從溪水邊抽到了「' + card.title + '」\n' + card.interpretMessage + '\n\n溪水邊 Stream Side · 為自己抽張卡'
         : '我正在溪水邊為自己抽張卡 🃏\n溪水邊 Stream Side';
       const url = window.location.href; // includes hash
       if (navigator.share) {
@@ -335,6 +290,8 @@ pageScript: |
     });
   </script>
 ---
+
+<script>const CARDS = {{ cards | dump | safe }};</script>
 
 <!-- ══════════════ PAGE INTRO ══════════════ -->
 <div style="text-align:center;padding:4rem 1.5rem 1rem;">
@@ -389,6 +346,7 @@ pageScript: |
     <h2 id="interpretTitle"></h2>
     <p id="interpretBody" style="margin-top:0.75rem;white-space:pre-line;"></p>
     <p class="card-message" id="interpretMessage"></p>
+    <div id="cardTags" style="display:flex;gap:0.4rem;flex-wrap:wrap;justify-content:center;margin-top:1rem;min-height:1rem;"></div>
     <div style="margin-top:2rem;display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
       <button onclick="shareCard()" class="btn-outline" style="font-size:0.82rem;padding:0.5rem 1.4rem;">{{ ui.cards_btn_share2 }}</button>
       <a href="{{ '/articles/' | url }}" class="btn-outline" style="font-size:0.82rem;padding:0.5rem 1.4rem;">{{ ui.cards_btn_articles }}</a>
