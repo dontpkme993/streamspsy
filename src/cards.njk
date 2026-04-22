@@ -172,12 +172,10 @@ pageScript: |
 
       const emojiEl = document.getElementById('cardEmoji');
       if (card.image) {
-        emojiEl.textContent = '';
         emojiEl.style.backgroundImage = 'url(' + card.image + ')';
         emojiEl.style.backgroundSize = 'cover';
         emojiEl.style.backgroundPosition = 'center';
       } else {
-        emojiEl.textContent = '✨';
         emojiEl.style.backgroundImage = '';
       }
       document.getElementById('cardTitle').textContent = card.title;
