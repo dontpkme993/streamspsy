@@ -293,7 +293,10 @@ pageScript: |
   </script>
 ---
 
-<script>const CARDS = {{ cards | dump | safe }};</script>
+<script>
+const CARDS = {{ cards | dump | safe }};
+CARDS.forEach(function(c) { if (c.image) { new Image().src = c.image; } });
+</script>
 
 <!-- ══════════════ PAGE INTRO ══════════════ -->
 <div style="text-align:center;padding:4rem 1.5rem 1rem;">
