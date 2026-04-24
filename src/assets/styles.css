@@ -619,12 +619,16 @@ a {
   50%       { background: rgba(255, 255, 255, 0.8); }
 }
 
+@keyframes cardFloat {
+  0%, 100% { transform: rotateY(180deg) translateY(0px); }
+  50%       { transform: rotateY(180deg) translateY(-10px); }
+}
+
 .card-front-face {
-  transform: rotateY(180deg);
   display: flex;
   flex-direction: column;
   padding: 2rem 1.5rem;
-  animation: cardBreath 2s ease-in-out infinite;
+  animation: cardBreath 2s ease-in-out infinite, cardFloat 3s ease-in-out infinite;
 }
 
 .card-front-face .card-image-area {
