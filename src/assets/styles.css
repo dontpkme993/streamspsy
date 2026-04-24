@@ -757,6 +757,9 @@ a {
     max-height: none;
   }
 
+}
+
+@media (max-width:640px) {
   .article-thumb img {
     width: 80%;
     height: 80%;
