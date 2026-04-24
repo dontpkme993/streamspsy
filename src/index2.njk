@@ -138,11 +138,13 @@ jsonLd: |
               <span>封面圖<br>Placeholder</span>
             {% endif %}
           </a>
-          <div class="article-body">
+          <div class="article-meta">
             <p class="date">{{ latestArticle.date | dateDisplay }}</p>
-            <div style="display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.5rem;">
+            <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
               {% for tag in latestArticle.tags %}<span class="tag">#{{ tag }}</span>{% endfor %}
             </div>
+          </div>
+          <div class="article-main">
             <h3><a href="{{ ('/articles/' + latestArticle.slug + '/') | url }}" style="color:inherit;text-decoration:none;transition:color 0.2s;" onmouseover="this.style.color='var(--straw)'" onmouseout="this.style.color='inherit'">{{ latestArticle.title }}</a></h3>
             <p class="summary-label">3 秒摘要</p>
             <p class="summary">{{ latestArticle.summary }}</p>
@@ -152,7 +154,11 @@ jsonLd: |
         {% else %}
         <article class="article-card reveal">
           <div class="article-thumb"><span>封面圖<br>Placeholder</span></div>
-          <div class="article-body">
+          <div class="article-meta">
+            <p class="date"></p>
+            <div style="display:flex;gap:0.4rem;flex-wrap:wrap;"></div>
+          </div>
+          <div class="article-main">
             <h3><span class="placeholder-text">文章標題 Placeholder</span></h3>
             <p class="summary-label">3 秒摘要</p>
             <p class="summary"><span class="placeholder-text">3秒摘要佔位符</span></p>
