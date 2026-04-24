@@ -614,12 +614,17 @@ a {
   opacity: 0.6;
 }
 
+@keyframes cardBreath {
+  0%, 100% { background: rgba(255, 255, 255, 0.5); }
+  50%       { background: rgba(255, 255, 255, 0.8); }
+}
+
 .card-front-face {
   transform: rotateY(180deg);
-  background: var(--rice);
   display: flex;
   flex-direction: column;
   padding: 2rem 1.5rem;
+  animation: cardBreath 2s ease-in-out infinite;
 }
 
 .card-front-face .card-image-area {
