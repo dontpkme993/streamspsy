@@ -32,7 +32,7 @@ body::after {
   pointer-events: none;
   z-index: 9998;
   opacity: 0.035;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns=!string!width=!string!height=!string!%3E%3Cfilter id=!string!%3E%3CfeTurbulence type=!string!baseFrequency=!string!numOctaves=!string!stitchTiles=!string!/%3E%3C/filter%3E%3Crect width=!string!height=!string!filter=!string!/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 200px 200px;
 }
 
@@ -104,7 +104,7 @@ a {
 }
 
 .nav-links a::after {
-  content: 'http://www.w3.org/2000/svg';
+  content: '';
   position: absolute;
   bottom: -2px;
   left: 0;
@@ -213,7 +213,7 @@ a {
 }
 
 .hero-image-placeholder::before {
-  content: '300';
+  content: '🌾 主視覺圖片佔位符 Image Placeholder';
   color: rgba(250, 243, 224, 0.35);
   font-size: 0.85rem;
   letter-spacing: 0.08em;
@@ -513,7 +513,7 @@ a {
 }
 
 .timeline-item::before {
-  content: '300';
+  content: '';
   position: absolute;
   left: 0;
   top: 0.6rem;
@@ -525,7 +525,7 @@ a {
 }
 
 .timeline-item::after {
-  content: 'n';
+  content: '';
   position: absolute;
   left: 5px;
   top: 1.5rem;
@@ -596,7 +596,7 @@ a {
 }
 
 .card-back-face::before {
-  content: 'fractalNoise';
+  content: '';
   position: absolute;
   inset: 12px;
   border: 2px solid rgba(250, 243, 224, 0.25);
@@ -761,8 +761,8 @@ a {
 
 @media (max-width:640px) {
   .article-thumb img {
-    width: 80%;
-    height: 80%;
+    width: 80% !important;
+    height: 80% !important;
     margin-left: 10%;
     margin-top: 10%;
     border-radius: 1000px;
