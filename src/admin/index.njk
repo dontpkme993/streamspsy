@@ -1034,20 +1034,21 @@ pageScript: |
       this.disabled = true;
       setPodcastStatus('rss-status', 'loading', '儲存中…');
       try {
-        const res = await fetch(
-          `${PODCAST_API_BASE}/repos/${PODCAST_REPO}/actions/variables/PODCAST_RSS_URL`,
-          {
-            method: 'PATCH',
-            headers: {
-              'Authorization': `Bearer ${token}`,
-              'Accept': 'application/vnd.github+json',
-              'X-GitHub-Api-Version': '2022-11-28',
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ name: 'PODCAST_RSS_URL', value }),
-          }
-        );
-        if (res.status === 204) {
+        const varUrl = `${PODCAST_API_BASE}/repos/${PODCAST_REPO}/actions/variables/PODCAST_RSS_URL`;
+        const headers = {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/vnd.github+json',
+          'X-GitHub-Api-Version': '2022-11-28',
+        };
+        // GitHub API 不允許空字串 value，清空時改用 DELETE 刪除變數
+        const res = value
+          ? await fetch(varUrl, {
+              method: 'PATCH',
+              headers: { ...headers, 'Content-Type': 'application/json' },
+              body: JSON.stringify({ name: 'PODCAST_RSS_URL', value }),
+            })
+          : await fetch(varUrl, { method: 'DELETE', headers });
+        if (res.status === 204 || res.status === 200) {
           setPodcastStatus('rss-status', 'success', value ? '✓ RSS 網址已更新' : '✓ RSS 網址已清空，下次同步將略過');
         } else if (res.status === 403) {
           throw new Error('Token 權限不足，需要 Variables: Read and write 權限');
