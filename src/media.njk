@@ -223,10 +223,8 @@ activeNav: media
             });
 
             // Filter book items
-            document.querySelectorAll('.book-item[data-authors]').forEach(function(item) {
-              var bookAuthors = item.dataset.authors || '';
-              var show = author === 'all' || bookAuthors === author || bookAuthors.split('|||').includes(author);
-              item.style.display = show ? '' : 'none';
+            document.querySelectorAll('.book-item').forEach(function(item) {
+              item.style.display = matchesAuthor(item, author) ? '' : 'none';
             });
           }
 
@@ -269,6 +267,7 @@ activeNav: media
           }
 
           window.addEventListener('hashchange', initPodcastFromHash);
+          window.addEventListener('load', initPodcastFromHash);
           initPodcastFromHash();
         </script>
       </div>
@@ -302,7 +301,7 @@ activeNav: media
     <div class="book-grid">
 
       {% for book in books %}
-        <article class="book-item" data-authors="{{ book.authors | join('|||') }}">
+        <article class="book-item" data-authors="{{ book.authors | default([]) | join('|||') }}">
           <a href="{{ book.link or '#' }}" target="_blank" rel="noopener" aria-label="{{ book.title }}">
             {% if book.image %}
               <img src="{{ book.image | url }}" alt="{{ book.title }}" class="book-cover" style="object-fit:cover;">
