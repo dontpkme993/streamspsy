@@ -1026,7 +1026,10 @@ pageScript: |
       const token = document.getElementById('gh-token').value.trim();
       if (!token) { setPodcastStatus('rss-status', 'error', '請先載入 GitHub Token'); return; }
       const value = document.getElementById('rss-url').value.trim();
-      if (!value) { setPodcastStatus('rss-status', 'error', '請輸入 RSS 網址'); return; }
+      if (value && !/^https?:\/\/.+/.test(value)) {
+        setPodcastStatus('rss-status', 'error', '網址格式不正確，請輸入 http:// 或 https:// 開頭的網址');
+        return;
+      }
 
       this.disabled = true;
       setPodcastStatus('rss-status', 'loading', '儲存中…');
@@ -1045,7 +1048,7 @@ pageScript: |
           }
         );
         if (res.status === 204) {
-          setPodcastStatus('rss-status', 'success', '✓ RSS 網址已更新');
+          setPodcastStatus('rss-status', 'success', value ? '✓ RSS 網址已更新' : '✓ RSS 網址已清空，下次同步將略過');
         } else if (res.status === 403) {
           throw new Error('Token 權限不足，需要 Variables: Read and write 權限');
         } else {
