@@ -2,7 +2,7 @@ require('dotenv').config();
 const { Client } = require('@notionhq/client');
 const { downloadImage } = require('../adapters/notion');
 
-const notion = new Client({ auth: process.env.NOTION_TOKEN });
+const notion = new Client({ auth: process.env.NOTION_TOKEN, fetch: globalThis.fetch });
 
 module.exports = async () => {
   if (!process.env.NOTION_TOKEN || !process.env.NOTION_CARDS_DB) {
@@ -11,13 +11,31 @@ module.exports = async () => {
   }
   console.log('[cards] DB ID prefix:', process.env.NOTION_CARDS_DB.slice(0, 8));
 
-  try {
-    const db = await notion.databases.query({
-      database_id: process.env.NOTION_CARDS_DB,
-      filter: { property: '發佈', checkbox: { equals: true } },
-    });
-    console.log('[cards] 查詢成功，共', db.results.length, '筆（已發佈）');
+  let db;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      db = await notion.databases.query({
+        database_id: process.env.NOTION_CARDS_DB,
+        filter: { property: '發佈', checkbox: { equals: true } },
+      });
+      break;
+    } catch (e) {
+      const isNetworkError = e.message?.includes('Premature close') || e.message?.includes('fetch failed') || e.code === 'ECONNRESET' || e.code === 'ERR_STREAM_PREMATURE_CLOSE';
+      if (isNetworkError && attempt < 3) {
+        const delay = attempt * 3000;
+        console.warn(`[cards] 網路錯誤，${delay / 1000}s 後重試 (${attempt}/3):`, e.message);
+        await new Promise(r => setTimeout(r, delay));
+        continue;
+      }
+      console.error('[cards] 查詢失敗:', e.message);
+      if (e.code) console.error('[cards] error code:', e.code);
+      if (e.status) console.error('[cards] HTTP status:', e.status);
+      return [];
+    }
+  }
+  console.log('[cards] 查詢成功，共', db.results.length, '筆（已發佈）');
 
+  try {
     return Promise.all(db.results.map(async page => {
       const p = page.properties;
       const idSlug = page.id.replace(/-/g, '');
@@ -45,9 +63,7 @@ module.exports = async () => {
       };
     }));
   } catch (e) {
-    console.error('[cards] 查詢失敗:', e.message);
-    if (e.code) console.error('[cards] error code:', e.code);
-    if (e.status) console.error('[cards] HTTP status:', e.status);
+    console.error('[cards] 資料處理失敗:', e.message);
     return [];
   }
 };

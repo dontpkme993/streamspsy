@@ -2,7 +2,7 @@ const { Client } = require('@notionhq/client');
 const https = require('https');
 const fs = require('fs');
 
-const notion = new Client({ auth: process.env.NOTION_TOKEN });
+const notion = new Client({ auth: process.env.NOTION_TOKEN, fetch: globalThis.fetch });
 
 const DBS = [
   process.env.NOTION_ARTICLES_DB,

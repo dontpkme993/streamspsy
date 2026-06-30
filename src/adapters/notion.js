@@ -4,7 +4,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const notion = new Client({ auth: process.env.NOTION_TOKEN });
+const notion = new Client({ auth: process.env.NOTION_TOKEN, fetch: globalThis.fetch });
 
 // 將 rich_text 陣列轉為 Markdown 字串，處理 bold/italic/code/link
 function richTextToMd(richTexts) {
