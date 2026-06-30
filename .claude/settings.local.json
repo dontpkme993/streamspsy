@@ -45,7 +45,9 @@
       "Bash(node *)",
       "Bash(git commit -m 'fix: 改用 native fetch 解決 node-fetch v2 與 Node.js 22 不相容問題 *)",
       "Bash(git commit *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "WebSearch",
+      "Bash(git commit -m 'chore: 升級 GitHub Actions 至支援 Node.js 24 的版本 *)"
     ]
   }
 }
