@@ -48,24 +48,33 @@ function githubRequest(method, path, body) {
   });
 }
 
-async function checkDB(dbId) {
-  try {
-    const res = await notion.databases.query({
-      database_id: dbId,
-      filter: {
-        timestamp: 'last_edited_time',
-        last_edited_time: { after: LAST_BUILD_TIME },
-      },
-    });
-    const count = res.results?.length || 0;
-    console.log(`DB ${dbId.slice(0, 8)}... 有 ${count} 筆更新`);
-    return count;
-  } catch (e) {
-    if (e.code === 'validation_error' && e.message.includes('multiple data sources')) {
-      console.warn(`DB ${dbId.slice(0, 8)}... 不支援查詢（多資料來源），略過`);
-      return 0;
+async function checkDB(dbId, retries = 3) {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const res = await notion.databases.query({
+        database_id: dbId,
+        filter: {
+          timestamp: 'last_edited_time',
+          last_edited_time: { after: LAST_BUILD_TIME },
+        },
+      });
+      const count = res.results?.length || 0;
+      console.log(`DB ${dbId.slice(0, 8)}... 有 ${count} 筆更新`);
+      return count;
+    } catch (e) {
+      if (e.code === 'validation_error' && e.message.includes('multiple data sources')) {
+        console.warn(`DB ${dbId.slice(0, 8)}... 不支援查詢（多資料來源），略過`);
+        return 0;
+      }
+      const isNetworkError = e.message?.includes('Premature close') || e.message?.includes('fetch failed') || e.code === 'ECONNRESET';
+      if (isNetworkError && attempt < retries) {
+        const delay = attempt * 3000;
+        console.warn(`DB ${dbId.slice(0, 8)}... 網路錯誤，${delay / 1000}s 後重試 (${attempt}/${retries}): ${e.message}`);
+        await new Promise(r => setTimeout(r, delay));
+        continue;
+      }
+      throw e;
     }
-    throw e;
   }
 }
 
