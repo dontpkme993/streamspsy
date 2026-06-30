@@ -7,6 +7,7 @@ const notion = new Client({ auth: process.env.NOTION_TOKEN, fetch: globalThis.fe
 const DBS = [
   process.env.NOTION_ARTICLES_DB,
   process.env.NOTION_EVENTS_DB,
+  process.env.NOTION_CARDS_DB,
 ].filter(Boolean);
 
 const LAST_BUILD_TIME = process.env.LAST_BUILD_TIME || '2000-01-01T00:00:00.000Z';

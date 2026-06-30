@@ -44,7 +44,8 @@
       "Bash(git commit -m 'chore: 為牌卡載入添加診斷 log *)",
       "Bash(node *)",
       "Bash(git commit -m 'fix: 改用 native fetch 解決 node-fetch v2 與 Node.js 22 不相容問題 *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }

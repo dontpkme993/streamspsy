@@ -26,6 +26,7 @@ jobs:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTION_ARTICLES_DB: ${{ secrets.NOTION_ARTICLES_DB }}
           NOTION_EVENTS_DB: ${{ secrets.NOTION_EVENTS_DB }}
+          NOTION_CARDS_DB: ${{ secrets.NOTION_CARDS_DB }}
           LAST_BUILD_TIME: ${{ vars.LAST_BUILD_TIME }}
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           GH_REPO: ${{ github.repository }}
