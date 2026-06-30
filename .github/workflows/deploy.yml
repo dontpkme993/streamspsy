@@ -55,7 +55,7 @@ jobs:
           SITE_BASE_PATH: /
           SITE_URL: https://streamspsy.com
 
-      - uses: actions/upload-pages-artifact@v4
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: _site
 
