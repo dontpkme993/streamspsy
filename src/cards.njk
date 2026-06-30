@@ -155,10 +155,17 @@ pageScript: |
     function showFan() {
       fanState = 'fan';
       selectedCardIndex = -1;
-      document.getElementById('cardFan').style.display = '';
       document.getElementById('cardResultWrap').style.display = 'none';
       document.getElementById('card3d').classList.remove('flipped');
       document.getElementById('interpretation').classList.remove('visible');
+
+      if (!CARDS.length) {
+        document.getElementById('cardFan').style.display = 'none';
+        document.getElementById('noCardsMsg').style.display = '';
+        return;
+      }
+      document.getElementById('noCardsMsg').style.display = 'none';
+      document.getElementById('cardFan').style.display = '';
 
       // Trigger spread animation after paint
       requestAnimationFrame(() => requestAnimationFrame(() => {
@@ -212,6 +219,7 @@ pageScript: |
 
     function pickCard() {
       if (fanState !== 'fan') return;
+      if (!CARDS.length) return;
       fanState = 'collapsing';
 
       document.querySelectorAll('.fan-card').forEach(c => {
@@ -314,6 +322,7 @@ CARDS.forEach(function(c) { if (c.image) { new Image().src = c.image; } });
 
   <!-- Fan of 10 cards (populated by JS) -->
   <div class="card-fan" id="cardFan" aria-label="牌卡組，點擊任一張翻牌"></div>
+  <p id="noCardsMsg" style="display:none;text-align:center;color:var(--straw-text);padding:2rem 0;">牌卡資料暫時無法載入，請稍後再試。</p>
 
   <!-- Result card — shown after fan collapses -->
   <div class="card-3d-wrap" id="cardResultWrap">
