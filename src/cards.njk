@@ -236,6 +236,7 @@ pageScript: |
     }
 
     function redraw() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       history.replaceState(null, '', location.pathname); // clear hash
       if (fanState === 'result') {
         document.getElementById('card3d').classList.remove('flipped');
