@@ -5,13 +5,18 @@ const { downloadImage } = require('../adapters/notion');
 const notion = new Client({ auth: process.env.NOTION_TOKEN });
 
 module.exports = async () => {
-  if (!process.env.NOTION_TOKEN || !process.env.NOTION_CARDS_DB) return [];
+  if (!process.env.NOTION_TOKEN || !process.env.NOTION_CARDS_DB) {
+    console.warn('[cards] 缺少 NOTION_TOKEN 或 NOTION_CARDS_DB，跳過');
+    return [];
+  }
+  console.log('[cards] DB ID prefix:', process.env.NOTION_CARDS_DB.slice(0, 8));
 
   try {
     const db = await notion.databases.query({
       database_id: process.env.NOTION_CARDS_DB,
       filter: { property: '發佈', checkbox: { equals: true } },
     });
+    console.log('[cards] 查詢成功，共', db.results.length, '筆（已發佈）');
 
     return Promise.all(db.results.map(async page => {
       const p = page.properties;
@@ -40,7 +45,9 @@ module.exports = async () => {
       };
     }));
   } catch (e) {
-    console.warn('cards fetch failed:', e.message);
+    console.error('[cards] 查詢失敗:', e.message);
+    if (e.code) console.error('[cards] error code:', e.code);
+    if (e.status) console.error('[cards] HTTP status:', e.status);
     return [];
   }
 };
