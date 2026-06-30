@@ -61,18 +61,6 @@ pageScript: |
         b.classList.toggle('active', shouldBeActive);
       });
 
-      // Filter articles
-      document.querySelectorAll('.article-card').forEach(card => {
-        let show;
-        if (type === 'all') {
-          show = true;
-        } else if (type === 'tag') {
-          show = (card.dataset.tags || '').includes(value);
-        } else {
-          show = (card.dataset.authors || '').split('|||').includes(value);
-        }
-        card.style.display = show ? '' : 'none';
-      });
     }
 
     // Author button clicks
@@ -90,8 +78,54 @@ pageScript: |
       });
     });
 
-    window.addEventListener('hashchange', () => applyFilter(parseHash()));
-    applyFilter(parseHash());
+    // ── Pagination ──
+    const PAGE_SIZE = 6;
+    let currentFilter = { type: 'all', value: '' };
+    let shownCount = PAGE_SIZE;
+
+    function getMatchingCards(filter) {
+      const { type, value } = filter;
+      return Array.from(document.querySelectorAll('.article-card')).filter(card => {
+        if (type === 'all') return true;
+        if (type === 'tag') return (card.dataset.tags || '').includes(value);
+        return (card.dataset.authors || '').split('|||').includes(value);
+      });
+    }
+
+    function renderArticles() {
+      const matching = getMatchingCards(currentFilter);
+      document.querySelectorAll('.article-card').forEach(c => c.style.display = 'none');
+      matching.slice(0, shownCount).forEach(c => c.style.display = '');
+
+      const btn = document.getElementById('load-more-btn');
+      if (matching.length > shownCount) {
+        btn.textContent = '{{ ui.articles_load_more }}';
+        btn.disabled = false;
+        btn.style.opacity = '';
+        btn.style.cursor = '';
+      } else {
+        btn.textContent = '沒有更多文章了';
+        btn.disabled = true;
+        btn.style.opacity = '0.4';
+        btn.style.cursor = 'default';
+      }
+    }
+
+    document.getElementById('load-more-btn').addEventListener('click', () => {
+      shownCount += PAGE_SIZE;
+      renderArticles();
+    });
+
+    window.addEventListener('hashchange', () => {
+      currentFilter = parseHash();
+      shownCount = PAGE_SIZE;
+      applyFilter(currentFilter);
+      renderArticles();
+    });
+
+    currentFilter = parseHash();
+    applyFilter(currentFilter);
+    renderArticles();
 
     // Show sidebar on desktop
     function updateSidebar() {
@@ -230,9 +264,9 @@ pageScript: |
       </article>
     {% endif %}
 
-    <!-- Load more placeholder -->
+    <!-- Load more -->
     <div style="text-align:center;margin-top:2rem;">
-      <button class="btn-outline">{{ ui.articles_load_more }}</button>
+      <button id="load-more-btn" class="btn-outline">{{ ui.articles_load_more }}</button>
     </div>
 
   </section>
