@@ -2,7 +2,7 @@ require('dotenv').config();
 const { Client } = require('@notionhq/client');
 const { downloadImage } = require('../adapters/notion');
 
-const notion = new Client({ auth: process.env.NOTION_TOKEN });
+const notion = new Client({ auth: process.env.NOTION_TOKEN, fetch: globalThis.fetch });
 
 module.exports = async () => {
   if (!process.env.NOTION_TOKEN || !process.env.NOTION_THERAPISTS_DB) return [];

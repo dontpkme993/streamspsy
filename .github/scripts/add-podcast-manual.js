@@ -2,7 +2,7 @@ require('dotenv').config();
 const { Client } = require('@notionhq/client');
 const Parser = require('rss-parser');
 
-const notion = new Client({ auth: process.env.NOTION_TOKEN });
+const notion = new Client({ auth: process.env.NOTION_TOKEN, fetch: globalThis.fetch });
 const parser = new Parser({
   customFields: {
     item: [['itunes:image', 'itunesImage', { keepArray: false }]],
